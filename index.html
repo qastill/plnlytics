@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PLN Lytics — Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#06101C;--sf:#0B1829;--cd:#101F35;--cdh:#172B45;--bd:#1E3352;--pri:#2B8AE0;--prl:#5AADE8;--acc:#F5B731;--ok:#2ECC71;--wn:#F39C12;--er:#E74C3C;--in:#3DB4E8;--tx:#F0F4F8;--t2:#A0B4CC;--t3:#6B83A0;--f:'Plus Jakarta Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--f);background:var(--bg);color:var(--tx);overflow:hidden;height:100vh;font-size:14px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%236B83A0'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:28px!important;cursor:pointer;font-family:var(--f);font-size:13px}
+select option{background:var(--cd);color:var(--tx)}
+.app{display:flex;height:100vh}
+/* SIDEBAR */
+.side{width:210px;background:linear-gradient(180deg,var(--sf),#07111F);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0}
+.slogo{padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+.slogo img{width:38px;height:38px;object-fit:contain}
+.slogo h1{font-size:16px;font-weight:900;line-height:1}
+.slogo small{font-size:8px;color:var(--acc);letter-spacing:2px;font-weight:700}
+.srole{padding:12px 16px;border-bottom:1px solid var(--bd)}
+.srole label{font-size:10px;color:var(--t3);font-weight:700;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px}
+.srole select{width:100%;background:var(--cd);border:2px solid var(--bd);border-radius:7px;padding:9px 12px;color:var(--tx);outline:none;font-weight:600;transition:border .15s}
+.srole select:focus{border-color:var(--prl)}
+.srole .rh{font-size:11px;color:var(--prl);margin-top:6px;font-weight:600;line-height:1.4}
+.snav{flex:1;padding-top:4px;overflow-y:auto}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;border-left:3px solid transparent;transition:all .12s;color:var(--t2);font-size:13px;font-weight:500}
+.ni:hover{background:rgba(43,138,224,.06);color:var(--tx)}.ni.on{background:rgba(43,138,224,.1);border-left-color:var(--pri);color:#fff;font-weight:700}
+.ni svg{width:18px;height:18px;fill:currentColor;opacity:.5;flex-shrink:0}.ni.on svg{opacity:1;fill:var(--prl)}
+.sph{height:70px;margin:6px 12px;border-radius:8px;overflow:hidden;background:url('https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=80') center/cover;position:relative}
+.sph::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,16,28,.85),rgba(6,16,28,.15))}
+.sph span{position:absolute;bottom:6px;left:8px;z-index:1;font-size:10px;color:var(--t2);font-weight:600}
+.sai{padding:10px 16px;border-top:1px solid var(--bd);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .12s}
+.sai:hover{background:rgba(43,138,224,.08)}
+.sai .ad{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--pri),#1A6DBF);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sai .ad svg{width:14px;height:14px;fill:#fff}
+.sai .info{font-size:13px;font-weight:700;color:#fff}
+.sai .st2{font-size:10px;color:var(--ok);font-weight:600;display:flex;align-items:center;gap:3px}
+.sai .st2::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok)}
+/* MAIN */
+.mn{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.tb{padding:8px 20px;background:var(--sf);border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;min-height:42px}
+.tb h2{font-size:18px;font-weight:800}.tb .sub{font-size:12px;color:var(--t3);margin-top:1px}
+.cw{flex:1;display:flex;overflow:hidden}
+.ct{flex:1;overflow-y:auto;padding:12px 16px}
+/* FILTER */
+.fbar{display:flex;gap:10px;align-items:center;padding:12px 16px;background:linear-gradient(135deg,rgba(43,138,224,.1),rgba(43,138,224,.03));border:2px solid rgba(43,138,224,.3);border-radius:10px;margin-bottom:12px;position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.fbar .flb{font-size:12px;font-weight:800;color:var(--prl);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.fbar .flb svg{width:18px;height:18px;fill:var(--prl)}
+.fbar select{background:var(--cd);border:1px solid var(--bd);border-radius:7px;padding:8px 28px 8px 12px;color:var(--tx);font-weight:600;min-width:160px}
+.fbar .ftag{font-size:13px;color:var(--prl);font-weight:700;display:flex;align-items:center;gap:5px;padding:5px 12px;background:rgba(43,138,224,.1);border-radius:6px}
+.fbar .ftag::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--prl);box-shadow:0 0 6px var(--prl)}
+.fbar .fhint{font-size:12px;color:var(--t3);font-style:italic}
+/* CARDS */
+.st{padding:12px 14px;background:var(--cd);border-radius:8px;border-left:3px solid var(--pri);cursor:pointer;transition:all .15s}
+.st:hover{background:var(--cdh);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.st .lb{font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+.st .vl{font-size:22px;font-weight:900;line-height:1.2;margin-top:3px}
+.st .su{font-size:12px;margin-top:2px;font-weight:600}
+.pb{width:100%;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.pb .fl{height:100%;border-radius:3px;transition:width .5s}
+.bx{background:var(--cd);border-radius:10px;padding:14px;border:1px solid var(--bd)}
+.bx h3{font-size:14px;font-weight:700;margin-bottom:8px;color:#fff}
+/* AI */
+.ai-box{background:linear-gradient(135deg,rgba(245,183,49,.07),rgba(245,183,49,.01));border:1px solid rgba(245,183,49,.2);border-radius:10px;padding:12px 16px;margin-bottom:12px;border-left:4px solid var(--acc)}
+.ai-box .ai-hd{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.ai-box .ai-hd img{width:20px;height:20px;border-radius:3px}
+.ai-box .ai-hd span{font-size:12px;font-weight:800;color:var(--acc);text-transform:uppercase;letter-spacing:.6px}
+.ai-box p{font-size:13px;color:var(--t2);line-height:1.6}
+.ai-box b{color:var(--tx)}.ai-box .act{color:var(--acc);font-weight:700}
+/* ALERT */
+.al{border-radius:8px;padding:10px 14px;display:flex;gap:10px;align-items:center;margin-bottom:10px;background:linear-gradient(135deg,rgba(231,76,60,.07),rgba(231,76,60,.02));border:1px solid rgba(231,76,60,.18)}
+.al .ai2{width:32px;height:32px;border-radius:6px;background:url('https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=200&q=60') center/cover;flex-shrink:0;position:relative;overflow:hidden}
+.al .ai2::after{content:'';position:absolute;inset:0;background:rgba(231,76,60,.45)}
+.al h4{font-size:14px;font-weight:800;color:var(--er)}.al p{font-size:12px;color:var(--t2);margin-top:1px}
+/* DETAIL PANEL */
+.dp{position:fixed;top:0;right:0;width:380px;height:100vh;background:var(--sf);border-left:1px solid var(--bd);z-index:100;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 30px rgba(0,0,0,.5)}
+.dp.open{transform:translateX(0)}
+.dp-head{padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,var(--cd),var(--sf))}
+.dp-head h3{font-size:16px;font-weight:800}
+.dp-head .close{cursor:pointer;background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+.dp-head .close svg{width:14px;height:14px;fill:var(--t2)}
+.dp-body{flex:1;overflow-y:auto;padding:16px}
+.dp-ai{background:linear-gradient(135deg,rgba(245,183,49,.08),rgba(245,183,49,.02));border:1px solid rgba(245,183,49,.2);border-radius:8px;padding:12px;margin-top:12px;border-left:3px solid var(--acc)}
+.dp-ai h4{font-size:13px;font-weight:800;color:var(--acc);margin-bottom:4px}
+.dp-ai p{font-size:12px;color:var(--t2);line-height:1.5}
+.dp-ai .act{color:var(--acc);font-weight:700}
+.clk{cursor:pointer;transition:all .12s;border-radius:5px}.clk:hover{background:var(--cdh)}
+/* MAP */
+.mw{position:relative;background:linear-gradient(135deg,#081428,#0C1E38);border-radius:10px;overflow:hidden;border:1px solid var(--bd);margin-bottom:10px}
+.mn-c{cursor:pointer;transition:transform .12s}.mn-c:hover{transform:scale(1.15)}
+/* ULP DETAIL TABLES */
+.gtbl{width:100%;border-collapse:collapse;font-size:12px}
+.gtbl th{padding:6px 8px;color:var(--t3);text-align:left;border-bottom:1px solid var(--bd);font-size:10px;font-weight:700;text-transform:uppercase;background:var(--sf)}
+.gtbl td{padding:5px 8px;border-bottom:1px solid rgba(30,51,82,.4)}
+.gtbl tr:hover td{background:var(--cdh)}
+.loc-pin{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(231,76,60,.1);color:var(--er);margin:2px}
+.loc-ok{background:rgba(46,204,113,.1);color:var(--ok)}
+.stk-lo{color:var(--er);font-weight:700}.stk-md{color:var(--wn);font-weight:600}.stk-ok{color:var(--ok)}
+/* CHAT */
+.cp{width:300px;border-left:1px solid var(--bd);display:none;flex-direction:column;background:var(--sf)}
+.cp.op{display:flex}
+.cpH{padding:10px 12px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.cpH .lt{display:flex;align-items:center;gap:8px}
+.cpH .aic{width:24px;height:24px;border-radius:5px;background:linear-gradient(135deg,var(--pri),#1A6DBF);display:flex;align-items:center;justify-content:center}
+.cpH .aic svg{width:12px;height:12px;fill:#fff}
+.cpH .tt{font-size:14px;font-weight:800}
+.cpH .cb{cursor:pointer;background:none;border:none}.cpH .cb svg{width:14px;height:14px;fill:var(--t3)}
+.cms{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
+.cm{max-width:88%}.cm.a{align-self:flex-start}.cm.u{align-self:flex-end}
+.cb2{padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.5;white-space:pre-wrap}
+.cm.a .cb2{background:var(--cd);border:1px solid var(--bd)}.cm.u .cb2{background:rgba(43,138,224,.1);border:1px solid rgba(43,138,224,.2)}
+.cb2 .sn{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
+.ci{padding:10px;border-top:1px solid var(--bd);display:flex;gap:6px}
+.ci input{flex:1;background:var(--cd);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;color:var(--tx);font-size:13px;outline:none;font-family:var(--f)}
+.ci input:focus{border-color:var(--pri)}
+.ci button{background:linear-gradient(135deg,var(--pri),#1A6DBF);border:none;border-radius:8px;padding:0 14px;cursor:pointer;display:flex;align-items:center}
+.ci button svg{width:14px;height:14px;fill:#fff}
+.td{display:flex;gap:3px;padding:4px}.td span{width:5px;height:5px;border-radius:50%;background:var(--pri);animation:pu 1s infinite}
+.td span:nth-child(2){animation-delay:.15s}.td span:nth-child(3){animation-delay:.3s}
+@keyframes pu{0%,100%{opacity:.3}50%{opacity:1}}
+.u3t{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}
+.u3t button{padding:5px 10px;border-radius:5px;border:none;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--f)}
+.uc{background:var(--cd);border-radius:8px;padding:12px;border:1px solid var(--bd);cursor:pointer;transition:all .15s}
+.uc:hover{border-color:var(--pri);background:var(--cdh);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="slogo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_PLN.png" alt="PLN" onerror="this.style.display='none'"><div><h1>PLN LYTICS</h1><small>INTELLIGENCE</small></div></div>
+  <div class="srole"><label>Akses Level</label><select id="roleSel" onchange="chR(this.value)"><option value="pusat">Pusat (Seluruh UID)</option><option value="uid" selected>UID (Seluruh UP3)</option><option value="up3">UP3 (Seluruh ULP)</option><option value="ulp">ULP (Detail Lokasi)</option></select><div class="rh" id="rh"></div></div>
+  <nav class="snav" id="sn"></nav>
+  <div class="sph"><span>UID Jawa Barat</span></div>
+  <div class="sai" onclick="tC()"><div class="ad"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74zM12 17.94V12h5.94L15 14.89l2.2 2.2-.9.85z"/></svg></div><div><div class="info">AI Assistant</div><div class="st2">Online</div></div></div>
+</aside>
+<div class="mn">
+  <header class="tb"><div><h2 id="pT">Dashboard</h2><div class="sub" id="pS">PLN UID Jawa Barat</div></div></header>
+  <div class="cw">
+    <div class="ct" id="ct"></div>
+    <div class="cp" id="cpn">
+      <div class="cpH"><div class="lt"><div class="aic"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74zM12 17.94V12h5.94L15 14.89l2.2 2.2-.9.85z"/></svg></div><span class="tt">PLN AI</span></div><button class="cb" onclick="tC()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></div>
+      <div class="cms" id="cms"></div>
+      <div class="ci"><input id="cin" placeholder="Tanyakan..." onkeydown="if(event.key==='Enter')sC()"><button onclick="sC()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button></div>
+    </div>
+  </div>
+</div>
+<div class="dp" id="dp"><div class="dp-head"><h3 id="dpT">Detail</h3><button class="close" onclick="closeDP()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></div><div class="dp-body" id="dpB"></div></div>
+</div>
+<script>
+var IMG='https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_PLN.png';
+var U=[{id:"BDG",nm:"Bandung",ulps:["Bdg Selatan","Bdg Utara","Bdg Timur","Bdg Barat","Ujungberung","Cijawura","Kopo"],lat:-6.917,lng:107.619},{id:"BGR",nm:"Bogor",ulps:["Bgr Kota","Bgr Barat","Bgr Timur","Cipayung","Jasinga","Leuwiliang"],lat:-6.597,lng:106.806},{id:"BKS",nm:"Bekasi",ulps:["Bks Kota","Babelan","Mustika Jaya","Medan Satria","Bantargebang"],lat:-6.238,lng:106.976},{id:"CJR",nm:"Cianjur",ulps:["Cjr Kota","Cipanas","Mande","Tanggeung","Sukanagara"],lat:-6.734,lng:107.044},{id:"CKG",nm:"Cikarang",ulps:["Ckg Kota","Lemahabang","Tambun","Cibitung"],lat:-6.255,lng:107.152},{id:"CMI",nm:"Cimahi",ulps:["Cmi Kota","Padalarang","Lembang","Cililin"],lat:-6.884,lng:107.541},{id:"CRB",nm:"Cirebon",ulps:["Crb Kota","Sumber","Kuningan","Ciledug","Cilimus"],lat:-6.732,lng:108.552},{id:"DPK",nm:"Depok",ulps:["Dpk Kota","Cimanggis","Sawangan","Bojonggede"],lat:-6.403,lng:106.794},{id:"GPI",nm:"Gn.Putri",ulps:["Citeureup","Cileungsi","Jonggol"],lat:-6.486,lng:106.906},{id:"GRT",nm:"Garut",ulps:["Grt Kota","Cikajang","Pameungpeuk","Leles","Cibatu"],lat:-7.228,lng:107.909},{id:"IDM",nm:"Indramayu",ulps:["Idm Kota","Haurgeulis","Jatibarang","Cikedung"],lat:-6.337,lng:108.320},{id:"KRW",nm:"Karawang",ulps:["Krw Kota","Cikampek","Kosambi","Rengasdengklok"],lat:-6.323,lng:107.338},{id:"MJA",nm:"Majalaya",ulps:["Majalaya","Baleendah","Banjaran","Soreang","Rancaekek"],lat:-7.050,lng:107.758},{id:"PWK",nm:"Purwakarta",ulps:["Pwk Kota","Subang","Pamanukan","Pagaden","Plered"],lat:-6.557,lng:107.442},{id:"SKI",nm:"Sukabumi",ulps:["Ski Kota","Cibadak","Cikembar","Plb Ratu","Cicurug"],lat:-6.922,lng:106.927},{id:"SMD",nm:"Sumedang",ulps:["Smd Kota","Tanjungsari","Majalengka","Jatiwangi"],lat:-6.856,lng:107.927},{id:"TSK",nm:"Tasikmalaya",ulps:["Tsk Kota","Pangandaran","Banjar","Ciamis","Rajapolah","Singaparna"],lat:-7.327,lng:108.221}];
+var D={BDG:{sc:56.76,rk:4,pl:{p:112},dy:{p:134},bp:{p:105},sl:{p:86},tx:{p:149},rp:{p:123},kel:14609,ai:161.12,kt:["Token Gagal","PTL Padam","Sambung"],saidi:19.65,saifi:.33,ens:98,stok:{kabel:72,meter:85,trafo:45,kubikel:38}},BGR:{sc:57.72,rk:3,pl:{p:110},dy:{p:140},bp:{p:125},sl:{p:96},tx:{p:128},rp:{p:112},kel:15222,ai:241.53,kt:["Token Gagal","KWH Rusak","Tagihan"],saidi:27.55,saifi:.35,ens:102,stok:{kabel:45,meter:62,trafo:28,kubikel:52}},BKS:{sc:56.02,rk:9,pl:{p:101},dy:{p:129},bp:{p:84},sl:{p:129},tx:{p:149},rp:{p:124},kel:2610,ai:199.05,kt:["Token Gagal","Display","PTL Padam"],saidi:33.88,saifi:.47,ens:97,stok:{kabel:58,meter:71,trafo:62,kubikel:44}},CJR:{sc:56.42,rk:6,pl:{p:111},dy:{p:138},bp:{p:143},sl:{p:80},tx:{p:102},rp:{p:148},kel:999,ai:93.96,kt:["Token Gagal","KWH Rusak","PB"],saidi:56.58,saifi:.89,ens:95,stok:{kabel:34,meter:48,trafo:22,kubikel:18}},CKG:{sc:40.20,rk:17,pl:{p:106},dy:{p:44},bp:{p:41},sl:{p:34},tx:{p:115},rp:{p:56},kel:7611,ai:246.63,kt:["Token Gagal","Sambung","Tagihan"],saidi:6.98,saifi:.13,ens:103,stok:{kabel:25,meter:33,trafo:15,kubikel:8}},CMI:{sc:56.62,rk:5,pl:{p:112},dy:{p:90},bp:{p:123},sl:{p:175},tx:{p:131},rp:{p:111},kel:8836,ai:104.71,kt:["KWH Rusak","Sambung","PTL Padam"],saidi:17.70,saifi:.25,ens:101,stok:{kabel:65,meter:78,trafo:55,kubikel:42}},CRB:{sc:55.65,rk:10,pl:{p:113},dy:{p:158},bp:{p:131},sl:{p:76},tx:{p:96},rp:{p:101},kel:5172,ai:179.31,kt:["Token Gagal","Geser","PTL Padam"],saidi:18.27,saifi:.33,ens:99,stok:{kabel:51,meter:67,trafo:39,kubikel:31}},DPK:{sc:56.04,rk:8,pl:{p:106},dy:{p:131},bp:{p:134},sl:{p:77},tx:{p:155},rp:{p:143},kel:8197,ai:159.32,kt:["Geser","Sambung","Token Gagal"],saidi:15.29,saifi:.24,ens:104,stok:{kabel:41,meter:56,trafo:33,kubikel:27}},GPI:{sc:49.80,rk:16,pl:{p:114},dy:{p:73},bp:{p:80},sl:{p:69},tx:{p:131},rp:{p:96},kel:5568,ai:129.70,kt:["Token Gagal","KWH Rusak","PTL Padam"],saidi:37.99,saifi:.51,ens:96,stok:{kabel:38,meter:45,trafo:19,kubikel:14}},GRT:{sc:56.40,rk:7,pl:{p:128},dy:{p:139},bp:{p:155},sl:{p:78},tx:{p:106},rp:{p:124},kel:2267,ai:84.62,kt:["Token Gagal","Sambung","KWH Rusak"],saidi:61.12,saifi:.87,ens:94,stok:{kabel:55,meter:82,trafo:48,kubikel:35}},IDM:{sc:52.28,rk:14,pl:{p:119},dy:{p:158},bp:{p:91},sl:{p:35},tx:{p:106},rp:{p:148},kel:999,ai:102.93,kt:["PTL Padam","Token Gagal","Geser"],saidi:49.48,saifi:.59,ens:97,stok:{kabel:62,meter:74,trafo:42,kubikel:29}},KRW:{sc:68.68,rk:2,pl:{p:101},dy:{p:36},bp:{p:125},sl:{p:123},tx:{p:118},rp:{p:53},kel:10720,ai:229.74,kt:["Token Gagal","PTL Diputus","Tagihan"],saidi:42.73,saifi:.49,ens:95,stok:{kabel:18,meter:29,trafo:12,kubikel:9}},MJA:{sc:55.02,rk:12,pl:{p:112},dy:{p:99},bp:{p:87},sl:{p:124},tx:{p:125},rp:{p:77},kel:4350,ai:129.26,kt:["KWH Rusak","Token Gagal","Tagihan"],saidi:38.01,saifi:.66,ens:98,stok:{kabel:47,meter:63,trafo:36,kubikel:25}},PWK:{sc:55.32,rk:11,pl:{p:128},dy:{p:136},bp:{p:78},sl:{p:110},tx:{p:123},rp:{p:74},kel:2763,ai:160.98,kt:["Token Gagal","PTL Diputus","KWH Rusak"],saidi:16.07,saifi:.21,ens:100,stok:{kabel:53,meter:69,trafo:41,kubikel:33}},SKI:{sc:54.88,rk:13,pl:{p:118},dy:{p:113},bp:{p:156},sl:{p:63},tx:{p:105},rp:{p:95},kel:3520,ai:97.54,kt:["Sambung","Token Gagal","PTL Padam"],saidi:36.86,saifi:.43,ens:99,stok:{kabel:61,meter:76,trafo:52,kubikel:40}},SMD:{sc:91.01,rk:1,pl:{p:106},dy:{p:154},bp:{p:184},sl:{p:157},tx:{p:135},rp:{p:101},kel:1309,ai:119.08,kt:["Token Gagal","KWH Rusak","Sambung"],saidi:14.92,saifi:.26,ens:105,stok:{kabel:71,meter:88,trafo:64,kubikel:51}},TSK:{sc:52.11,rk:15,pl:{p:126},dy:{p:152},bp:{p:132},sl:{p:12},tx:{p:124},rp:{p:133},kel:3517,ai:159.74,kt:["KWH Rusak","Token Gagal","PTL Padam"],saidi:32.13,saifi:.63,ens:96,stok:{kabel:43,meter:57,trafo:31,kubikel:22}}};
+var KP=[{n:"Penjualan TL",p:0},{n:"Tambah Pelanggan",p:113},{n:"Tambah Daya",p:108},{n:"Transaksi Mobile",p:126},{n:"Pendapatan BP",p:104},{n:"Saldo Akhir",p:104},{n:"PRR",p:110},{n:"BPBL",p:100},{n:"SAIDI",p:118},{n:"SAIFI",p:125},{n:"ENS",p:99},{n:"Response Time",p:112},{n:"Rating Negatif",p:190},{n:"Gangguan TM",p:200}];
+var KEL=[{n:"Token Gagal",c:4642},{n:"KWH Rusak",c:2682},{n:"Minta Sambung",c:2128},{n:"PTL Padam",c:1780},{n:"Tagihan",c:1234},{n:"PTL Diputus",c:636}];
+var CC=["#2B8AE0","#F5B731","#2ECC71","#E74C3C","#F39C12","#3DB4E8","#9B59B6","#E91E63","#1ABC9C","#E67E22","#8E44AD","#2980B9","#D35400","#16A085","#C0392B","#27AE60","#F1C40F"];
+// STATE: role hierarchy: pusat > uid > up3 > ulp
+var S={tab:'dash',role:'uid',fup3:null,fulp:null,up3:null,co:false};
+var CH={};
+var srt=function(){return Object.entries(D).sort(function(a,b){return a[1].rk-b[1].rk})};
+var pbc=function(p){return p>=110?'var(--ok)':p>=100?'var(--pri)':p>=80?'var(--wn)':'var(--er)'};
+var pbg=function(p){return p>=110?'linear-gradient(90deg,#2ECC71,#6EE7B7)':p>=100?'linear-gradient(90deg,#2B8AE0,#5AADE8)':p>=80?'linear-gradient(90deg,#F39C12,#FBBF24)':'linear-gradient(90deg,#E74C3C,#F87171)'};
+var mkP=function(p,h){h=h||4;return'<div class="pb" style="height:'+h+'px"><div class="fl" style="width:'+Math.min(Math.max(p,0),135)+'%;background:'+pbg(p)+'"></div></div>'};
+var scC=function(s){return s>70?'#2ECC71':s>55?'#2B8AE0':s>50?'#F39C12':'#E74C3C'};
+var RN={pusat:'Kantor Pusat',uid:'UID Jawa Barat',up3:'UP3',ulp:'ULP'};
+// Generate ULP detail data (dummy but realistic)
+function ulpData(up3id,ulpName){var seed=0;for(var i=0;i<ulpName.length;i++)seed+=ulpName.charCodeAt(i);var r=function(mn,mx){seed=(seed*9301+49297)%233280;return mn+Math.floor((seed/233280)*(mx-mn))};
+var spots=['Penyulang '+ulpName.substring(0,3).toUpperCase()+'-'+r(1,20),'GD-'+r(100,999)+' Jl. '+['Merdeka','Sudirman','Gatot Subroto','Ahmad Yani','Diponegoro'][r(0,5)],'Tiang '+r(1,99)+' RT'+r(1,15)+'/'+r(1,8),'Trafo GD-'+r(100,500)+' Kel. '+['Sukamaju','Margahayu','Cibiru','Ciparay','Dayeuh Kolot'][r(0,5)],'Gardu '+r(1,50)+' Perum '+['Griya Asri','Bumi Indah','Permata','Taman Sari','Bukit Hijau'][r(0,5)]];
+var gangguan=spots.slice(0,r(3,5)).map(function(s){return{lokasi:s,jenis:['Jumper Putus','Kabel Putus','Trafo Rusak','Arrester Rusak','Isolator Pecah','FCO Rusak','Pohon Tumbang','Overload'][r(0,8)],freq:r(1,12),lastDate:r(1,28)+'/'+r(1,2)+'/2026',status:r(0,10)>6?'Berulang':'Selesai'}});
+var keluhan=[{n:"Token Gagal",c:r(80,400)},{n:"KWH Rusak",c:r(30,180)},{n:"PTL Padam",c:r(20,120)},{n:"Sambung",c:r(10,80)},{n:"Tagihan",c:r(5,50)}];
+var totalKel=keluhan.reduce(function(a,b){return a+b.c},0);
+return{pelanggan:r(8000,45000),trafo:r(40,300),penyulang:r(3,15),saidi:(r(5,40)+r(0,99)/100).toFixed(2),saifi:(r(1,10)/10).toFixed(2),keluhan:keluhan,totalKel:totalKel,gangguan:gangguan,prediksi7:Math.floor(totalKel/52),rpt:r(18,32),bintang:r(0,10)>3?5:4}}
+
+// FILTER BAR
+function mkFilt(){
+  if(S.role==='uid'||S.role==='pusat') return '';
+  var ci=S.fup3?U.find(function(u){return u.id===S.fup3}):null;
+  var h='<div class="fbar"><div class="flb"><svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>FILTER</div>';
+  h+='<select onchange="setF(\'up3\',this.value)"><option value="">— Pilih UP3 —</option>';
+  U.forEach(function(u){h+='<option value="'+u.id+'" '+(S.fup3===u.id?'selected':'')+'>UP3 '+u.nm+'</option>'});
+  h+='</select>';
+  if(S.role==='ulp'){
+    if(ci){h+='<select onchange="setF(\'ulp\',this.value)"><option value="">— Pilih ULP —</option>';ci.ulps.forEach(function(u){h+='<option value="'+u+'" '+(S.fulp===u?'selected':'')+'>ULP '+u+'</option>'});h+='</select>';}
+    else{h+='<select disabled style="opacity:.5"><option>Pilih UP3 dulu</option></select>'}
+  }
+  if(S.fup3){h+='<div class="ftag">'+(ci?ci.nm:'')+(S.fulp?' / '+S.fulp:'')+'</div>'}
+  else{h+='<span class="fhint">Pilih UP3'+(S.role==='ulp'?' lalu ULP':'')+' untuk data spesifik</span>'}
+  h+='</div>';return h;
+}
+function setF(t,v){if(t==='up3'){S.fup3=v||null;S.fulp=null}else{S.fulp=v||null}nav(S.tab)}
+
+// AI INSIGHT
+function aiI(ctx,d){try{
+if(ctx==='dash')return'<b>Prediksi:</b> Pencapaian penjualan akhir tahun 40-60% tanpa intervensi. Distribusi aman — 6/7 KPI >110%.<br><b>Butuh perhatian:</b> Penjualan TL 0%, UP3 Cikarang 40.2% terendah, ENS 99% tipis.<br><span class="act">Arahan: Percepat captive power 200 GWh + aggressive PB 697 GWh. Intervensi CKG & GPI.</span>';
+if(ctx==='up3')return'<b>Prediksi:</b> ~'+Math.floor(d.kel/52)+' keluhan/minggu, dominasi '+d.kt[0]+'. '+(d.sc<50?'Score KRITIS — tetap bottom 3 tanpa perbaikan.':d.sc>70?'Excellent — jadikan benchmark.':'Moderat — ada ruang perbaikan.')+'<br><b>Butuh perhatian:</b> '+(d.bp.p<90?'BP '+d.bp.p+'%, ':'')+(d.sl.p<80?'Saldo '+d.sl.p+'%, ':'')+(d.dy.p<80?'Daya '+d.dy.p+'%, ':'')+Object.entries(d.stok).filter(function(e){return e[1]<30}).map(function(e){return'Stok '+e[0]+' '+e[1]+'%'}).join(', ')+'<br><span class="act">Arahan: Fokus '+d.kt[0]+'. '+(Object.values(d.stok).some(function(v){return v<30})?'Pengadaan material segera.':'Pertahankan momentum.')+'</span>';
+if(ctx==='ulp'){var ud=d;return'<b>Prediksi:</b> ~'+ud.prediksi7+' keluhan/minggu. Puncak Senin-Selasa (~'+Math.ceil(ud.prediksi7/5*1.3)+'/hari).<br><b>Titik Gangguan Berulang:</b> '+ud.gangguan.filter(function(g){return g.status==='Berulang'}).length+' dari '+ud.gangguan.length+' lokasi — perlu perbaikan permanen.<br><b>Butuh perhatian:</b> '+ud.keluhan[0].n+' mendominasi ('+ud.keluhan[0].c+' laporan, '+(ud.keluhan[0].c/ud.totalKel*100).toFixed(0)+'%). '+(ud.bintang<5?'Rating Bintang '+ud.bintang+' — belum mencapai B5.':'')+'<br><span class="act">Arahan: (1) Perbaiki '+ud.gangguan.filter(function(g){return g.status==='Berulang'}).map(function(g){return g.lokasi}).slice(0,2).join(', ')+' — gangguan berulang. (2) Siapkan '+Math.ceil(ud.prediksi7/5*1.2)+' kapasitas penanganan/hari. (3) '+(ud.keluhan[0].n==='Token Gagal'?'Ganti meter prabayar target '+Math.ceil(ud.keluhan[0].c/12)+'/bulan.':'Percepat penanganan '+ud.keluhan[0].n+'.')+'</span>'}
+}catch(e){return'Sedang menganalisis...'}return''}
+
+function openDP(t,c){document.getElementById('dpT').textContent=t;document.getElementById('dpB').innerHTML=c;document.getElementById('dp').classList.add('open')}
+function closeDP(){document.getElementById('dp').classList.remove('open')}
+function showUP3(id){var d=D[id],inf=U.find(function(u){return u.id===id});
+var h='<div style="height:70px;border-radius:8px;overflow:hidden;margin-bottom:12px;background:url(\'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=60\') center/cover;position:relative"><div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,16,28,.85),rgba(6,16,28,.2))"></div><div style="position:absolute;bottom:8px;left:12px;z-index:1"><div style="font-size:16px;font-weight:800">UP3 '+inf.nm+'</div><div style="font-size:11px;color:var(--t2)">#'+d.rk+'/17 — Score '+d.sc+'%</div></div></div>';
+[{l:"Pelanggan",p:d.pl.p},{l:"Daya",p:d.dy.p},{l:"BP",p:d.bp.p},{l:"Saldo",p:d.sl.p}].forEach(function(k){h+='<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+k.l+'</span><span style="font-weight:700;color:'+pbc(k.p)+'">'+k.p+'%</span></div>'+mkP(k.p)+'</div>'});
+h+='<div style="margin-top:8px;font-size:12px;color:var(--t2)">SAIDI <b style="color:var(--tx)">'+d.saidi+'</b> | SAIFI <b style="color:var(--tx)">'+d.saifi+'</b> | ENS <b style="color:var(--tx)">'+d.ens+'%</b> | Keluhan <b style="color:var(--tx)">'+d.kel.toLocaleString()+'</b></div>';
+h+='<div class="dp-ai"><h4>AI Analysis</h4><p>'+aiI('up3',d)+'</p></div>';
+openDP('UP3 '+inf.nm,h)}
+
+function showULP(up3id,ulpName){var ud=ulpData(up3id,ulpName);
+var h='<div style="height:60px;border-radius:8px;overflow:hidden;margin-bottom:12px;background:url(\'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&q=60\') center/cover;position:relative"><div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,16,28,.85),rgba(6,16,28,.2))"></div><div style="position:absolute;bottom:8px;left:12px;z-index:1"><div style="font-size:15px;font-weight:800">ULP '+ulpName+'</div><div style="font-size:10px;color:var(--t2)">'+ud.pelanggan.toLocaleString()+' pelanggan | '+ud.trafo+' trafo | B'+ud.bintang+'</div></div></div>';
+h+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px"><div style="background:var(--cd);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">SAIDI</div><div style="font-size:18px;font-weight:800">'+ud.saidi+'</div></div><div style="background:var(--cd);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">Keluhan</div><div style="font-size:18px;font-weight:800;color:var(--er)">'+ud.totalKel+'</div></div><div style="background:var(--cd);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">Prediksi/Minggu</div><div style="font-size:18px;font-weight:800;color:var(--in)">'+ud.prediksi7+'</div></div></div>';
+// Titik gangguan
+h+='<div style="font-size:12px;font-weight:700;color:var(--er);margin-bottom:6px">TITIK GANGGUAN BERULANG</div><table class="gtbl"><thead><tr><th>Lokasi</th><th>Jenis</th><th>Freq</th><th>Status</th></tr></thead><tbody>';
+ud.gangguan.forEach(function(g){h+='<tr><td style="font-size:11px">'+g.lokasi+'</td><td>'+g.jenis+'</td><td style="font-weight:700">'+g.freq+'x</td><td><span class="loc-pin'+(g.status==='Selesai'?' loc-ok':'')+'">'+g.status+'</span></td></tr>'});
+h+='</tbody></table>';
+// Keluhan breakdown
+h+='<div style="font-size:12px;font-weight:700;margin:10px 0 6px">KELUHAN PER JENIS</div>';
+ud.keluhan.forEach(function(k){h+='<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t2)">'+k.n+'</span><b>'+k.c+'</b></div>'+mkP((k.c/ud.keluhan[0].c)*100,3)+'</div>'});
+h+='<div class="dp-ai"><h4>AI Analisis Tajam — ULP '+ulpName+'</h4><p>'+aiI('ulp',ud)+'</p></div>';
+openDP('ULP '+ulpName,h)}
+
+// NAV
+var TB=[{id:'dash',lb:'Dashboard',ic:'<path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>'},{id:'map',lb:'Peta',ic:'<path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>'},{id:'up3',lb:'Analisis UP3',ic:'<path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>'},{id:'kel',lb:'Keluhan',ic:'<path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>'},{id:'inv',lb:'Investasi',ic:'<path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>'}];
+function bN(){document.getElementById('sn').innerHTML=TB.map(function(t){return'<div class="ni '+(S.tab===t.id?'on':'')+'" onclick="nav(\''+t.id+'\')"><svg viewBox="0 0 24 24">'+t.ic+'</svg><span>'+t.lb+'</span></div>'}).join('')}
+function nav(id){S.tab=id;bN();closeDP();document.getElementById('pT').textContent=TB.find(function(t){return t.id===id}).lb;var sub=RN[S.role];if(S.fup3){var ci=U.find(function(u){return u.id===S.fup3});sub+=' — '+ci.nm;if(S.fulp)sub+=' / '+S.fulp}document.getElementById('pS').textContent=sub;ren()}
+function chR(r){S.role=r;S.fup3=null;S.fulp=null;S.up3=null;var rh=document.getElementById('rh');if(rh){var msgs={pusat:'Lihat perbandingan seluruh UID Indonesia',uid:'Lihat seluruh UP3 di UID Jawa Barat',up3:'Pilih UP3 — filter muncul di setiap halaman',ulp:'Pilih UP3 lalu ULP — analisis per titik gangguan'};rh.innerHTML=msgs[r]||''}nav(S.tab)}
+function sU3N(id){S.up3=id;S.tab='up3';bN();ren()}
+function ren(){Object.values(CH).forEach(function(c){try{c.destroy()}catch(e){}});CH={};document.getElementById('ct').innerHTML=({dash:rD,map:rM,up3:rU,kel:rK,inv:rI}[S.tab]||rD)();iC()}
+
+// DASHBOARD
+function rD(){var h=mkFilt();var fd=S.fup3?D[S.fup3]:null,fi=S.fup3?U.find(function(u){return u.id===S.fup3}):null;
+// ULP level detail
+if(S.fulp&&fd){var ud=ulpData(S.fup3,S.fulp);
+h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI — ULP '+S.fulp+'</span></div><p>'+aiI('ulp',ud)+'</p></div>';
+h+='<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px">';
+[{lb:"Pelanggan",vl:ud.pelanggan.toLocaleString(),sc:"var(--pri)"},{lb:"SAIDI",vl:ud.saidi,sc:"var(--in)"},{lb:"Keluhan",vl:ud.totalKel+'',sc:"var(--er)"},{lb:"Prediksi 7hr",vl:'~'+ud.prediksi7,sc:"var(--prl)"},{lb:"Gangguan",vl:ud.gangguan.length+' titik',sc:"var(--wn)"},{lb:"Rating",vl:'B'+ud.bintang,sc:ud.bintang>=5?'var(--ok)':'var(--wn)'}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'});
+h+='</div><div style="display:grid;grid-template-columns:1.2fr 1fr .8fr;gap:8px;height:calc(100vh - 230px);min-height:200px">';
+// Titik gangguan
+h+='<div class="bx" style="overflow-y:auto"><h3 style="color:var(--er)">Titik Gangguan & Prediksi Lokasi</h3><table class="gtbl"><thead><tr><th>Lokasi</th><th>Jenis</th><th>Freq</th><th>Status</th></tr></thead><tbody>';
+ud.gangguan.forEach(function(g){h+='<tr><td style="font-size:11px;max-width:150px;overflow:hidden;text-overflow:ellipsis">'+g.lokasi+'</td><td style="font-size:11px">'+g.jenis+'</td><td style="font-weight:700">'+g.freq+'x</td><td><span class="loc-pin'+(g.status==='Selesai'?' loc-ok':'')+'">'+g.status+'</span></td></tr>'});
+h+='</tbody></table></div>';
+// Keluhan breakdown + prediksi
+h+='<div class="bx"><h3>Keluhan per Jenis + Prediksi</h3>';
+ud.keluhan.forEach(function(k){var pred=Math.ceil(k.c/52);h+='<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+k.n+'</span><span><b>'+k.c+'</b> <span style="font-size:10px;color:var(--in)">(~'+pred+'/mg)</span></span></div>'+mkP((k.c/ud.keluhan[0].c)*100,3)+'</div>'});
+h+='</div>';
+// Chart prediksi
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Prediksi Harian 7 Hari</h3><div style="flex:1;min-height:0"><canvas id="cPred"></canvas></div></div>';
+h+='</div>';return h}
+// UP3 filtered
+if(fd){h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI — UP3 '+fi.nm+'</span></div><p>'+aiI('up3',fd)+'</p></div>';
+h+='<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px">';
+[{lb:"Score",vl:fd.sc+'%',sc:scC(fd.sc)},{lb:"Pelanggan",vl:fd.pl.p+'%',sc:pbc(fd.pl.p)},{lb:"SAIDI",vl:fd.saidi+'',sc:"var(--in)"},{lb:"Keluhan",vl:fd.kel.toLocaleString(),sc:"var(--er)"},{lb:"AI Sar",vl:'Rp '+fd.ai+'M',sc:"var(--acc)"},{lb:"ENS",vl:fd.ens+'%',sc:pbc(fd.ens)}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'});
+h+='</div><div style="display:grid;grid-template-columns:1.3fr 1fr .7fr;gap:8px;height:calc(100vh - 230px);min-height:200px">';
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Tren Penjualan TL</h3><div style="flex:1;min-height:0"><canvas id="cT"></canvas></div></div>';
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>KPI Niaga + Distribusi</h3><div style="flex:1;overflow-y:auto">'+KP.map(function(k,i){return'<div class="clk" style="padding:3px 4px;margin-bottom:2px"><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--t2)">'+k.n+'</span><span style="font-size:12px;font-weight:700;color:'+pbc(k.p)+'">'+k.p+'%</span></div>'+mkP(k.p,3)+'</div>'}).join('')+'</div></div>';
+h+='<div class="bx" style="overflow-y:auto"><h3>ULP — Klik detail</h3>'+fi.ulps.map(function(u){return'<div class="clk" style="padding:6px 4px;border-bottom:1px solid rgba(30,51,82,.3)" onclick="showULP(\''+S.fup3+'\',\''+u+'\')"><div style="font-size:13px;font-weight:600">'+u+'</div><div style="font-size:11px;color:var(--t3)">'+Math.floor(Math.random()*500+80)+' keluhan</div></div>'}).join('')+'</div>';
+h+='</div>';return h}
+// UID level (default)
+h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI Intelligence Briefing</span></div><p>'+aiI('dash')+'</p></div>';
+h+='<div class="al"><div class="ai2"></div><div><h4>Penjualan TL — Realisasi 0%</h4><p>14 poin terancam hilang. Hanya SMD (+8.9) dan KRW (+16.2) positif.</p></div></div>';
+h+='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px">';
+[{lb:"Pelanggan",vl:"18,18 Jt",su:"+3.31%",sc:"var(--pri)"},{lb:"Penjualan",vl:"5.346 GWh",su:"-363 GWh",sc:"var(--er)"},{lb:"Pendapatan",vl:"Rp 5,99 T",su:"+12.70%",sc:"var(--ok)"},{lb:"SAIDI",vl:"32,91",su:"118%",sc:"var(--ok)"},{lb:"NKO",vl:"77.23%",su:"23.17/36",sc:"var(--wn)"}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl">'+s.vl+'</div><div class="su" style="color:'+s.sc+'">'+s.su+'</div></div>'});
+h+='</div><div style="display:grid;grid-template-columns:1.3fr 1fr .7fr;gap:8px;height:calc(100vh - 265px);min-height:200px">';
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Tren Penjualan TL (GWh)</h3><div style="flex:1;min-height:0"><canvas id="cT"></canvas></div></div>';
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>KPI Niaga + Distribusi</h3><div style="flex:1;overflow-y:auto">'+KP.map(function(k){return'<div class="clk" style="padding:3px 4px;margin-bottom:2px"><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--t2)">'+k.n+'</span><span style="font-size:12px;font-weight:700;color:'+pbc(k.p)+'">'+k.p+'%</span></div>'+mkP(k.p,3)+'</div>'}).join('')+'</div></div>';
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Ranking UP3</h3><div style="flex:1;overflow-y:auto">'+srt().map(function(e){var id=e[0],d=e[1];return'<div class="clk" style="display:flex;align-items:center;gap:6px;padding:4px" onclick="showUP3(\''+id+'\')"><span style="font-size:12px;color:var(--t3);width:18px;font-weight:700">'+d.rk+'</span><span style="font-size:13px;flex:1">'+U.find(function(u){return u.id===id}).nm+'</span><span style="font-size:12px;font-weight:800;color:'+scC(d.sc)+'">'+d.sc+'%</span></div>'}).join('')+'</div></div>';
+h+='</div>';return h}
+
+function rM(){var h=mkFilt();var W=500,H=270;
+var svg='<svg width="100%" viewBox="0 0 '+W+' '+H+'" style="display:block;padding:35px 8px 5px">';
+U.forEach(function(u){var p=D[u.id],x=((u.lng-106.4)/(108.8-106.4))*W,y=((u.lat-(-7.5))/((-6.1)-(-7.5)))*H,co=scC(p.sc);svg+='<g class="mn-c" onclick="showUP3(\''+u.id+'\')"><circle cx="'+x+'" cy="'+y+'" r="14" fill="'+co+'" opacity=".07"/><circle cx="'+x+'" cy="'+y+'" r="9" fill="'+co+'" opacity=".9"/><text x="'+x+'" y="'+(y+1)+'" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="7" font-weight="700">'+u.id+'</text></g>'});
+svg+='</svg>';
+h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>Peta Intelligence</span></div><p>Klik node untuk detail. <b>Hotspot:</b> CKG (40.2%) dan GPI (49.8%). Benchmark: SMD (91%). <span class="act">Arahan: Prioritaskan kunjungan CKG dan GPI.</span></p></div>';
+h+='<div class="mw"><div style="position:absolute;top:10px;left:14px;z-index:2;font-size:16px;font-weight:800">Jawa Barat — 17 UP3</div>'+svg+'</div>';
+h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px">'+srt().map(function(e){var id=e[0],d=e[1];return'<div class="uc" onclick="showUP3(\''+id+'\')"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:700">'+U.find(function(u){return u.id===id}).nm+'</span><span style="font-size:13px;font-weight:800;color:'+scC(d.sc)+'">'+d.sc+'%</span></div>'+mkP(d.sc/1.1,3)+'</div>'}).join('')+'</div>';
+return h}
+
+function rU(){var h=mkFilt();
+if(!S.up3&&!S.fup3){h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI Rangkuman</span></div><p><b>Best:</b> SMD 91.01% (BP 184%, Saldo 157%). <b>Worst:</b> CKG 40.20% (BP 41%, Saldo 34%). Stok kritis: CKG, KRW. <span class="act">Klik UP3 untuk drill-down.</span></p></div>';
+h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px">'+srt().map(function(e){var id=e[0],d=e[1],inf=U.find(function(u){return u.id===id});return'<div class="uc" onclick="sU3N(\''+id+'\')"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div><div style="font-size:14px;font-weight:700">'+inf.nm+'</div><div style="font-size:11px;color:var(--t3)">'+inf.ulps.length+' ULP</div></div><span style="font-size:18px;font-weight:900;color:'+scC(d.sc)+'">#'+d.rk+'</span></div>'+mkP(d.sc/1.1,4)+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:4px;font-size:11px;color:var(--t3)"><span>Plg '+d.pl.p+'%</span><span>SAIDI '+d.saidi+'</span><span>Kel '+(d.kel/1000).toFixed(1)+'K</span><span>Stk Kbl '+d.stok.kabel+'%</span></div></div>'}).join('')+'</div>';
+return h}
+var cid=S.fup3||S.up3;var cp=D[cid],ci=U.find(function(u){return u.id===cid});
+h+='<div class="u3t"><button onclick="S.up3=null;S.fup3=null;ren()" style="background:transparent;color:var(--t2);border:1px solid var(--bd)">Semua</button>'+U.map(function(u){return'<button onclick="S.up3=\''+u.id+'\';S.fup3=\''+u.id+'\';S.fulp=null;ren()" style="background:'+(cid===u.id?'var(--pri)':'var(--cd)')+';color:'+(cid===u.id?'#fff':'var(--t3)')+'">'+u.id+'</button>'}).join('')+'</div>';
+h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI — UP3 '+ci.nm+'</span></div><p>'+aiI('up3',cp)+'</p></div>';
+h+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;height:calc(100vh - 200px);min-height:200px">';
+var kpis=[{l:"Pelanggan",p:cp.pl.p},{l:"Daya",p:cp.dy.p},{l:"BP",p:cp.bp.p},{l:"Saldo",p:cp.sl.p},{l:"Transaksi",p:cp.tx.p},{l:"Rp Trx",p:cp.rp.p}];
+h+='<div class="bx"><h3>KPI Niaga</h3>'+kpis.map(function(k){return'<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t2)">'+k.l+'</span><span style="font-weight:700;color:'+pbc(k.p)+'">'+k.p+'%</span></div>'+mkP(k.p)+'</div>'}).join('')+'<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--bd);font-size:12px;color:var(--in)"><b>Distribusi</b><br>SAIDI <b style="color:var(--tx)">'+cp.saidi+'</b> | SAIFI <b style="color:var(--tx)">'+cp.saifi+'</b> | ENS <b style="color:var(--tx)">'+cp.ens+'%</b></div></div>';
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Profil</h3><div style="flex:1;min-height:0"><canvas id="cR"></canvas></div></div>';
+h+='<div class="bx"><h3>Stok Material</h3>'+[{n:"Kabel JTM",v:cp.stok.kabel},{n:"KWH Meter",v:cp.stok.meter},{n:"Trafo",v:cp.stok.trafo},{n:"Kubikel",v:cp.stok.kubikel}].map(function(m){return'<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>'+m.n+'</span><span class="'+(m.v<30?'stk-lo':m.v<50?'stk-md':'stk-ok')+'">'+m.v+'%</span></div>'+mkP(m.v)+'</div>'}).join('')+'<div style="margin-top:6px;font-size:13px">AI Sar: <b style="color:var(--acc)">Rp '+cp.ai+' M</b></div></div>';
+h+='<div class="bx" style="overflow-y:auto"><h3>ULP ('+ci.ulps.length+')</h3>'+ci.ulps.map(function(u){return'<div class="clk" style="padding:6px 2px;border-bottom:1px solid rgba(30,51,82,.3)" onclick="showULP(\''+cid+'\',\''+u+'\')"><div style="font-size:13px;font-weight:600">'+u+'</div><div style="font-size:11px;color:var(--t3)">'+Math.floor(Math.random()*500+80)+' keluhan</div></div>'}).join('')+'</div>';
+h+='</div>';return h}
+
+function rK(){var h=mkFilt();var fd=S.fup3?D[S.fup3]:null;var totalK=S.fulp?Math.floor(Math.random()*900+200):fd?fd.kel:95482;var pred7=Math.floor(totalK/52);
+if(S.fulp&&fd){var ud=ulpData(S.fup3,S.fulp);
+h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI — ULP '+S.fulp+'</span></div><p>'+aiI('ulp',ud)+'</p></div>';
+h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">';
+[{lb:"Keluhan",vl:ud.totalKel+'',sc:"var(--er)"},{lb:"Prediksi 7hr",vl:'~'+ud.prediksi7,sc:"var(--prl)"},{lb:"Gangguan Berulang",vl:ud.gangguan.filter(function(g){return g.status==='Berulang'}).length+'',sc:"var(--wn)"},{lb:"#1 Jenis",vl:ud.keluhan[0].n,sc:"var(--er)"}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'});
+h+='</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;height:calc(100vh - 230px);min-height:180px">';
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Prediksi Harian</h3><div style="flex:1;min-height:0"><canvas id="cKU"></canvas></div></div>';
+h+='<div class="bx" style="overflow-y:auto"><h3>Breakdown + Prediksi/Minggu</h3>'+ud.keluhan.map(function(k){return'<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+k.n+'</span><span><b>'+k.c+'</b> <span style="font-size:10px;color:var(--in)">(~'+Math.ceil(k.c/52)+'/mg)</span></span></div>'+mkP((k.c/ud.keluhan[0].c)*100,3)+'</div>'}).join('')+'</div>';
+h+='<div class="bx" style="overflow-y:auto"><h3 style="color:var(--er)">Titik Gangguan</h3><table class="gtbl"><thead><tr><th>Lokasi</th><th>Jenis</th><th>F</th></tr></thead><tbody>'+ud.gangguan.map(function(g){return'<tr><td style="font-size:10px">'+g.lokasi+'</td><td style="font-size:10px">'+g.jenis+'</td><td style="font-weight:700">'+g.freq+'x</td></tr>'}).join('')+'</tbody></table></div>';
+h+='</div>';return h}
+h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI Keluhan'+(fd?' — '+U.find(function(u){return u.id===S.fup3}).nm:'')+'</span></div><p>'+(fd?aiI('up3',fd):'Total <b>95.482</b> keluhan 2024. BGR 15.222, BDG 14.609. Token Gagal #1 (4.642). <b>Prediksi: ~1.836/minggu.</b> <span class="act">Arahan: Ganti meter prabayar 1.000/bulan.</span>')+'</p></div>';
+h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">';
+[{lb:"Total",vl:totalK.toLocaleString(),sc:"var(--er)"},{lb:"#1",vl:fd?fd.kt[0]:'Token Gagal',sc:"var(--wn)"},{lb:"Prediksi 7hr",vl:'~'+pred7,sc:"var(--prl)"},{lb:"Resolve",vl:(70+Math.random()*25).toFixed(0)+'%',sc:"var(--ok)"}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'});
+h+='</div><div style="display:grid;grid-template-columns:1.3fr .7fr;gap:8px;height:calc(100vh - 240px);min-height:180px">';
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Keluhan per '+(fd?'ULP':'UP3')+'</h3><div style="flex:1;min-height:0"><canvas id="cKU"></canvas></div></div>';
+h+='<div class="bx" style="overflow-y:auto"><h3>Jenis</h3>'+(fd?fd.kt.map(function(n,i){var c=Math.floor(fd.kel*([.3,.2,.15,.1,.08][i]||.05));return'<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+n+'</span><b>'+c.toLocaleString()+'</b></div>'+mkP((c/(fd.kel*.3))*100,3)+'</div>'}).join(''):KEL.map(function(k){return'<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+k.n+'</span><b>'+k.c.toLocaleString()+'</b></div>'+mkP((k.c/4642)*100,3)+'</div>'}).join(''))+'</div>';
+h+='</div>';return h}
+
+function rI(){var h=mkFilt();var fd=S.fup3?D[S.fup3]:null,fi=S.fup3?U.find(function(u){return u.id===S.fup3}):null;
+h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI Investasi'+(fi?' — '+fi.nm:'')+'</span></div><p>'+(fd?'AI Sar <b>Rp '+fd.ai+'M</b>. '+Object.entries(fd.stok).filter(function(e){return e[1]<30}).map(function(e){return e[0]+' '+e[1]+'% KRITIS'}).join(', ')+'. <span class="act">Arahan: Pengadaan segera.</span>':'Total MDU <b>Rp 1.95T</b>. Stok kritis: CKG, KRW. <span class="act">Arahan: Audit MDU + pengadaan darurat.</span>')+'</p></div>';
+h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">';
+if(fd){[{lb:"AI Sar",vl:'Rp '+fd.ai+'M',sc:"var(--acc)"},{lb:"Kabel",vl:fd.stok.kabel+'%',sc:fd.stok.kabel<30?'var(--er)':'var(--ok)'},{lb:"Trafo",vl:fd.stok.trafo+'%',sc:fd.stok.trafo<30?'var(--er)':'var(--ok)'},{lb:"Kubikel",vl:fd.stok.kubikel+'%',sc:fd.stok.kubikel<30?'var(--er)':'var(--ok)'}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'})}
+else{[{lb:"Jasa",vl:"Rp 646.71M",sc:"var(--pri)"},{lb:"MDU",vl:"Rp 1.95T",sc:"var(--acc)"},{lb:"Kabel",vl:"Rp 524M",sc:"var(--wn)"},{lb:"Meter",vl:"Rp 247M",sc:"var(--in)"}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'})}
+h+='</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;height:calc(100vh - 240px);min-height:180px">';
+h+='<div class="bx" style="display:flex;flex-direction:column"><h3>AI Sar per UP3</h3><div style="flex:1;min-height:0"><canvas id="cIV"></canvas></div></div>';
+h+='<div class="bx" style="overflow-y:auto"><h3>Stok Material</h3><table class="gtbl"><thead><tr><th>UP3</th><th>Kabel</th><th>Meter</th><th>Trafo</th><th>Kubkl</th></tr></thead><tbody>'+srt().map(function(e){var id=e[0],s=e[1].stok;var c=function(v){return v<30?'stk-lo':v<50?'stk-md':'stk-ok'};return'<tr onclick="showUP3(\''+id+'\')"><td style="font-weight:700">'+id+'</td><td class="'+c(s.kabel)+'">'+s.kabel+'%</td><td class="'+c(s.meter)+'">'+s.meter+'%</td><td class="'+c(s.trafo)+'">'+s.trafo+'%</td><td class="'+c(s.kubikel)+'">'+s.kubikel+'%</td></tr>'}).join('')+'</tbody></table></div>';
+h+='</div>';return h}
+
+// CHARTS
+var TS={background:'#101F35',borderColor:'#1E3352',borderWidth:1,borderRadius:6,titleColor:'#F0F4F8',bodyColor:'#A0B4CC',titleFont:{size:12},bodyFont:{size:11},padding:8};
+var AX={grid:{color:'rgba(30,51,82,.4)'},ticks:{color:'#6B83A0',font:{size:10}},border:{display:false}};
+function iC(){
+var el=document.getElementById('cT');
+if(el)CH.t=new Chart(el,{type:'line',data:{labels:['2019','2020','2021','2022','2023','2024','2025','T26'],datasets:[{data:[50884,49883,53318,56226,58564,61637,63503,67016],borderColor:'#2B8AE0',backgroundColor:'rgba(43,138,224,.1)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#2B8AE0',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:Object.assign({},TS,{callbacks:{label:function(c){return c.parsed.y.toLocaleString('id-ID')+' GWh'}}})},scales:{x:AX,y:Object.assign({},AX,{min:48000,max:69000,ticks:Object.assign({},AX.ticks,{callback:function(v){return(v/1000).toFixed(0)+'K'}})})}}});
+el=document.getElementById('cR');
+if(el){var cid=S.fup3||S.up3;if(cid&&D[cid]){var cp=D[cid];CH.r=new Chart(el,{type:'radar',data:{labels:['Plg','Daya','BP','Saldo','Trx','Rp'],datasets:[{data:[Math.min(cp.pl.p,130),Math.min(cp.dy.p,130),Math.min(cp.bp.p,130),Math.min(cp.sl.p,130),Math.min(cp.tx.p,130),Math.min(cp.rp.p,130)],borderColor:'#2B8AE0',backgroundColor:'rgba(43,138,224,.1)',borderWidth:2,pointBackgroundColor:'#2B8AE0',pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{grid:{color:'#1E3352'},angleLines:{color:'#1E3352'},ticks:{display:false,stepSize:25},min:0,max:140,pointLabels:{color:'#A0B4CC',font:{size:11}}}}}})}}
+el=document.getElementById('cKU');
+if(el){var d;
+if(S.fulp){d=['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(function(w,i){return{id:w,v:Math.floor(Math.random()*40+10+(i<2?20:i>4?-5:0))}});
+}else if(S.fup3){var ci=U.find(function(u){return u.id===S.fup3});d=ci.ulps.map(function(u){return{id:u,v:Math.floor(Math.random()*800+100)}}).sort(function(a,b){return b.v-a.v})}
+else{d=Object.entries(D).map(function(e){return{id:e[0],v:e[1].kel}}).sort(function(a,b){return b.v-a.v})}
+CH.ku=new Chart(el,{type:'bar',data:{labels:d.map(function(x){return x.id}),datasets:[{data:d.map(function(x){return x.v}),backgroundColor:d.map(function(_,i){return CC[i%CC.length]}),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TS},scales:{x:Object.assign({},AX,{ticks:Object.assign({},AX.ticks,{maxRotation:45})}),y:Object.assign({},AX,{ticks:Object.assign({},AX.ticks,{callback:function(v){return v>999?(v/1000)+'K':v}})})}}})}
+el=document.getElementById('cPred');
+if(el){var pd=['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(function(w,i){return{d:w,v:Math.floor(Math.random()*30+15+(i<2?15:i>4?-8:0))}});
+CH.pred=new Chart(el,{type:'bar',data:{labels:pd.map(function(x){return x.d}),datasets:[{data:pd.map(function(x){return x.v}),backgroundColor:pd.map(function(_,i){return i>=5?'rgba(43,138,224,.4)':CC[0]}),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TS},scales:{x:AX,y:AX}}})}
+el=document.getElementById('cIV');
+if(el){var d=Object.entries(D).map(function(e){return{id:e[0],v:e[1].ai}}).sort(function(a,b){return b.v-a.v});CH.iv=new Chart(el,{type:'bar',data:{labels:d.map(function(x){return x.id}),datasets:[{data:d.map(function(x){return x.v}),backgroundColor:d.map(function(x){return x.v>200?'#E74C3C':x.v>150?'#F39C12':'#2B8AE0'}),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TS},scales:{x:AX,y:Object.assign({},AX,{min:0,max:260})}}})}}
+
+// CHAT — POWERED BY CLAUDE API
+var chatHistory=[];
+function tC(){S.co=!S.co;document.getElementById('cpn').classList.toggle('op',S.co);if(S.co&&!document.getElementById('cms').children.length){aM('a','Halo! Saya AI PLN Lytics.\n\nTanya saya apa saja soal kinerja PLN Jawa Barat — saya punya semua datanya.\n\nContoh:\n• "Kenapa Cikarang ranking terakhir?"\n• "Stok mana yang paling bahaya?"\n• "Bandingkan Bogor vs Bandung"\n• "Apa yang harus dilakukan minggu ini?"')}}
+function aM(r,t){var d=document.getElementById('cms'),el=document.createElement('div');el.className='cm '+r;el.innerHTML='<div class="cb2"><div class="sn">'+(r==='a'?'PLN LYTICS AI':'ANDA')+'</div>'+t.replace(/\n/g,'<br>')+'</div>';d.appendChild(el);d.scrollTop=d.scrollHeight}
+function buildSystemPrompt(){
+  var s='Kamu adalah AI analis PLN yang cerdas. Kamu bicara seperti konsultan senior yang ngobrol santai dengan manager PLN — bahasa sederhana, langsung ke inti masalah, pakai angka konkret.\n\n';
+  s+='ATURAN MENJAWAB:\n';
+  s+='1. LANGSUNG jawab inti pertanyaan di kalimat pertama. Jangan basa-basi.\n';
+  s+='2. Pakai ANGKA SPESIFIK dari data, bukan kata-kata umum. Contoh: "Cikarang skornya 40.2%, terendah dari 17 UP3" bukan "performanya kurang baik".\n';
+  s+='3. Jawab MAKSIMAL 4-6 kalimat. Kalau butuh lebih, pakai bullet points pendek.\n';
+  s+='4. Selalu akhiri dengan 1 AKSI KONKRET yang harus dilakukan. Mulai dengan "Yang harus dilakukan:" atau "Langkah selanjutnya:".\n';
+  s+='5. Jangan pakai kata "berdasarkan data", "perlu diperhatikan", "dapat disimpulkan" — langsung saja bicarakan faktanya.\n';
+  s+='6. Kalau ditanya perbandingan, buat format sederhana berdampingan.\n';
+  s+='7. Kalau ditanya prediksi, berikan angka estimasi + alasan singkat 1 kalimat.\n';
+  s+='8. Bicara seperti rekan kerja yang pintar, bukan seperti laporan formal.\n\n';
+  s+='CONTOH JAWABAN YANG BAGUS:\n';
+  s+='Q: "Kenapa penjualan jelek?"\n';
+  s+='A: "Penjualan Januari minus 363 GWh karena formula baru menghitung penambahan, bukan total. 15 dari 17 UP3 negatif — cuma Sumedang (+8.9) dan Karawang (+16.2) yang positif. Target setahun 3.512 GWh itu belum pernah tercapai sejak 2019. Langkah selanjutnya: fokus captive power 200 GWh dan aggressive PB 697 GWh, ini kontributor terbesar."\n\n';
+  s+='DATA LENGKAP UID JAWA BARAT s.d FEBRUARI 2026:\n';
+  s+='• 18,18 juta pelanggan | 35.822 MVA | 17 UP3 | 92 ULP\n';
+  s+='• Penjualan: 5.346 GWh, target 67.016 → MINUS 363 GWh (0 poin!)\n';
+  s+='• Pendapatan: Rp 5,99 T (+12.70%)\n';
+  s+='• NKO Niaga: 77.23% (23.17/36 poin)\n';
+  s+='• SAIDI: 32.91 mnt/plg (118% target=bagus, makin rendah makin baik)\n';
+  s+='• SAIFI: 0.38 kali/plg (125%)\n';
+  s+='• ENS: 2.199 MWh (99% — tipis!)\n';
+  s+='• Response Time: 26.4 mnt (112%), Rating Negatif: 190%, Gangguan TM: 200%\n';
+  s+='• Kontribusi SAIDI: Penyulang 40%, Bencana Alam 34% (naik drastis dari 2%!)\n';
+  s+='• PDKB: 107% target. RC baru: 154 titik. FLISR: 0% (belum jalan!)\n';
+  s+='• 665 penyulang belum pola RC 1-1-1\n';
+  s+='• Keluhan 2024: 95.482 total → Token Gagal 4.642, KWH Rusak 2.682, Minta Sambung 2.128\n';
+  s+='• Rencana penjualan: Captive Power 200 GWh + Aggressive PB 697 + KTT Baru 214 + Data Center 177\n\n';
+  s+='DATA 17 UP3:\n';
+  Object.entries(D).forEach(function(e){var id=e[0],d=e[1],nm=U.find(function(u){return u.id===id}).nm;
+    s+=nm+'('+id+'): skor '+d.sc+'% #'+d.rk+' | Plg '+d.pl.p+'% Daya '+d.dy.p+'% BP '+d.bp.p+'% Saldo '+d.sl.p+'% | Kel '+d.kel+' ['+d.kt.join(',')+'] | SAIDI '+d.saidi+' SAIFI '+d.saifi+' ENS '+d.ens+'% | Stok: Kabel '+d.stok.kabel+'% Meter '+d.stok.meter+'% Trafo '+d.stok.trafo+'% Kubikel '+d.stok.kubikel+'% | AI Sar Rp'+d.ai+'M\n'});
+  s+='\nSTOK KRITIS: CKG(kabel 25%,trafo 15%,kubikel 8%), KRW(kabel 18%,meter 29%,trafo 12%,kubikel 9%), CJR(kubikel 18%), GPI(kubikel 14%)\n';
+  s+='\nUser sedang melihat: '+RN[S.role];
+  if(S.fup3){s+=' → UP3 '+U.find(function(u){return u.id===S.fup3}).nm}
+  if(S.fulp){s+=' → ULP '+S.fulp}
+  return s;
+}
+function sC(){
+  var inp=document.getElementById('cin'),q=inp.value.trim();
+  if(!q)return;
+  aM('u',q);inp.value='';
+  var d=document.getElementById('cms'),dots=document.createElement('div');
+  dots.className='td';dots.id='typing';
+  dots.innerHTML='<span></span><span></span><span></span>';
+  d.appendChild(dots);d.scrollTop=d.scrollHeight;
+  chatHistory.push({role:'user',content:q});
+  // Build conversation: system context as first user msg, then assistant ack, then real history
+  var msgs=[
+    {role:'user',content:buildSystemPrompt()},
+    {role:'assistant',content:'Siap. Saya punya semua data PLN UID Jawa Barat. Tanya saja, saya jawab langsung dan konkret.'}
+  ];
+  var recent=chatHistory.slice(-14);
+  recent.forEach(function(m){msgs.push(m)});
+  fetch('/api/chat',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:msgs})
+  }).then(function(r){return r.json()}).then(function(data){
+    var typing=document.getElementById('typing');if(typing)typing.remove();
+    var reply='';
+    if(data.content){data.content.forEach(function(b){if(b.type==='text')reply+=b.text})}
+    if(!reply)reply='Maaf, coba tanya lagi dengan cara berbeda.';
+    chatHistory.push({role:'assistant',content:reply});
+    aM('a',reply);
+  }).catch(function(err){
+    var typing=document.getElementById('typing');if(typing)typing.remove();
+    aM('a','Koneksi gagal. Coba lagi.');
+    console.error(err);
+  });
+}
+bN();ren();
+</script>
+</body>
+</html>
