@@ -5,6 +5,8 @@
 <title>PLN Lytics — Intelligence Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{--bg:#06101C;--sf:#0B1829;--cd:#101F35;--cdh:#172B45;--bd:#1E3352;--pri:#2B8AE0;--prl:#5AADE8;--acc:#F5B731;--ok:#2ECC71;--wn:#F39C12;--er:#E74C3C;--in:#3DB4E8;--tx:#F0F4F8;--t2:#A0B4CC;--t3:#6B83A0;--f:'Plus Jakarta Sans',sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--f);background:var(--bg);color:var(--tx);overflow:hidden;height:100vh;font-size:14px}
@@ -89,6 +91,22 @@ select option{background:var(--cd);color:var(--tx)}
 /* MAP */
 .mw{position:relative;background:linear-gradient(135deg,#081428,#0C1E38);border-radius:10px;overflow:hidden;border:1px solid var(--bd);margin-bottom:10px}
 .mn-c{cursor:pointer;transition:transform .12s}.mn-c:hover{transform:scale(1.15)}
+#mapLeaflet{width:100%;height:100%;background:#081428;z-index:1}
+.map-wrap{height:calc(100vh - 60px);position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--bd)}
+.map-ctrl{position:absolute;top:10px;right:10px;z-index:1000;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;max-height:calc(100vh - 100px);overflow-y:auto;font-size:12px;min-width:160px}
+.map-ctrl h4{font-size:11px;color:var(--acc);font-weight:800;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.map-ctrl label{display:flex;align-items:center;gap:6px;padding:3px 0;cursor:pointer;color:var(--t2);font-size:11px;font-weight:500}
+.map-ctrl label:hover{color:var(--tx)}
+.map-ctrl input[type=checkbox]{accent-color:var(--pri)}
+.map-ctrl .gi-legend{display:flex;align-items:center;gap:5px;padding:2px 0;font-size:11px;color:var(--t2)}
+.map-ctrl .gi-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.map-load{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;color:var(--prl);font-size:14px;font-weight:700;text-align:center}
+.leaflet-popup-content-wrapper{background:var(--sf)!important;color:var(--tx)!important;border:1px solid var(--bd)!important;border-radius:8px!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important}
+.leaflet-popup-tip{background:var(--sf)!important}
+.leaflet-popup-content{font-family:var(--f)!important;font-size:12px!important;line-height:1.5!important;color:var(--t2)!important}
+.leaflet-popup-content b{color:var(--tx)!important}
+.leaflet-control-zoom a{background:var(--sf)!important;color:var(--tx)!important;border-color:var(--bd)!important}
+.leaflet-control-zoom a:hover{background:var(--cd)!important}
 /* ULP DETAIL TABLES */
 .gtbl{width:100%;border-collapse:collapse;font-size:12px}
 .gtbl th{padding:6px 8px;color:var(--t3);text-align:left;border-bottom:1px solid var(--bd);font-size:10px;font-weight:700;text-transform:uppercase;background:var(--sf)}
@@ -224,7 +242,7 @@ function bN(){document.getElementById('sn').innerHTML=TB.map(function(t){return'
 function nav(id){S.tab=id;bN();closeDP();document.getElementById('pT').textContent=TB.find(function(t){return t.id===id}).lb;var sub=RN[S.role];if(S.fup3){var ci=U.find(function(u){return u.id===S.fup3});sub+=' — '+ci.nm;if(S.fulp)sub+=' / '+S.fulp}document.getElementById('pS').textContent=sub;ren()}
 function chR(r){S.role=r;S.fup3=null;S.fulp=null;S.up3=null;var rh=document.getElementById('rh');if(rh){var msgs={pusat:'Lihat perbandingan seluruh UID Indonesia',uid:'Lihat seluruh UP3 di UID Jawa Barat',up3:'Pilih UP3 — filter muncul di setiap halaman',ulp:'Pilih UP3 lalu ULP — analisis per titik gangguan'};rh.innerHTML=msgs[r]||''}nav(S.tab)}
 function sU3N(id){S.up3=id;S.tab='up3';bN();ren()}
-function ren(){Object.values(CH).forEach(function(c){try{c.destroy()}catch(e){}});CH={};document.getElementById('ct').innerHTML=({dash:rD,map:rM,up3:rU,kel:rK,inv:rI}[S.tab]||rD)();iC()}
+function ren(){Object.values(CH).forEach(function(c){try{c.destroy()}catch(e){}});CH={};if(S.tab!=='map'&&MAP){MAP.remove();MAP=null;ML={}}document.getElementById('ct').innerHTML=({dash:rD,map:rM,up3:rU,kel:rK,inv:rI}[S.tab]||rD)();iC()}
 
 // DASHBOARD
 function rD(){var h=mkFilt();var fd=S.fup3?D[S.fup3]:null,fi=S.fup3?U.find(function(u){return u.id===S.fup3}):null;
@@ -265,14 +283,116 @@ h+='<div class="bx" style="display:flex;flex-direction:column"><h3>KPI Niaga + D
 h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Ranking UP3</h3><div style="flex:1;overflow-y:auto">'+srt().map(function(e){var id=e[0],d=e[1];return'<div class="clk" style="display:flex;align-items:center;gap:6px;padding:4px" onclick="showUP3(\''+id+'\')"><span style="font-size:12px;color:var(--t3);width:18px;font-weight:700">'+d.rk+'</span><span style="font-size:13px;flex:1">'+U.find(function(u){return u.id===id}).nm+'</span><span style="font-size:12px;font-weight:800;color:'+scC(d.sc)+'">'+d.sc+'%</span></div>'}).join('')+'</div></div>';
 h+='</div>';return h}
 
-function rM(){var h=mkFilt();var W=500,H=270;
-var svg='<svg width="100%" viewBox="0 0 '+W+' '+H+'" style="display:block;padding:35px 8px 5px">';
-U.forEach(function(u){var p=D[u.id],x=((u.lng-106.4)/(108.8-106.4))*W,y=((u.lat-(-7.5))/((-6.1)-(-7.5)))*H,co=scC(p.sc);svg+='<g class="mn-c" onclick="showUP3(\''+u.id+'\')"><circle cx="'+x+'" cy="'+y+'" r="14" fill="'+co+'" opacity=".07"/><circle cx="'+x+'" cy="'+y+'" r="9" fill="'+co+'" opacity=".9"/><text x="'+x+'" y="'+(y+1)+'" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="7" font-weight="700">'+u.id+'</text></g>'});
-svg+='</svg>';
-h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>Peta Intelligence</span></div><p>Klik node untuk detail. <b>Hotspot:</b> CKG (40.2%) dan GPI (49.8%). Benchmark: SMD (91%). <span class="act">Arahan: Prioritaskan kunjungan CKG dan GPI.</span></p></div>';
-h+='<div class="mw"><div style="position:absolute;top:10px;left:14px;z-index:2;font-size:16px;font-weight:800">Jawa Barat — 17 UP3</div>'+svg+'</div>';
-h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px">'+srt().map(function(e){var id=e[0],d=e[1];return'<div class="uc" onclick="showUP3(\''+id+'\')"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:700">'+U.find(function(u){return u.id===id}).nm+'</span><span style="font-size:13px;font-weight:800;color:'+scC(d.sc)+'">'+d.sc+'%</span></div>'+mkP(d.sc/1.1,3)+'</div>'}).join('')+'</div>';
+function rM(){
+var h='<div class="map-wrap"><div id="mapLeaflet"></div>';
+h+='<div class="map-ctrl" id="mapCtrl"><h4>Layers</h4>';
+h+='<label><input type="checkbox" checked onchange="tgL(\'mv\',this.checked)"> Medium Voltage</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'lv\',this.checked)"> Low Voltage</label>';
+h+='<label><input type="checkbox" checked onchange="tgL(\'gi\',this.checked)"> Substations (GI)</label>';
+h+='<label><input type="checkbox" checked onchange="tgL(\'tr\',this.checked)"> Dist. Transformers</label>';
+h+='<label><input type="checkbox" checked onchange="tgL(\'sd\',this.checked)"> Switching Devices</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'pmv\',this.checked)"> MV Poles</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'plv\',this.checked)"> LV Poles</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'bg\',this.checked)"> Service Areas</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'ca\',this.checked)"> Cable Accessories</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'mc\',this.checked)"> MV Cells</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'tgi\',this.checked)"> Power Transformers</label>';
+h+='<h4 style="margin-top:8px">Substations</h4>';
+var gic=[["GI HAURGEULIS","#e53935"],["GI INDRAMAYU BARU","#8e24aa"],["GI CIKEDUNG","#43a047"],["GI INDRAMAYU","#1e88e5"],["GI JATIBARANG","#ff8f00"]];
+gic.forEach(function(g){h+='<div class="gi-legend"><span class="gi-dot" style="background:'+g[1]+'"></span>'+g[0].replace("GI ","")+'</div>'});
+h+='</div>';
+h+='<div class="map-load" id="mapLoad">Loading network data...</div>';
+h+='</div>';
+setTimeout(initMap,50);
 return h}
+
+var MAP=null,ML={},MD=null;
+function tgL(k,v){if(ML[k]){if(v)MAP.addLayer(ML[k]);else MAP.removeLayer(ML[k])}}
+function initMap(){
+if(MAP){MAP.remove();MAP=null}
+ML={};
+MAP=L.map('mapLeaflet',{preferCanvas:true,zoomControl:true}).setView([-6.45,108.2],11);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'PLN UP3 Indramayu',maxZoom:19}).addTo(MAP);
+if(MD){buildLayers(MD);return}
+fetch('/data/idm.json').then(function(r){return r.json()}).then(function(d){
+MD=d;buildLayers(d);
+var el=document.getElementById('mapLoad');if(el)el.style.display='none';
+}).catch(function(e){
+var el=document.getElementById('mapLoad');if(el)el.textContent='Failed to load map data';
+console.error(e);
+})}
+function buildLayers(d){
+var el=document.getElementById('mapLoad');if(el)el.style.display='none';
+// MV lines
+var mvLines=[];
+d.MV.forEach(function(m){
+var ll=m.c.map(function(p){return[p[1],p[0]]});
+var line=L.polyline(ll,{color:m.cl||'#43a047',weight:2,opacity:.8});
+line.bindPopup('<b>'+((m.f||''))+' </b><br>GI: '+(m.g||'-')+'<br>Segment: '+(m.h||'-'));
+mvLines.push(line);
+});
+ML.mv=L.layerGroup(mvLines).addTo(MAP);
+// LV lines
+var lvLines=[];
+d.LV.forEach(function(m){
+var ll=m.c.map(function(p){return[p[1],p[0]]});
+lvLines.push(L.polyline(ll,{color:'#78909c',weight:1,opacity:.4}));
+});
+ML.lv=L.layerGroup(lvLines);
+// GI substations
+var giMarkers=[];
+d.GI.forEach(function(g){
+var cm=L.circleMarker([g.y,g.x],{radius:12,fillColor:g.col||'#e53935',color:'#fff',weight:2,fillOpacity:.9});
+cm.bindPopup('<b>'+g.n+'</b><br>Capacity: '+(g.k||'-'));
+giMarkers.push(cm);
+});
+ML.gi=L.layerGroup(giMarkers).addTo(MAP);
+// Distribution Transformers
+var trMarkers=[];
+d.TR.forEach(function(t){
+var cm=L.circleMarker([t.y,t.x],{radius:3,fillColor:t.cl||'#ff9800',color:t.cl||'#ff9800',weight:0,fillOpacity:.7});
+cm.bindPopup('<b>Trafo '+(t.kap||'-')+' kVA</b><br>Feeder: '+(t.f||'-')+'<br>GI: '+(t.g||'-'));
+trMarkers.push(cm);
+});
+ML.tr=L.layerGroup(trMarkers).addTo(MAP);
+// Switching devices
+var sdMarkers=[];
+d.SD.forEach(function(s){
+var col=s.t==='SW'?'#00e676':'#ffeb3b';
+var cm=L.circleMarker([s.y,s.x],{radius:3,fillColor:col,color:col,weight:0,fillOpacity:.7});
+cm.bindPopup('<b>'+(s.t==='SW'?'Switch':'PHBTR')+'</b><br>Feeder: '+(s.f||'-')+'<br>GI: '+(s.g||'-')+'<br>Status: '+(s.to||'-'));
+sdMarkers.push(cm);
+});
+ML.sd=L.layerGroup(sdMarkers).addTo(MAP);
+// MV Poles
+var pmvM=[];d.PMV.forEach(function(p){pmvM.push(L.circleMarker([p[0],p[1]],{radius:1.5,fillColor:'#90a4ae',color:'#90a4ae',weight:0,fillOpacity:.5}))});
+ML.pmv=L.layerGroup(pmvM);
+// LV Poles
+var plvM=[];d.PLV.forEach(function(p){plvM.push(L.circleMarker([p[0],p[1]],{radius:1,fillColor:'#607d8b',color:'#607d8b',weight:0,fillOpacity:.4}))});
+ML.plv=L.layerGroup(plvM);
+// Service areas (polygons)
+var bgP=[];d.BG.forEach(function(b){
+if(b.length>2){var ll=b.map(function(p){return[p[1],p[0]]});bgP.push(L.polygon(ll,{color:'#455a64',weight:1,fillColor:'#263238',fillOpacity:.15}))}
+});
+ML.bg=L.layerGroup(bgP);
+// Cable accessories
+var caM=[];d.CA.forEach(function(c){caM.push(L.circleMarker([c[0],c[1]],{radius:2,fillColor:'#ce93d8',color:'#ce93d8',weight:0,fillOpacity:.6}))});
+ML.ca=L.layerGroup(caM);
+// MV Cells
+var mcM=[];d.MC.forEach(function(m){
+var cm=L.circleMarker([m.y,m.x],{radius:4,fillColor:'#4dd0e1',color:'#fff',weight:1,fillOpacity:.8});
+cm.bindPopup('<b>MV Cell</b>');
+mcM.push(cm);
+});
+ML.mc=L.layerGroup(mcM);
+// Power transformers (TGI)
+var tgiM=[];d.TGI.forEach(function(t){
+var cm=L.circleMarker([t.y,t.x],{radius:8,fillColor:'#ffd600',color:'#fff',weight:2,fillOpacity:.9});
+cm.bindPopup('<b>Power Transformer</b><br>Capacity: '+(t.kap||'-'));
+tgiM.push(cm);
+});
+ML.tgi=L.layerGroup(tgiM);
+}
 
 function rU(){var h=mkFilt();
 if(!S.up3&&!S.fup3){h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI Rangkuman</span></div><p><b>Best:</b> SMD 91.01% (BP 184%, Saldo 157%). <b>Worst:</b> CKG 40.20% (BP 41%, Saldo 34%). Stok kritis: CKG, KRW. <span class="act">Klik UP3 untuk drill-down.</span></p></div>';
