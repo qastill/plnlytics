@@ -141,6 +141,69 @@ select option{background:var(--cd);color:var(--tx)}
 .u3t button{padding:5px 10px;border-radius:5px;border:none;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--f)}
 .uc{background:var(--cd);border-radius:8px;padding:12px;border:1px solid var(--bd);cursor:pointer;transition:all .15s}
 .uc:hover{border-color:var(--pri);background:var(--cdh);transform:translateY(-1px)}
+
+/* NKO Dashboard Styles */
+.nko-wrap{padding:10px}
+.nko-header{background:linear-gradient(135deg,#003d7a,#0066cc);border-radius:12px;padding:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.nko-header h2{color:#fff;font-size:20px;margin:0}
+.nko-header .nko-score{font-size:42px;font-weight:900;color:#2ECC71}
+.nko-header .nko-score.red{color:#E74C3C}
+.nko-header .nko-score.yellow{color:#F39C12}
+.nko-header .nko-detail{text-align:right;color:#fff}
+.nko-header .nko-detail small{opacity:.7;display:block}
+.nko-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.nko-card{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:14px;position:relative;overflow:hidden}
+.nko-card .kpi-name{font-size:11px;color:var(--tx);opacity:.7;margin-bottom:4px}
+.nko-card .kpi-val{font-size:22px;font-weight:800}
+.nko-card .kpi-target{font-size:10px;color:var(--tx);opacity:.5;margin-top:2px}
+.nko-card .kpi-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:8px;overflow:hidden}
+.nko-card .kpi-bar-fill{height:100%;border-radius:2px;transition:width .5s}
+.nko-card.green .kpi-val{color:#2ECC71}.nko-card.green .kpi-bar-fill{background:#2ECC71}
+.nko-card.yellow .kpi-val{color:#F39C12}.nko-card.yellow .kpi-bar-fill{background:#F39C12}
+.nko-card.red .kpi-val{color:#E74C3C}.nko-card.red .kpi-bar-fill{background:#E74C3C}
+.nko-table-wrap{background:var(--cd);border:1px solid var(--bd);border-radius:10px;overflow-x:auto;margin-bottom:16px}
+.nko-table{width:100%;border-collapse:collapse;font-size:12px}
+.nko-table th{background:linear-gradient(135deg,#003d7a,#0052a3);color:#fff;padding:10px 8px;text-align:left;font-size:11px;position:sticky;top:0}
+.nko-table td{padding:8px;border-bottom:1px solid var(--bd);color:var(--tx)}
+.nko-table tr:hover{background:rgba(255,255,255,.03)}
+.nko-table .val-green{color:#2ECC71;font-weight:700}
+.nko-table .val-yellow{color:#F39C12;font-weight:700}
+.nko-table .val-red{color:#E74C3C;font-weight:700}
+.nko-table .cat-row{background:rgba(0,102,204,.1);font-weight:700}
+.nko-table .cat-row td{color:#5AADE8}
+.nko-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.nko-badge.green{background:rgba(46,204,113,.15);color:#2ECC71}
+.nko-badge.yellow{background:rgba(243,156,18,.15);color:#F39C12}
+.nko-badge.red{background:rgba(231,76,60,.15);color:#E74C3C}
+.nko-filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.nko-filters button{padding:6px 14px;border:1px solid var(--bd);border-radius:6px;background:var(--cd);color:var(--tx);cursor:pointer;font-size:11px;transition:all .2s}
+.nko-filters button:hover,.nko-filters button.active{background:var(--pri);color:#fff;border-color:var(--pri)}
+.nko-section-title{font-size:16px;font-weight:700;color:var(--tx);margin:16px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--pri)}
+.gi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:16px}
+.gi-box{background:var(--cd);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+.gi-box-header{background:linear-gradient(135deg,#003d7a,#0066cc);padding:12px 16px;color:#fff}
+.gi-box-header h3{margin:0;font-size:14px}
+.gi-box-header .rm{font-size:11px;opacity:.8;margin-top:2px}
+.gi-box-header .rm strong{color:#F5B731}
+.gi-box-body{padding:12px}
+.trafo-section{margin-bottom:10px}
+.trafo-section .trafo-title{font-size:11px;font-weight:700;color:var(--pri);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--bd)}
+.feeder-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:11px;color:var(--tx)}
+.feeder-row .feeder-name{flex:1}
+.feeder-row .feeder-load{font-weight:700;min-width:60px;text-align:right}
+.feeder-row .feeder-load.high{color:#E74C3C}
+.feeder-row .feeder-load.med{color:#F39C12}
+.feeder-row .feeder-load.ok{color:#2ECC71}
+.gi-summary{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+.gi-summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.gi-stat{text-align:center;padding:10px}
+.gi-stat .gi-stat-val{font-size:24px;font-weight:800;color:var(--pri)}
+.gi-stat .gi-stat-lbl{font-size:11px;color:var(--tx);opacity:.6;margin-top:2px}
+.nko-chart-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.nko-chart-box{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:16px}
+.nko-chart-box h4{margin:0 0 12px;font-size:13px;color:var(--tx)}
+.nko-chart-box canvas{max-height:250px}
+@media(max-width:768px){.nko-chart-wrap{grid-template-columns:1fr}.gi-grid{grid-template-columns:1fr}.nko-cards{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -237,12 +300,12 @@ h+='<div class="dp-ai"><h4>AI Analisis Tajam — ULP '+ulpName+'</h4><p>'+aiI('u
 openDP('ULP '+ulpName,h)}
 
 // NAV
-var TB=[{id:'dash',lb:'Dashboard',ic:'<path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>'},{id:'map',lb:'Peta',ic:'<path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>'},{id:'up3',lb:'Analisis UP3',ic:'<path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>'},{id:'kel',lb:'Keluhan',ic:'<path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>'},{id:'inv',lb:'Investasi',ic:'<path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>'}];
+var TB=[{id:'dash',lb:'Dashboard',ic:'<path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>'},{id:'map',lb:'Peta',ic:'<path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>'},{id:'up3',lb:'Analisis UP3',ic:'<path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>'},{id:'kel',lb:'Keluhan',ic:'<path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>'},{id:'inv',lb:'Investasi',ic:'<path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>'},{id:'nko',lb:'NKO Indramayu',ic:'<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>'}];
 function bN(){document.getElementById('sn').innerHTML=TB.map(function(t){return'<div class="ni '+(S.tab===t.id?'on':'')+'" onclick="nav(\''+t.id+'\')"><svg viewBox="0 0 24 24">'+t.ic+'</svg><span>'+t.lb+'</span></div>'}).join('')}
 function nav(id){S.tab=id;bN();closeDP();document.getElementById('pT').textContent=TB.find(function(t){return t.id===id}).lb;var sub=RN[S.role];if(S.fup3){var ci=U.find(function(u){return u.id===S.fup3});sub+=' — '+ci.nm;if(S.fulp)sub+=' / '+S.fulp}document.getElementById('pS').textContent=sub;ren()}
 function chR(r){S.role=r;S.fup3=null;S.fulp=null;S.up3=null;var rh=document.getElementById('rh');if(rh){var msgs={pusat:'Lihat perbandingan seluruh UID Indonesia',uid:'Lihat seluruh UP3 di UID Jawa Barat',up3:'Pilih UP3 — filter muncul di setiap halaman',ulp:'Pilih UP3 lalu ULP — analisis per titik gangguan'};rh.innerHTML=msgs[r]||''}nav(S.tab)}
 function sU3N(id){S.up3=id;S.tab='up3';bN();ren()}
-function ren(){Object.values(CH).forEach(function(c){try{c.destroy()}catch(e){}});CH={};if(S.tab!=='map'&&MAP){MAP.remove();MAP=null;ML={}}document.getElementById('ct').innerHTML=({dash:rD,map:rM,up3:rU,kel:rK,inv:rI}[S.tab]||rD)();iC()}
+function ren(){Object.values(CH).forEach(function(c){try{c.destroy()}catch(e){}});CH={};if(S.tab!=='map'&&MAP){MAP.remove();MAP=null;ML={}}document.getElementById('ct').innerHTML=({dash:rD,map:rM,up3:rU,kel:rK,inv:rI,nko:rNKO}[S.tab]||rD)();iC()}
 
 // DASHBOARD
 function rD(){var h=mkFilt();var fd=S.fup3?D[S.fup3]:null,fi=S.fup3?U.find(function(u){return u.id===S.fup3}):null;
@@ -532,6 +595,49 @@ function sC(){
   });
 }
 bN();ren();
+
+var NKO_DATA={totalAgregat:101.98,totalProporsional:101.98,lossPointTHD:3.08,potensiPoint110:8.02,categories:[
+{no:1,name:'Penjualan Tenaga Listrik',bobot:14,nilai:12.82,lp100:1.18,pp110:2.58,items:[{id:'a',name:'Penjualan Tenaga Listrik',satuan:'GWh',bobot:14,target:12.81,realisasi:11.73,pct:91.54,nilai:12.82,lp:1.18,pp:2.58}]},
+{no:2,name:'Susut Distribusi Tanpa E-min',bobot:12,nilai:13.16,lp100:0,pp110:0.04,items:[{id:'a',name:'Susut Distribusi Tanpa E-min',satuan:'%',bobot:12,target:10.00,realisasi:9.04,pct:109.63,nilai:13.16,lp:0,pp:0.04}]},
+{no:3,name:'Keandalan Penyaluran TL',bobot:12,nilai:13.20,lp100:0,pp110:0,items:[{id:'a',name:'SAIDI',satuan:'Menit/plg',bobot:5,target:39.43,realisasi:22.69,pct:142.45,nilai:5.50,lp:0,pp:0},{id:'b',name:'SAIFI',satuan:'Kali/plg',bobot:5,target:0.51,realisasi:0.32,pct:137.24,nilai:5.50,lp:0,pp:0},{id:'c',name:'ENS',satuan:'MWh',bobot:2,target:96.12,realisasi:79.37,pct:117.42,nilai:2.20,lp:0,pp:0}]},
+{no:4,name:'Penyelesaian Eksekusi RUPTL & Investasi',bobot:10,nilai:10.00,lp100:0,pp110:1.00,items:[{id:'a',name:'Penambahan Aset RUPTL',satuan:'%',bobot:5,target:100,realisasi:100,pct:100,nilai:5.00,lp:0,pp:0.50},{id:'b',name:'Penambahan Aset Fisik Investasi',satuan:'%',bobot:5,target:100,realisasi:100,pct:100,nilai:5.00,lp:0,pp:0.50}]},
+{no:5,name:'Percepatan Penyambungan Pelanggan',bobot:10,nilai:9.40,lp100:0.71,pp110:1.60,items:[{id:'a1',name:'Penambahan Pelanggan',satuan:'Pelanggan',bobot:0.50,target:2838,realisasi:2597,pct:91.51,nilai:0.46,lp:0.04,pp:0.09},{id:'a2',name:'Penambahan Daya Tersambung',satuan:'MVA',bobot:1.50,target:13.24,realisasi:14.19,pct:107.15,nilai:1.61,lp:0,pp:0.04},{id:'b',name:'Pendapatan Biaya Penyambungan',satuan:'Rp Milyar',bobot:2,target:13.12,realisasi:8.76,pct:66.75,nilai:1.34,lp:0.66,pp:0.86},{id:'c',name:'Penambahan Pelanggan RT Lisdes',satuan:'Pelanggan',bobot:4,target:0,realisasi:0,pct:100,nilai:4.00,lp:0,pp:0.40},{id:'d',name:'Peningkatan kWh dari RT Lisdes',satuan:'kWh',bobot:2,target:0,realisasi:0,pct:100,nilai:2.00,lp:0,pp:0.20}]},
+{no:6,name:'Peningkatan Pelayanan Pelanggan',bobot:8,nilai:8.55,lp100:0.02,pp110:0.25,items:[{id:'a',name:'Feedback Rating Negatif PLN Mobile',satuan:'Kali',bobot:2,target:2,realisasi:0,pct:200,nilai:2.20,lp:0,pp:0},{id:'b',name:'Response Time Gangguan',satuan:'Menit',bobot:2,target:28,realisasi:26.73,pct:104.54,nilai:2.09,lp:0,pp:0.11},{id:'c',name:'Success Rate Auto Dispatch',satuan:'%',bobot:2,target:18.99,realisasi:40.83,pct:214.99,nilai:2.20,lp:0,pp:0},{id:'d1',name:'Transaksi Keuangan PLN Mobile',satuan:'Ribuan',bobot:1.20,target:37.18,realisasi:36.43,pct:97.99,nilai:1.18,lp:0.02,pp:0.14},{id:'d2',name:'Rupiah Transaksi PLN Mobile',satuan:'Rp Milyar',bobot:0.80,target:5.84,realisasi:7.02,pct:120.23,nilai:0.88,lp:0,pp:0}]},
+{no:7,name:'Keandalan JTM',bobot:7,nilai:7.50,lp100:0,pp110:0.20,items:[{id:'a',name:'Gangguan TM',satuan:'Kali',bobot:5,target:100,realisasi:56,pct:144,nilai:5.50,lp:0,pp:0.20},{id:'b',name:'Kerusakan Peralatan Distribusi',satuan:'Unit',bobot:2,target:4,realisasi:4,pct:100,nilai:2.00,lp:0,pp:0}]},
+{no:8,name:'Emergency Response Time (ERT)',bobot:6,nilai:6.54,lp100:0,pp110:0.06,items:[{id:'a',name:'MVOD',satuan:'%',bobot:4,target:100,realisasi:108.39,pct:108.39,nilai:4.34,lp:0,pp:0.06},{id:'b',name:'MTTR Siaga 1 TM',satuan:'%',bobot:2,target:100,realisasi:110,pct:110,nilai:2.20,lp:0,pp:0}]},
+{no:9,name:'Management Cash In',bobot:6,nilai:5.04,lp100:1.16,pp110:1.56,items:[{id:'a',name:'Saldo Rata-Rata Akhir Bulan',satuan:'Rp Juta',bobot:2,target:997.60,realisasi:1575.85,pct:42.04,nilai:0.84,lp:1.16,pp:1.36},{id:'b',name:'Pelunasan PRR & Piutang Prabayar',satuan:'Rp Juta',bobot:2,target:0,realisasi:16.29,pct:110,nilai:2.20,lp:0,pp:0.20},{id:'c',name:'Usulan Penghapusan PRR',satuan:'Rp Miliar',bobot:2,target:0,realisasi:0,pct:100,nilai:2.00,lp:0,pp:0}]},
+{no:10,name:'Pengendalian Anggaran',bobot:5,nilai:5.20,lp100:0,pp110:0.30,items:[{id:'a',name:'Pengendalian Anggaran Investasi RKAP',satuan:'%',bobot:2,target:97.5,realisasi:100,pct:110,nilai:2.20,lp:0,pp:0},{id:'b',name:'Usulan Penghapusan ATTB',satuan:'Rp Juta',bobot:2,target:0,realisasi:0,pct:100,nilai:2.00,lp:0,pp:0.20},{id:'c',name:'Pengendalian NAC',satuan:'Rp Juta',bobot:2,target:0,realisasi:0,pct:100,nilai:1.00,lp:0,pp:0.10}]},
+{no:11,name:'Pengelolaan Transaksi Energi',bobot:6,nilai:6.31,lp100:0,pp110:0.29,items:[{id:'a',name:'Perolehan Temuan P2TL',satuan:'kWh',bobot:3,target:2660306,realisasi:2668199,pct:100.30,nilai:3.01,lp:0,pp:0.29},{id:'b',name:'Penyelesaian Ganti Meter',satuan:'Unit',bobot:2,target:1699,realisasi:1879,pct:110.59,nilai:2.20,lp:0,pp:0},{id:'c',name:'Tindak Lanjut LBKB',satuan:'%',bobot:1,target:99,realisasi:100,pct:110,nilai:1.10,lp:0,pp:0}]},
+{no:12,name:'Digitalisasi Aplikasi Korporat',bobot:4,nilai:4.28,lp100:0,pp110:0.12,items:[{id:'a',name:'Pengembangan Aset Distribusi',satuan:'%',bobot:2,target:100,realisasi:103.96,pct:103.96,nilai:2.08,lp:0,pp:0.12},{id:'b',name:'Efektivitas Pemeliharaan',satuan:'%',bobot:2,target:100,realisasi:110,pct:110,nilai:2.20,lp:0,pp:0}]},
+{no:13,name:'Kepatuhan & Tata Kelola',bobot:0,nilai:0,lp100:0,pp110:0,items:[{id:'a',name:'Implementasi Maturity Level',satuan:'Max 3',bobot:0,target:0,realisasi:0,pct:0,nilai:0,lp:0,pp:0},{id:'b',name:'Kepatuhan',satuan:'Max 3',bobot:0,target:0,realisasi:0,pct:0,nilai:0,lp:0,pp:0},{id:'c',name:'Tata Kelola Perusahaan',satuan:'Max 3',bobot:0,target:0,realisasi:0,pct:0,nilai:0,lp:0,pp:0}]}
+]};
+
+var GI_DATA=[
+{name:'GI HAURGEULIS',rm:33.596,trafos:[
+{name:'TRAFO I 60 MVA',kv:20.9,amp:763,pct:44,feeders:[{name:'CILEGEH',code:'CLGH',amp:106},{name:'BUGIS',code:'BGIS',amp:106},{name:'GABUSWETAN',code:'GBWN',amp:99},{name:'BALERAJA',code:'BLRJ',amp:175},{name:'MARGAMULYA',code:'MGMA',amp:141},{name:'PATROL',code:'PTRL',amp:136}]},
+{name:'TRAFO III 60 MVA',kv:21,amp:348,pct:20,feeders:[{name:'BONGAS',code:'BNGS',amp:118},{name:'GANTAR',code:'GNTR',amp:145},{name:'BANTARHUNI',code:'BTHN',amp:85}]}]},
+{name:'GI INDRAMAYU BARU',rm:42.45,trafos:[
+{name:'TRAFO I 60 MVA',kv:20.8,amp:507,pct:29,feeders:[{name:'BHAKTI MINGAS UTAMA',code:'BMU',amp:28},{name:'KANDANGHAUR',code:'KDHR',amp:194},{name:'SUKRA',code:'SKRA',amp:123},{name:'SUMURADEM',code:'SUMD',amp:162}]}]},
+{name:'GI JATIBARANG',rm:20.72,trafos:[
+{name:'TRAFO 1 60 MVA',kv:21,amp:1135,pct:66,feeders:[{name:'WANASARI',code:'WNSR',amp:148},{name:'KEDOKAN',code:'KDKN',amp:113},{name:'SLIYEG',code:'SLYG',amp:144},{name:'BANGODUA',code:'BNGD',amp:82},{name:'LOSARANG',code:'LSRG',amp:115},{name:'PILANGSARI',code:'PLSR',amp:150},{name:'KERTASEMAYA',code:'KSMY',amp:193},{name:'KARANGAMPEL',code:'KRAM',amp:190}]},
+{name:'TRAFO III 60 MVA',kv:21,amp:1048,pct:61,feeders:[{name:'CHANGJUIFANG',code:'CHJF',amp:125},{name:'GADEL',code:'GADL',amp:170},{name:'POLYTAMA A',code:'PLTA',amp:122},{name:'POLYTAMA B',code:'PLTB',amp:122},{name:'JUNTINYUAT',code:'JNTY',amp:232},{name:'CANGKINGAN',code:'CKGN',amp:152},{name:'KAPLONGAN',code:'KPGN',amp:125}]}]},
+{name:'GI INDRAMAYU LAMA',rm:12.32,trafos:[
+{name:'TRAFO I 30 MVA',kv:21.1,amp:720,pct:83,feeders:[{name:'MALL INDRAMAYU',code:'MID',amp:115},{name:'ERETAN',code:'ERTN',amp:105},{name:'LOMBANG',code:'LBNG',amp:50},{name:'SWISBELL',code:'SWBL',amp:115},{name:'GREAT WALL POLYCEM',code:'GWP',amp:25},{name:'KARANGSONG',code:'KRSG',amp:135},{name:'TAMBAK',code:'TBAK',amp:80}]},
+{name:'TRAFO III 30 MVA',kv:21.3,amp:658,pct:76,feeders:[{name:'LOHBENER',code:'LBNR',amp:199},{name:'LANGUT',code:'LNGT',amp:121},{name:'PEMDA',code:'PEMD',amp:73},{name:'PENDOPO',code:'PIM',amp:75},{name:'BALONGAN',code:'BALG',amp:115},{name:'RS BUMI PATRA',code:'RBA',amp:75}]}]},
+{name:'GI CIKEDUNG',rm:73.63,trafos:[
+{name:'TRAFO I 60 MVA',kv:20.5,amp:432,pct:25,feeders:[{name:'TAMIYANGSARI',code:'TMYS',amp:157},{name:'LOYANG',code:'LYNG',amp:96},{name:'PEGAGAN',code:'PGGN',amp:117},{name:'SUKASELAMET',code:'SKSM',amp:62}]},
+{name:'TRAFO II 60 MVA',kv:21,amp:908,pct:52,feeders:[{name:'KARANGSINOM',code:'KRSM',amp:141},{name:'JANGGA',code:'JNGA',amp:192},{name:'KROYA',code:'KRYA',amp:80},{name:'PABRIK CHANGJUIFANG',code:'PKC',amp:120},{name:'FOOD PACKAGING 1',code:'FPG1',amp:125},{name:'FOOD PACKAGING 2',code:'FPG2',amp:124},{name:'FOOD PACKAGING 3',code:'FPG3',amp:125}]}]}
+];
+var GI_SUMMARY={totalGI:5,totalTrafo:9,trafo60:7,trafo30:2,totalBebanA:6021,totalBebanMW:208.33,totalBebanPct:47,totalRM:182.71,totalPenyulang:52,bebanGt200:1,spotload:2};
+
+function rNKO(){var ct=document.getElementById('ct');var scoreColor=NKO_DATA.totalAgregat>=100?'green':NKO_DATA.totalAgregat>=85?'yellow':'red';var af=window._nkoFilter||'all';var fm={'all':'Semua KPI','tel':'Transaksi Energi','jar':'Jaringan','kon':'Konstruksi','ren':'Perencanaan','ku':'Keuangan','um':'Umum','peta':'Peta Kelistrikan'};var cf={'tel':[1,2,11],'jar':[3,7,8],'kon':[4],'ren':[5,12],'ku':[9,10],'um':[6,13]};var h='<div class="nko-wrap">';h+='<div class="nko-header"><div><h2>NKO UP3 INDRAMAYU 2025</h2><small style="color:rgba(255,255,255,.7)">Nilai Kinerja Organisasi - Monitoring Dashboard</small></div>';h+='<div class="nko-detail"><div class="nko-score '+scoreColor+'">'+NKO_DATA.totalAgregat.toFixed(2)+'</div><small>Total Agregat / 100</small>';h+='<div style="margin-top:4px"><span class="nko-badge yellow">Loss Point: '+NKO_DATA.lossPointTHD.toFixed(2)+'</span> ';h+='<span class="nko-badge green">Potensi 110%: '+NKO_DATA.potensiPoint110.toFixed(2)+'</span></div></div></div>';h+='<div class="nko-filters">';Object.keys(fm).forEach(function(k){h+='<button class="'+(af===k?'active':'')+'" onclick="window._nkoFilter=\''+k+'\';rNKO()">'+fm[k]+'</button>';});h+='</div>';if(af==='peta'){h+=renderPetaKelistrikan();}else{h+=renderNKOCards(af,cf);h+=renderNKOCharts();h+=renderNKOTable(af,cf);}h+='</div>';ct.innerHTML=h;if(af!=='peta'){initNKOCharts();}}
+function renderNKOCards(filter,cf){var cats=NKO_DATA.categories;if(filter!=='all'){cats=cats.filter(function(c){return cf[filter]&&cf[filter].indexOf(c.no)>-1;});}var h='<div class="nko-cards">';cats.forEach(function(cat){var pct=cat.bobot>0?(cat.nilai/cat.bobot*100):100;var cl=pct>=110?'green':pct>=85?'yellow':'red';h+='<div class="nko-card '+cl+'">';h+='<div class="kpi-name">'+cat.no+'. '+cat.name+'</div>';h+='<div class="kpi-val">'+cat.nilai.toFixed(2)+' <span style="font-size:12px;opacity:.5">/ '+cat.bobot+'</span></div>';h+='<div class="kpi-target">Pencapaian: '+pct.toFixed(1)+'%</div>';h+='<div class="kpi-bar"><div class="kpi-bar-fill" style="width:'+Math.min(pct,120)+'%"></div></div>';h+='</div>';});h+='</div>';return h;}
+function renderNKOCharts(){var h='<div class="nko-chart-wrap">';h+='<div class="nko-chart-box"><h4>Pencapaian per Kategori KPI</h4><canvas id="nkoBarChart"></canvas></div>';h+='<div class="nko-chart-box"><h4>Distribusi Bobot NKO</h4><canvas id="nkoPieChart"></canvas></div>';h+='</div>';return h;}
+function initNKOCharts(){var cats=NKO_DATA.categories.filter(function(c){return c.bobot>0;});var labels=cats.map(function(c){return c.name.length>20?c.name.substring(0,20)+'...':c.name;});var data=cats.map(function(c){return c.bobot>0?(c.nilai/c.bobot*100).toFixed(1):0;});var colors=data.map(function(d){return d>=110?'#2ECC71':d>=85?'#F39C12':'#E74C3C';});var el1=document.getElementById('nkoBarChart');var el2=document.getElementById('nkoPieChart');if(el1){var c1=new Chart(el1,{type:'bar',data:{labels:labels,datasets:[{label:'Pencapaian (%)',data:data,backgroundColor:colors,borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.5)'}},x:{ticks:{color:'rgba(255,255,255,.5)',maxRotation:45},grid:{display:false}}}}});CH.nkoBar=c1;}if(el2){var bd=cats.map(function(c){return c.bobot;});var bc=['#3498DB','#E74C3C','#2ECC71','#F39C12','#9B59B6','#1ABC9C','#E67E22','#34495E','#16A085','#C0392B','#8E44AD','#D35400'];var c2=new Chart(el2,{type:'doughnut',data:{labels:cats.map(function(c){return c.name.length>18?c.name.substring(0,18)+'...':c.name;}),datasets:[{data:bd,backgroundColor:bc.slice(0,cats.length)}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'rgba(255,255,255,.7)',font:{size:9},padding:6}}}}});CH.nkoPie=c2;}}
+
+function renderNKOTable(filter,cf){var cats=NKO_DATA.categories;if(filter!=='all'){cats=cats.filter(function(c){return cf[filter]&&cf[filter].indexOf(c.no)>-1;});}var h='<div class="nko-section-title">Detail Indikator Kinerja</div>';h+='<div class="nko-table-wrap"><table class="nko-table"><thead><tr>';h+='<th>NO</th><th>INDIKATOR KINERJA</th><th>SATUAN</th><th>BOBOT</th><th>TARGET</th><th>REALISASI</th><th>PENCAPAIAN (%)</th><th>NILAI</th><th>LOSS POINT</th><th>POTENSI 110%</th>';h+='</tr></thead><tbody>';cats.forEach(function(cat){var cp=cat.bobot>0?(cat.nilai/cat.bobot*100):100;var cc=cp>=110?'val-green':cp>=85?'val-yellow':'val-red';h+='<tr class="cat-row"><td>'+cat.no+'</td><td colspan="2">'+cat.name+'</td><td>'+cat.bobot.toFixed(2)+'</td><td></td><td></td><td></td><td class="'+cc+'">'+cat.nilai.toFixed(2)+'</td><td>'+(cat.lp100||0).toFixed(2)+'</td><td>'+(cat.pp110||0).toFixed(2)+'</td></tr>';if(cat.items){cat.items.forEach(function(item){var cl=item.pct>=110?'val-green':item.pct>=85?'val-yellow':'val-red';h+='<tr><td style="padding-left:20px">'+item.id+'</td><td>'+item.name+'</td><td>'+item.satuan+'</td><td>'+(item.bobot||0).toFixed(2)+'</td>';h+='<td>'+(item.target!==undefined&&item.target!==0?Number(item.target).toLocaleString('id-ID'):'')+'</td>';h+='<td>'+(item.realisasi!==undefined&&item.realisasi!==0?Number(item.realisasi).toLocaleString('id-ID'):'')+'</td>';h+='<td class="'+cl+'">'+(item.pct||0).toFixed(2)+'</td>';h+='<td class="'+cl+'">'+(item.nilai||0).toFixed(2)+'</td>';h+='<td>'+(item.lp||0).toFixed(2)+'</td>';h+='<td>'+(item.pp||0).toFixed(2)+'</td></tr>';});}});h+='<tr style="background:linear-gradient(135deg,#003d7a,#0052a3)"><td colspan="3" style="font-weight:900;color:#fff;text-align:center">TOTAL AGREGAT</td>';h+='<td style="color:#fff;font-weight:700">100</td><td colspan="3"></td>';h+='<td style="color:#2ECC71;font-weight:900;font-size:16px">'+NKO_DATA.totalAgregat.toFixed(2)+'</td>';h+='<td style="color:#F39C12;font-weight:700">'+NKO_DATA.lossPointTHD.toFixed(2)+'</td>';h+='<td style="color:#2ECC71;font-weight:700">'+NKO_DATA.potensiPoint110.toFixed(2)+'</td></tr>';h+='</tbody></table></div>';return h;}
+function renderPetaKelistrikan(){var h='<div class="nko-section-title">Kesiapan Pasokan Kelistrikan 2026 - GI & Penyulang Existing</div>';h+='<div class="gi-summary"><div class="gi-summary-grid">';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalGI+'</div><div class="gi-stat-lbl">Gardu Induk</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalTrafo+'</div><div class="gi-stat-lbl">Trafo Tenaga</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalPenyulang+'</div><div class="gi-stat-lbl">Penyulang</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalBebanA.toLocaleString('id-ID')+'A</div><div class="gi-stat-lbl">Total Beban</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalBebanMW+'MW</div><div class="gi-stat-lbl">'+GI_SUMMARY.totalBebanPct+'% Kapasitas</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val" style="color:#F5B731">'+GI_SUMMARY.totalRM.toFixed(2)+'</div><div class="gi-stat-lbl">Total Reverse Margin (MVA)</div></div>';h+='</div>';h+='<div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--tx);opacity:.7">';h+='<span>60 MVA: <strong>'+GI_SUMMARY.trafo60+' Trafo</strong></span>';h+='<span>30 MVA: <strong>'+GI_SUMMARY.trafo30+' Trafo</strong></span>';h+='<span style="color:#E74C3C">Beban > 200A: <strong>'+GI_SUMMARY.bebanGt200+' Penyulang</strong></span>';h+='<span style="color:#F39C12">Spotload: <strong>'+GI_SUMMARY.spotload+' Penyulang</strong></span>';h+='</div></div>';h+='<div class="gi-grid">';GI_DATA.forEach(function(gi){h+='<div class="gi-box">';h+='<div class="gi-box-header"><h3>'+gi.name+'</h3><div class="rm">Reverse Margin: <strong>'+gi.rm.toFixed(2)+' MVA</strong></div></div>';h+='<div class="gi-box-body">';gi.trafos.forEach(function(tr){h+='<div class="trafo-section">';h+='<div class="trafo-title">'+tr.name+' ('+tr.kv+' kV / '+tr.amp+' A / '+tr.pct+' %)</div>';tr.feeders.forEach(function(f){var lc=f.amp>=200?'high':f.amp>=150?'med':'ok';h+='<div class="feeder-row"><span class="feeder-name">P. '+f.name+' ('+f.code+')</span><span class="feeder-load '+lc+'">= '+f.amp+' A</span></div>';});h+='</div>';});h+='</div></div>';});h+='</div>';return h;}
+
 </script>
 </body>
 </html>
