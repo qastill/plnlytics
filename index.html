@@ -66,7 +66,15 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .feeder-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.05)}.feeder-name{color:var(--txd)}.feeder-load{font-weight:600}.feeder-load.high{color:var(--red)}.feeder-load.med{color:var(--ylw)}.feeder-load.ok{color:var(--grn)}
 .dp{position:fixed;right:-420px;top:0;width:420px;height:100vh;background:var(--cd);border-left:1px solid var(--bd);transition:right .3s;z-index:99;display:flex;flex-direction:column}.dp.open{right:0}
 .dp-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)}.dp-head h3{font-size:14px}.dp-head .close{background:none;border:none;color:var(--txd);cursor:pointer}.dp-head .close svg{width:18px;height:18px;fill:currentColor}.dp-body{flex:1;overflow-y:auto;padding:16px}
-.map-wrap{height:100%;width:100%;border-radius:10px;overflow:hidden}#mapEl{height:100%;width:100%}
+.map-wrap{height:calc(100vh - 60px);position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--bd)}
+.map-ctrl{position:absolute;top:10px;right:10px;z-index:1000;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;max-height:calc(100vh - 100px);overflow-y:auto;font-size:12px;min-width:160px}
+.map-ctrl h4{font-size:11px;color:var(--acc);font-weight:800;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.map-ctrl label{display:flex;align-items:center;gap:6px;padding:3px 0;cursor:pointer;color:var(--t2);font-size:11px;font-weight:500}
+.map-ctrl label:hover{color:var(--tx)}
+.map-ctrl input[type=checkbox]{accent-color:var(--pri)}
+.map-ctrl .gi-legend{display:flex;align-items:center;gap:5px;padding:2px 0;font-size:11px;color:var(--t2)}
+.map-ctrl .gi-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.map-load{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;color:var(--prl);font-size:14px;font-weight:700;text-align:center}#mapEl{height:100%;width:100%}
 .bagian-header{background:linear-gradient(135deg,#003d7a,#0066cc);border-radius:12px;padding:20px;margin-bottom:16px}.bagian-header h2{color:#fff;font-size:20px;margin:0 0 4px}.bagian-header p{color:rgba(255,255,255,.7);font-size:12px}
 .bagian-header .filter-row{display:flex;gap:8px;margin-top:12px;align-items:center}
 .bagian-header .ai-btn,.ai-btn{background:linear-gradient(135deg,var(--pri),var(--cyan));border:none;color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:6px}.ai-btn:hover{opacity:.9}.ai-btn svg{width:14px;height:14px;fill:#fff}
@@ -140,13 +148,122 @@ function nav(page){S.page=page;document.querySelectorAll(".ni").forEach(function
 function destroyCharts(){Object.keys(chartInstances).forEach(function(k){if(chartInstances[k]){chartInstances[k].destroy();delete chartInstances[k]}})}
 function makeChart(id,cfg){var c=document.getElementById(id);if(!c)return null;Chart.defaults.color="#94a3b8";Chart.defaults.borderColor="#1e3054";var ch=new Chart(c.getContext("2d"),cfg);chartInstances[id]=ch;return ch}
 function statusBadge(s){var c={Berjalan:"#3b82f6",Selesai:"#22c55e",Draft:"#f59e0b",Approved:"#22c55e",Kritis:"#ef4444",Tinggi:"#f97316",Sedang:"#3b82f6"};return'<span style="background:'+((c[s]||"#3b82f6")+"22")+";color:"+(c[s]||"#3b82f6")+';padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600">'+s+"</span>"}
-function renderPage(){destroyCharts();var ct=document.getElementById("ct"),t={dash:"Dashboard",peta:"Peta Jaringan",jaringan:"Jaringan",konstruksi:"Konstruksi",perencanaan:"Perencanaan",keuangan:"Keuangan",transaksi:"Transaksi Energi",nko:"NKO Indramayu"};document.getElementById("pageTitle").textContent=t[S.page]||"Dashboard";document.getElementById("pageSub").textContent=getLevelLabel()+" \u2014 Monitoring Real-time";switch(S.page){case"dash":renderDashboard();break;case"peta":renderPeta();break;case"jaringan":renderJaringan();break;case"konstruksi":renderKonstruksi();break;case"perencanaan":renderPerencanaan();break;case"keuangan":renderKeuangan();break;case"transaksi":renderTransaksi();break;case"nko":renderNKO();break;default:renderDashboard()}}
+function renderPage(){destroyCharts();var ct=document.getElementById("ct"),t={dash:"Dashboard",peta:"Peta Jaringan",jaringan:"Jaringan",konstruksi:"Konstruksi",perencanaan:"Perencanaan",keuangan:"Keuangan",transaksi:"Transaksi Energi",nko:"NKO Indramayu"};document.getElementById("pageTitle").textContent=t[S.page]||"Dashboard";document.getElementById("pageSub").textContent=getLevelLabel()+" \u2014 Monitoring Real-time";switch(S.page){case"dash":renderDashboard();break;case"peta":rM();break;case"jaringan":renderJaringan();break;case"konstruksi":renderKonstruksi();break;case"perencanaan":renderPerencanaan();break;case"keuangan":renderKeuangan();break;case"transaksi":renderTransaksi();break;case"nko":renderNKO();break;default:renderDashboard()}}
 function aggregateMonthly(){var keys=Object.keys(MONTHLY),agg={saidi:[],saifi:[],losses:[],gangguan:[],penjualan:[],pendapatan:[]};for(var i=0;i<5;i++){var ss=0,sf=0,ls=0,gg=0,pj=0,pd=0;keys.forEach(function(k){ss+=MONTHLY[k].saidi[i];sf+=MONTHLY[k].saifi[i];ls+=MONTHLY[k].losses[i];gg+=MONTHLY[k].gangguan[i];pj+=MONTHLY[k].penjualan[i];pd+=MONTHLY[k].pendapatan[i]});var n=keys.length;agg.saidi.push(+(ss/n).toFixed(2));agg.saifi.push(+(sf/n).toFixed(2));agg.losses.push(+(ls/n).toFixed(1));agg.gangguan.push(Math.round(gg/n));agg.penjualan.push(+pj.toFixed(2));agg.pendapatan.push(+pd.toFixed(1))}return agg}
 function renderDashboard(){var d=getSelectedData(),ct=document.getElementById("ct"),h='<div class="sec-header"><h2>Dashboard Overview</h2><span class="loc-badge">'+getLevelLabel()+"</span></div>";h+='<div class="card-grid">';h+='<div class="stat-card blue"><div class="val">'+d.pelanggan.toLocaleString()+'</div><div class="lbl">Total Pelanggan</div></div>';h+='<div class="stat-card cyan"><div class="val">'+d.daya_tersambung.toFixed(1)+' MW</div><div class="lbl">Daya Tersambung</div></div>';h+='<div class="stat-card '+(d.saidi<=2.5?"green":d.saidi<=3.5?"yellow":"red")+'"><div class="val">'+d.saidi+'</div><div class="lbl">SAIDI (Menit)</div></div>';h+='<div class="stat-card '+(d.saifi<=.2?"green":d.saifi<=.3?"yellow":"red")+'"><div class="val">'+d.saifi+'</div><div class="lbl">SAIFI (Kali)</div></div>';h+='<div class="stat-card '+(d.losses<=8?"green":d.losses<=10?"yellow":"red")+'"><div class="val">'+d.losses+'%</div><div class="lbl">Susut Distribusi</div></div>';h+='<div class="stat-card green"><div class="val">'+d.penjualan_gwh.toFixed(2)+' GWh</div><div class="lbl">Penjualan TL</div></div>';h+='<div class="stat-card blue"><div class="val">Rp '+d.pendapatan_m.toFixed(1)+' M</div><div class="lbl">Pendapatan</div></div>';h+='<div class="stat-card '+(d.gangguan_tm<=10?"green":d.gangguan_tm<=15?"yellow":"red")+'"><div class="val">'+d.gangguan_tm+'</div><div class="lbl">Gangguan TM</div></div></div>';
 if(S.level==="all_up3"){h+='<div class="card"><h3>Perbandingan ULP</h3><table class="tbl"><thead><tr><th>ULP</th><th>Pelanggan</th><th>SAIDI</th><th>SAIFI</th><th>Susut</th><th>Gangguan TM</th><th>Pendapatan</th><th>Rating</th></tr></thead><tbody>';Object.keys(ULP_DATA).forEach(function(k){var u=ULP_DATA[k];h+="<tr><td><strong>"+u.name+"</strong></td><td>"+u.pelanggan.toLocaleString()+"</td>";h+='<td class="'+(u.saidi<=2.5?"green":u.saidi<=3.5?"yellow":"red")+'">'+u.saidi+"</td>";h+='<td class="'+(u.saifi<=.2?"green":u.saifi<=.3?"yellow":"red")+'">'+u.saifi+"</td>";h+='<td class="'+(u.losses<=8?"green":u.losses<=10?"yellow":"red")+'">'+u.losses+"%</td>";h+='<td class="'+(u.gangguan_tm<=10?"green":u.gangguan_tm<=15?"yellow":"red")+'">'+u.gangguan_tm+"</td>";h+="<td>Rp "+u.pendapatan_m+' M</td><td class="'+(u.rating>=4?"green":u.rating>=3.5?"yellow":"red")+'">'+u.rating+"</td></tr>"});h+="</tbody></table></div>"}
 h+='<div class="chart-row"><div class="chart-box"><h4>Trend SAIDI & SAIFI</h4><div class="chart-container"><canvas id="chTrend"></canvas></div></div><div class="chart-box"><h4>Penjualan & Pendapatan</h4><div class="chart-container"><canvas id="chRev"></canvas></div></div></div>';h+='<div id="aiAnalysisArea"></div>';ct.innerHTML=h;var md=S.level==="all_up3"?aggregateMonthly():MONTHLY[S.level];if(md){makeChart("chTrend",{type:"line",data:{labels:MONTHS,datasets:[{label:"SAIDI",data:md.saidi,borderColor:"#ef4444",backgroundColor:"rgba(239,68,68,.1)",tension:.4,fill:true},{label:"SAIFI x10",data:md.saifi.map(function(v){return v*10}),borderColor:"#f59e0b",backgroundColor:"rgba(245,158,11,.1)",tension:.4,fill:true,yAxisID:"y1"}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{title:{display:true,text:"SAIDI"}},y1:{position:"right",title:{display:true,text:"SAIFIx10"},grid:{display:false}}}}});makeChart("chRev",{type:"bar",data:{labels:MONTHS,datasets:[{label:"Penjualan GWh",data:md.penjualan,backgroundColor:"rgba(59,130,246,.6)",borderRadius:4},{label:"Pendapatan M",data:md.pendapatan,backgroundColor:"rgba(34,197,94,.6)",borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false}})}}
-function renderPeta(){var ct=document.getElementById("ct");ct.innerHTML='<div class="sec-header"><h2>Peta Jaringan</h2><span class="loc-badge">'+getLevelLabel()+'</span></div><div class="map-wrap" style="height:calc(100vh - 160px)"><div id="mapEl"></div></div><div id="aiAnalysisArea"></div>';setTimeout(initMap,100)}
-function initMap(){var el=document.getElementById("mapEl");if(!el)return;var map=L.map("mapEl").setView([-6.337,108.32],11);L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"CartoDB"}).addTo(map);[[-6.35,108.45,"GI Haurgeulis"],[-6.33,108.32,"GI Indramayu Baru"],[-6.34,108.25,"GI Jatibarang"],[-6.38,108.18,"GI Cikedung"],[-6.36,108.38,"GI Patrol"]].forEach(function(g){L.circleMarker([g[0],g[1]],{radius:10,color:"#3b82f6",fillColor:"#3b82f6",fillOpacity:.8}).addTo(map).bindPopup("<strong>"+g[2]+"</strong>")})}
+function rM(){
+var h='<div class="map-wrap"><div id="mapLeaflet"></div>';
+h+='<div class="map-ctrl" id="mapCtrl"><h4>Layers</h4>';
+h+='<label><input type="checkbox" checked onchange="tgL(\'mv\',this.checked)"> Medium Voltage</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'lv\',this.checked)"> Low Voltage</label>';
+h+='<label><input type="checkbox" checked onchange="tgL(\'gi\',this.checked)"> Substations (GI)</label>';
+h+='<label><input type="checkbox" checked onchange="tgL(\'tr\',this.checked)"> Dist. Transformers</label>';
+h+='<label><input type="checkbox" checked onchange="tgL(\'sd\',this.checked)"> Switching Devices</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'pmv\',this.checked)"> MV Poles</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'plv\',this.checked)"> LV Poles</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'bg\',this.checked)"> Service Areas</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'ca\',this.checked)"> Cable Accessories</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'mc\',this.checked)"> MV Cells</label>';
+h+='<label><input type="checkbox" onchange="tgL(\'tgi\',this.checked)"> Power Transformers</label>';
+h+='<h4 style="margin-top:8px">Substations</h4>';
+var gic=[["GI HAURGEULIS","#e53935"],["GI INDRAMAYU BARU","#8e24aa"],["GI CIKEDUNG","#43a047"],["GI INDRAMAYU","#1e88e5"],["GI JATIBARANG","#ff8f00"]];
+gic.forEach(function(g){h+='<div class="gi-legend"><span class="gi-dot" style="background:'+g[1]+'"></span>'+g[0].replace("GI ","")+'</div>'});
+h+='</div>';
+h+='<div class="map-load" id="mapLoad">Loading network data...</div>';
+h+='</div>';
+setTimeout(initMap,50);
+return h}
+
+var MAP=null,ML={},MD=null;
+function tgL(k,v){if(ML[k]){if(v)MAP.addLayer(ML[k]);else MAP.removeLayer(ML[k])}}
+function initMap(){
+if(MAP){MAP.remove();MAP=null}
+ML={};
+MAP=L.map('mapLeaflet',{preferCanvas:true,zoomControl:true}).setView([-6.45,108.2],11);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'PLN UP3 Indramayu',maxZoom:19}).addTo(MAP);
+if(MD){buildLayers(MD);return}
+fetch('/data/idm.json').then(function(r){return r.json()}).then(function(d){
+MD=d;buildLayers(d);
+var el=document.getElementById('mapLoad');if(el)el.style.display='none';
+}).catch(function(e){
+var el=document.getElementById('mapLoad');if(el)el.textContent='Failed to load map data';
+console.error(e);
+})}
+function buildLayers(d){
+var el=document.getElementById('mapLoad');if(el)el.style.display='none';
+// MV lines
+var mvLines=[];
+d.MV.forEach(function(m){
+var ll=m.c.map(function(p){return[p[1],p[0]]});
+var line=L.polyline(ll,{color:m.cl||'#43a047',weight:2,opacity:.8});
+line.bindPopup('<b>'+((m.f||''))+' </b><br>GI: '+(m.g||'-')+'<br>Segment: '+(m.h||'-'));
+mvLines.push(line);
+});
+ML.mv=L.layerGroup(mvLines).addTo(MAP);
+// LV lines
+var lvLines=[];
+d.LV.forEach(function(m){
+var ll=m.c.map(function(p){return[p[1],p[0]]});
+lvLines.push(L.polyline(ll,{color:'#78909c',weight:1,opacity:.4}));
+});
+ML.lv=L.layerGroup(lvLines);
+// GI substations
+var giMarkers=[];
+d.GI.forEach(function(g){
+var cm=L.circleMarker([g.y,g.x],{radius:12,fillColor:g.col||'#e53935',color:'#fff',weight:2,fillOpacity:.9});
+cm.bindPopup('<b>'+g.n+'</b><br>Capacity: '+(g.k||'-'));
+giMarkers.push(cm);
+});
+ML.gi=L.layerGroup(giMarkers).addTo(MAP);
+// Distribution Transformers
+var trMarkers=[];
+d.TR.forEach(function(t){
+var cm=L.circleMarker([t.y,t.x],{radius:3,fillColor:t.cl||'#ff9800',color:t.cl||'#ff9800',weight:0,fillOpacity:.7});
+cm.bindPopup('<b>Trafo '+(t.kap||'-')+' kVA</b><br>Feeder: '+(t.f||'-')+'<br>GI: '+(t.g||'-'));
+trMarkers.push(cm);
+});
+ML.tr=L.layerGroup(trMarkers).addTo(MAP);
+// Switching devices
+var sdMarkers=[];
+d.SD.forEach(function(s){
+var col=s.t==='SW'?'#00e676':'#ffeb3b';
+var cm=L.circleMarker([s.y,s.x],{radius:3,fillColor:col,color:col,weight:0,fillOpacity:.7});
+cm.bindPopup('<b>'+(s.t==='SW'?'Switch':'PHBTR')+'</b><br>Feeder: '+(s.f||'-')+'<br>GI: '+(s.g||'-')+'<br>Status: '+(s.to||'-'));
+sdMarkers.push(cm);
+});
+ML.sd=L.layerGroup(sdMarkers).addTo(MAP);
+// MV Poles
+var pmvM=[];d.PMV.forEach(function(p){pmvM.push(L.circleMarker([p[0],p[1]],{radius:1.5,fillColor:'#90a4ae',color:'#90a4ae',weight:0,fillOpacity:.5}))});
+ML.pmv=L.layerGroup(pmvM);
+// LV Poles
+var plvM=[];d.PLV.forEach(function(p){plvM.push(L.circleMarker([p[0],p[1]],{radius:1,fillColor:'#607d8b',color:'#607d8b',weight:0,fillOpacity:.4}))});
+ML.plv=L.layerGroup(plvM);
+// Service areas (polygons)
+var bgP=[];d.BG.forEach(function(b){
+if(b.length>2){var ll=b.map(function(p){return[p[1],p[0]]});bgP.push(L.polygon(ll,{color:'#455a64',weight:1,fillColor:'#263238',fillOpacity:.15}))}
+});
+ML.bg=L.layerGroup(bgP);
+// Cable accessories
+var caM=[];d.CA.forEach(function(c){caM.push(L.circleMarker([c[0],c[1]],{radius:2,fillColor:'#ce93d8',color:'#ce93d8',weight:0,fillOpacity:.6}))});
+ML.ca=L.layerGroup(caM);
+// MV Cells
+var mcM=[];d.MC.forEach(function(m){
+var cm=L.circleMarker([m.y,m.x],{radius:4,fillColor:'#4dd0e1',color:'#fff',weight:1,fillOpacity:.8});
+cm.bindPopup('<b>MV Cell</b>');
+mcM.push(cm);
+});
+ML.mc=L.layerGroup(mcM);
+// Power transformers (TGI)
+var tgiM=[];d.TGI.forEach(function(t){
+var cm=L.circleMarker([t.y,t.x],{radius:8,fillColor:'#ffd600',color:'#fff',weight:2,fillOpacity:.9});
+cm.bindPopup('<b>Power Transformer</b><br>Capacity: '+(t.kap||'-'));
+tgiM.push(cm);
+});
+ML.tgi=L.layerGroup(tgiM);
+}
+
 function renderJaringan(){var d=getSelectedData(),ct=document.getElementById("ct"),h='<div class="bagian-header"><h2>Bagian Jaringan</h2><p>Monitoring kondisi jaringan distribusi - '+getLevelLabel()+'</p><div class="filter-row"><button class="ai-btn" onclick="runAIAnalysis(\'jaringan\')"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z"/></svg>Analisis AI</button></div></div>';
 h+='<div class="kpi-row">';h+='<div class="kpi-mini"><div class="kpi-label">Penyulang</div><div class="kpi-val" style="color:var(--pri)">'+d.penyulang+'</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">Gardu Distribusi</div><div class="kpi-val" style="color:var(--cyan)">'+d.trafo+'</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">Kabel TM (km)</div><div class="kpi-val" style="color:var(--grn)">'+d.kabel_tm_km.toFixed(1)+'</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">SAIDI</div><div class="kpi-val" style="color:'+(d.saidi<=2.5?"var(--grn)":d.saidi<=3.5?"var(--ylw)":"var(--red)")+'">'+d.saidi+'</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">Susut</div><div class="kpi-val" style="color:'+(d.losses<=8?"var(--grn)":d.losses<=10?"var(--ylw)":"var(--red)")+'">'+d.losses+'%</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">Gangguan TM</div><div class="kpi-val" style="color:'+(d.gangguan_tm<=10?"var(--grn)":d.gangguan_tm<=15?"var(--ylw)":"var(--red)")+'">'+d.gangguan_tm+'</div></div></div>';
 h+='<div class="nko-section-title">Kesiapan Pasokan Kelistrikan - GI & Penyulang</div>';h+='<div class="gi-summary"><div class="gi-summary-grid">';h+='<div class="gi-stat"><div class="gi-stat-val" style="color:var(--pri)">'+GI_DATA.length+'</div><div class="gi-stat-lbl">Gardu Induk</div></div>';var tt=GI_DATA.reduce(function(s,g){return s+g.trafos.length},0),tf=GI_DATA.reduce(function(s,g){return s+g.trafos.reduce(function(ss,t){return ss+t.feeders.length},0)},0);h+='<div class="gi-stat"><div class="gi-stat-val" style="color:var(--cyan)">'+tt+'</div><div class="gi-stat-lbl">Trafo Tenaga</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val" style="color:var(--grn)">'+tf+'</div><div class="gi-stat-lbl">Penyulang</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val" style="color:var(--org)">6.021A</div><div class="gi-stat-lbl">Total Beban</div></div></div></div>';
