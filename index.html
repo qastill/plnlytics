@@ -1,644 +1,174 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PLN Lytics — Intelligence Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_PLN.png">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9/dist/leaflet.js"></script>
 <style>
-:root{--bg:#06101C;--sf:#0B1829;--cd:#101F35;--cdh:#172B45;--bd:#1E3352;--pri:#2B8AE0;--prl:#5AADE8;--acc:#F5B731;--ok:#2ECC71;--wn:#F39C12;--er:#E74C3C;--in:#3DB4E8;--tx:#F0F4F8;--t2:#A0B4CC;--t3:#6B83A0;--f:'Plus Jakarta Sans',sans-serif}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--f);background:var(--bg);color:var(--tx);overflow:hidden;height:100vh;font-size:14px}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%236B83A0'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:28px!important;cursor:pointer;font-family:var(--f);font-size:13px}
-select option{background:var(--cd);color:var(--tx)}
-.app{display:flex;height:100vh}
-/* SIDEBAR */
-.side{width:210px;background:linear-gradient(180deg,var(--sf),#07111F);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0}
-.slogo{padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
-.slogo img{width:38px;height:38px;object-fit:contain}
-.slogo h1{font-size:16px;font-weight:900;line-height:1}
-.slogo small{font-size:8px;color:var(--acc);letter-spacing:2px;font-weight:700}
-.srole{padding:12px 16px;border-bottom:1px solid var(--bd)}
-.srole label{font-size:10px;color:var(--t3);font-weight:700;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px}
-.srole select{width:100%;background:var(--cd);border:2px solid var(--bd);border-radius:7px;padding:9px 12px;color:var(--tx);outline:none;font-weight:600;transition:border .15s}
-.srole select:focus{border-color:var(--prl)}
-.srole .rh{font-size:11px;color:var(--prl);margin-top:6px;font-weight:600;line-height:1.4}
-.snav{flex:1;padding-top:4px;overflow-y:auto}
-.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;border-left:3px solid transparent;transition:all .12s;color:var(--t2);font-size:13px;font-weight:500}
-.ni:hover{background:rgba(43,138,224,.06);color:var(--tx)}.ni.on{background:rgba(43,138,224,.1);border-left-color:var(--pri);color:#fff;font-weight:700}
-.ni svg{width:18px;height:18px;fill:currentColor;opacity:.5;flex-shrink:0}.ni.on svg{opacity:1;fill:var(--prl)}
-.sph{height:70px;margin:6px 12px;border-radius:8px;overflow:hidden;background:url('https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=80') center/cover;position:relative}
-.sph::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,16,28,.85),rgba(6,16,28,.15))}
-.sph span{position:absolute;bottom:6px;left:8px;z-index:1;font-size:10px;color:var(--t2);font-weight:600}
-.sai{padding:10px 16px;border-top:1px solid var(--bd);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .12s}
-.sai:hover{background:rgba(43,138,224,.08)}
-.sai .ad{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--pri),#1A6DBF);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sai .ad svg{width:14px;height:14px;fill:#fff}
-.sai .info{font-size:13px;font-weight:700;color:#fff}
-.sai .st2{font-size:10px;color:var(--ok);font-weight:600;display:flex;align-items:center;gap:3px}
-.sai .st2::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok)}
-/* MAIN */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a1628;--cd:#111d33;--cdh:#162240;--bd:#1e3054;--tx:#e2e8f0;--txd:#94a3b8;--pri:#3b82f6;--grn:#22c55e;--red:#ef4444;--ylw:#f59e0b;--org:#f97316;--cyan:#06b6d4}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--tx);display:flex;min-height:100vh;overflow:hidden}
+.app{display:flex;width:100%;height:100vh}
+.side{width:240px;min-width:240px;background:var(--cd);border-right:1px solid var(--bd);display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.slogo{display:flex;align-items:center;gap:10px;padding:16px;border-bottom:1px solid var(--bd)}
+.slogo img{width:36px;height:36px}.slogo h1{font-size:16px;color:#fff;letter-spacing:1px}.slogo small{font-size:9px;color:var(--pri);letter-spacing:3px;display:block}
+.srole{padding:12px 16px;border-bottom:1px solid var(--bd)}.srole label{font-size:10px;text-transform:uppercase;color:var(--txd);letter-spacing:1px;display:block;margin-bottom:6px}
+.srole select{width:100%;background:var(--cdh);border:1px solid var(--bd);color:var(--tx);padding:8px 10px;border-radius:6px;font-size:12px;cursor:pointer}.srole select:focus{outline:none;border-color:var(--pri)}
+.snav{flex:1;overflow-y:auto;padding:8px 0}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;color:var(--txd);font-size:13px;transition:all .2s;border-left:3px solid transparent}
+.ni:hover{background:var(--cdh);color:var(--tx)}.ni.on{background:var(--cdh);color:var(--pri);border-left-color:var(--pri);font-weight:600}
+.ni svg{width:18px;height:18px;fill:currentColor;flex-shrink:0}
+.sph{padding:12px 16px;border-top:1px solid var(--bd);font-size:11px;color:var(--txd)}.sph span{display:flex;align-items:center;gap:6px}
+.sai{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--bd);cursor:pointer;transition:all .2s}.sai:hover{background:var(--cdh)}
+.sai .ad{width:32px;height:32px;background:linear-gradient(135deg,var(--pri),var(--cyan));border-radius:50%;display:flex;align-items:center;justify-content:center}.sai .ad svg{width:16px;height:16px;fill:#fff}
+.sai .info{font-size:12px;font-weight:600;color:var(--tx)}.sai .st2{font-size:10px;color:var(--grn)}.sai .st2::before{content:'';display:inline-block;width:6px;height:6px;background:var(--grn);border-radius:50%;margin-right:4px}
 .mn{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.tb{padding:8px 20px;background:var(--sf);border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;min-height:42px}
-.tb h2{font-size:18px;font-weight:800}.tb .sub{font-size:12px;color:var(--t3);margin-top:1px}
-.cw{flex:1;display:flex;overflow:hidden}
-.ct{flex:1;overflow-y:auto;padding:12px 16px}
-/* FILTER */
-.fbar{display:flex;gap:10px;align-items:center;padding:12px 16px;background:linear-gradient(135deg,rgba(43,138,224,.1),rgba(43,138,224,.03));border:2px solid rgba(43,138,224,.3);border-radius:10px;margin-bottom:12px;position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);box-shadow:0 4px 16px rgba(0,0,0,.3)}
-.fbar .flb{font-size:12px;font-weight:800;color:var(--prl);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;display:flex;align-items:center;gap:5px}
-.fbar .flb svg{width:18px;height:18px;fill:var(--prl)}
-.fbar select{background:var(--cd);border:1px solid var(--bd);border-radius:7px;padding:8px 28px 8px 12px;color:var(--tx);font-weight:600;min-width:160px}
-.fbar .ftag{font-size:13px;color:var(--prl);font-weight:700;display:flex;align-items:center;gap:5px;padding:5px 12px;background:rgba(43,138,224,.1);border-radius:6px}
-.fbar .ftag::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--prl);box-shadow:0 0 6px var(--prl)}
-.fbar .fhint{font-size:12px;color:var(--t3);font-style:italic}
-/* CARDS */
-.st{padding:12px 14px;background:var(--cd);border-radius:8px;border-left:3px solid var(--pri);cursor:pointer;transition:all .15s}
-.st:hover{background:var(--cdh);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
-.st .lb{font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.8px}
-.st .vl{font-size:22px;font-weight:900;line-height:1.2;margin-top:3px}
-.st .su{font-size:12px;margin-top:2px;font-weight:600}
-.pb{width:100%;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
-.pb .fl{height:100%;border-radius:3px;transition:width .5s}
-.bx{background:var(--cd);border-radius:10px;padding:14px;border:1px solid var(--bd)}
-.bx h3{font-size:14px;font-weight:700;margin-bottom:8px;color:#fff}
-/* AI */
-.ai-box{background:linear-gradient(135deg,rgba(245,183,49,.07),rgba(245,183,49,.01));border:1px solid rgba(245,183,49,.2);border-radius:10px;padding:12px 16px;margin-bottom:12px;border-left:4px solid var(--acc)}
-.ai-box .ai-hd{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.ai-box .ai-hd img{width:20px;height:20px;border-radius:3px}
-.ai-box .ai-hd span{font-size:12px;font-weight:800;color:var(--acc);text-transform:uppercase;letter-spacing:.6px}
-.ai-box p{font-size:13px;color:var(--t2);line-height:1.6}
-.ai-box b{color:var(--tx)}.ai-box .act{color:var(--acc);font-weight:700}
-/* ALERT */
-.al{border-radius:8px;padding:10px 14px;display:flex;gap:10px;align-items:center;margin-bottom:10px;background:linear-gradient(135deg,rgba(231,76,60,.07),rgba(231,76,60,.02));border:1px solid rgba(231,76,60,.18)}
-.al .ai2{width:32px;height:32px;border-radius:6px;background:url('https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=200&q=60') center/cover;flex-shrink:0;position:relative;overflow:hidden}
-.al .ai2::after{content:'';position:absolute;inset:0;background:rgba(231,76,60,.45)}
-.al h4{font-size:14px;font-weight:800;color:var(--er)}.al p{font-size:12px;color:var(--t2);margin-top:1px}
-/* DETAIL PANEL */
-.dp{position:fixed;top:0;right:0;width:380px;height:100vh;background:var(--sf);border-left:1px solid var(--bd);z-index:100;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 30px rgba(0,0,0,.5)}
-.dp.open{transform:translateX(0)}
-.dp-head{padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,var(--cd),var(--sf))}
-.dp-head h3{font-size:16px;font-weight:800}
-.dp-head .close{cursor:pointer;background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center}
-.dp-head .close svg{width:14px;height:14px;fill:var(--t2)}
-.dp-body{flex:1;overflow-y:auto;padding:16px}
-.dp-ai{background:linear-gradient(135deg,rgba(245,183,49,.08),rgba(245,183,49,.02));border:1px solid rgba(245,183,49,.2);border-radius:8px;padding:12px;margin-top:12px;border-left:3px solid var(--acc)}
-.dp-ai h4{font-size:13px;font-weight:800;color:var(--acc);margin-bottom:4px}
-.dp-ai p{font-size:12px;color:var(--t2);line-height:1.5}
-.dp-ai .act{color:var(--acc);font-weight:700}
-.clk{cursor:pointer;transition:all .12s;border-radius:5px}.clk:hover{background:var(--cdh)}
-/* MAP */
-.mw{position:relative;background:linear-gradient(135deg,#081428,#0C1E38);border-radius:10px;overflow:hidden;border:1px solid var(--bd);margin-bottom:10px}
-.mn-c{cursor:pointer;transition:transform .12s}.mn-c:hover{transform:scale(1.15)}
-#mapLeaflet{width:100%;height:100%;background:#081428;z-index:1}
-.map-wrap{height:calc(100vh - 60px);position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--bd)}
-.map-ctrl{position:absolute;top:10px;right:10px;z-index:1000;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;max-height:calc(100vh - 100px);overflow-y:auto;font-size:12px;min-width:160px}
-.map-ctrl h4{font-size:11px;color:var(--acc);font-weight:800;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
-.map-ctrl label{display:flex;align-items:center;gap:6px;padding:3px 0;cursor:pointer;color:var(--t2);font-size:11px;font-weight:500}
-.map-ctrl label:hover{color:var(--tx)}
-.map-ctrl input[type=checkbox]{accent-color:var(--pri)}
-.map-ctrl .gi-legend{display:flex;align-items:center;gap:5px;padding:2px 0;font-size:11px;color:var(--t2)}
-.map-ctrl .gi-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.map-load{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1001;color:var(--prl);font-size:14px;font-weight:700;text-align:center}
-.leaflet-popup-content-wrapper{background:var(--sf)!important;color:var(--tx)!important;border:1px solid var(--bd)!important;border-radius:8px!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important}
-.leaflet-popup-tip{background:var(--sf)!important}
-.leaflet-popup-content{font-family:var(--f)!important;font-size:12px!important;line-height:1.5!important;color:var(--t2)!important}
-.leaflet-popup-content b{color:var(--tx)!important}
-.leaflet-control-zoom a{background:var(--sf)!important;color:var(--tx)!important;border-color:var(--bd)!important}
-.leaflet-control-zoom a:hover{background:var(--cd)!important}
-/* ULP DETAIL TABLES */
-.gtbl{width:100%;border-collapse:collapse;font-size:12px}
-.gtbl th{padding:6px 8px;color:var(--t3);text-align:left;border-bottom:1px solid var(--bd);font-size:10px;font-weight:700;text-transform:uppercase;background:var(--sf)}
-.gtbl td{padding:5px 8px;border-bottom:1px solid rgba(30,51,82,.4)}
-.gtbl tr:hover td{background:var(--cdh)}
-.loc-pin{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(231,76,60,.1);color:var(--er);margin:2px}
-.loc-ok{background:rgba(46,204,113,.1);color:var(--ok)}
-.stk-lo{color:var(--er);font-weight:700}.stk-md{color:var(--wn);font-weight:600}.stk-ok{color:var(--ok)}
-/* CHAT */
-.cp{width:300px;border-left:1px solid var(--bd);display:none;flex-direction:column;background:var(--sf)}
-.cp.op{display:flex}
-.cpH{padding:10px 12px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
-.cpH .lt{display:flex;align-items:center;gap:8px}
-.cpH .aic{width:24px;height:24px;border-radius:5px;background:linear-gradient(135deg,var(--pri),#1A6DBF);display:flex;align-items:center;justify-content:center}
-.cpH .aic svg{width:12px;height:12px;fill:#fff}
-.cpH .tt{font-size:14px;font-weight:800}
-.cpH .cb{cursor:pointer;background:none;border:none}.cpH .cb svg{width:14px;height:14px;fill:var(--t3)}
-.cms{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
-.cm{max-width:88%}.cm.a{align-self:flex-start}.cm.u{align-self:flex-end}
-.cb2{padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.5;white-space:pre-wrap}
-.cm.a .cb2{background:var(--cd);border:1px solid var(--bd)}.cm.u .cb2{background:rgba(43,138,224,.1);border:1px solid rgba(43,138,224,.2)}
-.cb2 .sn{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
-.ci{padding:10px;border-top:1px solid var(--bd);display:flex;gap:6px}
-.ci input{flex:1;background:var(--cd);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;color:var(--tx);font-size:13px;outline:none;font-family:var(--f)}
-.ci input:focus{border-color:var(--pri)}
-.ci button{background:linear-gradient(135deg,var(--pri),#1A6DBF);border:none;border-radius:8px;padding:0 14px;cursor:pointer;display:flex;align-items:center}
-.ci button svg{width:14px;height:14px;fill:#fff}
-.td{display:flex;gap:3px;padding:4px}.td span{width:5px;height:5px;border-radius:50%;background:var(--pri);animation:pu 1s infinite}
-.td span:nth-child(2){animation-delay:.15s}.td span:nth-child(3){animation-delay:.3s}
-@keyframes pu{0%,100%{opacity:.3}50%{opacity:1}}
-.u3t{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}
-.u3t button{padding:5px 10px;border-radius:5px;border:none;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--f)}
-.uc{background:var(--cd);border-radius:8px;padding:12px;border:1px solid var(--bd);cursor:pointer;transition:all .15s}
-.uc:hover{border-color:var(--pri);background:var(--cdh);transform:translateY(-1px)}
-
-/* NKO Dashboard Styles */
-.nko-wrap{padding:10px}
-.nko-header{background:linear-gradient(135deg,#003d7a,#0066cc);border-radius:12px;padding:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-.nko-header h2{color:#fff;font-size:20px;margin:0}
-.nko-header .nko-score{font-size:42px;font-weight:900;color:#2ECC71}
-.nko-header .nko-score.red{color:#E74C3C}
-.nko-header .nko-score.yellow{color:#F39C12}
-.nko-header .nko-detail{text-align:right;color:#fff}
-.nko-header .nko-detail small{opacity:.7;display:block}
-.nko-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
-.nko-card{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:14px;position:relative;overflow:hidden}
-.nko-card .kpi-name{font-size:11px;color:var(--tx);opacity:.7;margin-bottom:4px}
-.nko-card .kpi-val{font-size:22px;font-weight:800}
-.nko-card .kpi-target{font-size:10px;color:var(--tx);opacity:.5;margin-top:2px}
-.nko-card .kpi-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:8px;overflow:hidden}
-.nko-card .kpi-bar-fill{height:100%;border-radius:2px;transition:width .5s}
-.nko-card.green .kpi-val{color:#2ECC71}.nko-card.green .kpi-bar-fill{background:#2ECC71}
-.nko-card.yellow .kpi-val{color:#F39C12}.nko-card.yellow .kpi-bar-fill{background:#F39C12}
-.nko-card.red .kpi-val{color:#E74C3C}.nko-card.red .kpi-bar-fill{background:#E74C3C}
-.nko-table-wrap{background:var(--cd);border:1px solid var(--bd);border-radius:10px;overflow-x:auto;margin-bottom:16px}
-.nko-table{width:100%;border-collapse:collapse;font-size:12px}
-.nko-table th{background:linear-gradient(135deg,#003d7a,#0052a3);color:#fff;padding:10px 8px;text-align:left;font-size:11px;position:sticky;top:0}
-.nko-table td{padding:8px;border-bottom:1px solid var(--bd);color:var(--tx)}
-.nko-table tr:hover{background:rgba(255,255,255,.03)}
-.nko-table .val-green{color:#2ECC71;font-weight:700}
-.nko-table .val-yellow{color:#F39C12;font-weight:700}
-.nko-table .val-red{color:#E74C3C;font-weight:700}
-.nko-table .cat-row{background:rgba(0,102,204,.1);font-weight:700}
-.nko-table .cat-row td{color:#5AADE8}
-.nko-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
-.nko-badge.green{background:rgba(46,204,113,.15);color:#2ECC71}
-.nko-badge.yellow{background:rgba(243,156,18,.15);color:#F39C12}
-.nko-badge.red{background:rgba(231,76,60,.15);color:#E74C3C}
-.nko-filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.nko-filters button{padding:6px 14px;border:1px solid var(--bd);border-radius:6px;background:var(--cd);color:var(--tx);cursor:pointer;font-size:11px;transition:all .2s}
-.nko-filters button:hover,.nko-filters button.active{background:var(--pri);color:#fff;border-color:var(--pri)}
-.nko-section-title{font-size:16px;font-weight:700;color:var(--tx);margin:16px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--pri)}
-.gi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:16px}
-.gi-box{background:var(--cd);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
-.gi-box-header{background:linear-gradient(135deg,#003d7a,#0066cc);padding:12px 16px;color:#fff}
-.gi-box-header h3{margin:0;font-size:14px}
-.gi-box-header .rm{font-size:11px;opacity:.8;margin-top:2px}
-.gi-box-header .rm strong{color:#F5B731}
-.gi-box-body{padding:12px}
-.trafo-section{margin-bottom:10px}
-.trafo-section .trafo-title{font-size:11px;font-weight:700;color:var(--pri);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--bd)}
-.feeder-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:11px;color:var(--tx)}
-.feeder-row .feeder-name{flex:1}
-.feeder-row .feeder-load{font-weight:700;min-width:60px;text-align:right}
-.feeder-row .feeder-load.high{color:#E74C3C}
-.feeder-row .feeder-load.med{color:#F39C12}
-.feeder-row .feeder-load.ok{color:#2ECC71}
-.gi-summary{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
-.gi-summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.gi-stat{text-align:center;padding:10px}
-.gi-stat .gi-stat-val{font-size:24px;font-weight:800;color:var(--pri)}
-.gi-stat .gi-stat-lbl{font-size:11px;color:var(--tx);opacity:.6;margin-top:2px}
-.nko-chart-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.nko-chart-box{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:16px}
-.nko-chart-box h4{margin:0 0 12px;font-size:13px;color:var(--tx)}
-.nko-chart-box canvas{max-height:250px}
-@media(max-width:768px){.nko-chart-wrap{grid-template-columns:1fr}.gi-grid{grid-template-columns:1fr}.nko-cards{grid-template-columns:repeat(2,1fr)}}
+.tb{background:var(--cd);border-bottom:1px solid var(--bd);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}.tb h2{font-size:16px;font-weight:600}.tb small{color:var(--txd);font-size:12px}
+.cw{flex:1;overflow-y:auto;display:flex;flex-direction:column}.ct{flex:1;padding:16px 20px;overflow-y:auto}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:12px}.card h3{font-size:14px;margin-bottom:10px;color:var(--tx)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.stat-card{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:16px;text-align:center}.stat-card .val{font-size:28px;font-weight:800;margin:4px 0}.stat-card .lbl{font-size:11px;color:var(--txd);text-transform:uppercase;letter-spacing:.5px}
+.stat-card.green .val{color:var(--grn)}.stat-card.red .val{color:var(--red)}.stat-card.yellow .val{color:var(--ylw)}.stat-card.blue .val{color:var(--pri)}.stat-card.cyan .val{color:var(--cyan)}.stat-card.orange .val{color:var(--org)}
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--bd)}.sec-header h2{font-size:18px;font-weight:700}.sec-header .loc-badge{background:var(--pri);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px}
+.tab-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--bd);background:transparent;color:var(--txd);font-size:12px;cursor:pointer;transition:all .2s}.tab-btn:hover{border-color:var(--pri);color:var(--tx)}.tab-btn.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}.tbl th{text-align:left;padding:8px 10px;background:var(--cdh);color:var(--txd);font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd)}.tbl td{padding:8px 10px;border-bottom:1px solid var(--bd)}.tbl tr:hover td{background:rgba(59,130,246,.05)}.tbl .green{color:var(--grn)}.tbl .red{color:var(--red)}.tbl .yellow{color:var(--ylw)}
+.pbar{height:6px;background:var(--cdh);border-radius:3px;overflow:hidden;margin-top:4px}.pbar .fill{height:100%;border-radius:3px;transition:width .5s}.pbar .fill.green{background:var(--grn)}.pbar .fill.red{background:var(--red)}.pbar .fill.yellow{background:var(--ylw)}.pbar .fill.blue{background:var(--pri)}
+.ai-analysis{background:linear-gradient(135deg,#0c1f3d,#162240);border:1px solid var(--pri);border-radius:12px;padding:20px;margin-top:16px;position:relative;overflow:hidden}
+.ai-analysis::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pri),var(--cyan),var(--pri));animation:aiGlow 3s infinite}
+@keyframes aiGlow{0%,100%{opacity:.5}50%{opacity:1}}
+.ai-analysis .ai-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--pri);margin-bottom:12px}.ai-analysis .ai-title svg{width:18px;height:18px;fill:var(--pri)}
+.ai-analysis .ai-body{font-size:13px;line-height:1.7;color:var(--tx)}.ai-analysis .ai-body h4{color:var(--cyan);margin:10px 0 6px;font-size:13px}.ai-analysis .ai-body ul{margin:4px 0 8px 16px}.ai-analysis .ai-body li{margin-bottom:4px;color:var(--txd)}
+.ai-analysis .ai-body .highlight{background:rgba(59,130,246,.15);padding:2px 6px;border-radius:4px;color:var(--pri)}.ai-analysis .ai-body .metric{display:inline-block;font-weight:700;color:var(--grn)}.ai-analysis .ai-body .metric.bad{color:var(--red)}
+.ai-analysis .thinking{display:flex;align-items:center;gap:8px;color:var(--txd);font-size:13px}.ai-analysis .thinking .dots{display:flex;gap:4px}.ai-analysis .thinking .dots span{width:6px;height:6px;background:var(--pri);border-radius:50%;animation:dotPulse 1.4s infinite}.ai-analysis .thinking .dots span:nth-child(2){animation-delay:.2s}.ai-analysis .thinking .dots span:nth-child(3){animation-delay:.4s}
+@keyframes dotPulse{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.rc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:12px}
+.rc-card{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:14px;border-left:4px solid var(--pri)}.rc-card.critical{border-left-color:var(--red)}.rc-card.warning{border-left-color:var(--ylw)}.rc-card.good{border-left-color:var(--grn)}
+.rc-card .rc-title{font-size:13px;font-weight:700;margin-bottom:6px}.rc-card .rc-desc{font-size:12px;color:var(--txd);line-height:1.5}.rc-card .rc-action{font-size:11px;color:var(--pri);margin-top:8px;font-weight:600}
+.cp{position:fixed;right:-380px;top:0;width:380px;height:100vh;background:var(--cd);border-left:1px solid var(--bd);transition:right .3s;z-index:100;display:flex;flex-direction:column}.cp.open{right:0}
+.cpH{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)}.cpH h3{font-size:14px;display:flex;align-items:center;gap:8px}.cpH button{background:none;border:none;color:var(--txd);cursor:pointer;padding:4px}.cpH button:hover{color:var(--tx)}.cpH svg{width:18px;height:18px;fill:currentColor}
+.cms{flex:1;overflow-y:auto;padding:12px}.cms .msg{margin-bottom:12px;display:flex;flex-direction:column}.cms .msg.user{align-items:flex-end}.cms .msg.ai{align-items:flex-start}
+.cms .msg .bubble{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5}.cms .msg.user .bubble{background:var(--pri);color:#fff;border-bottom-right-radius:4px}.cms .msg.ai .bubble{background:var(--cdh);color:var(--tx);border-bottom-left-radius:4px}
+.cb{padding:12px;border-top:1px solid var(--bd);display:flex;gap:8px}.cb input{flex:1;background:var(--cdh);border:1px solid var(--bd);color:var(--tx);padding:10px 14px;border-radius:8px;font-size:13px}.cb input:focus{outline:none;border-color:var(--pri)}
+.cb button{background:var(--pri);border:none;color:#fff;width:40px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center}.cb button:hover{opacity:.9}.cb button svg{width:18px;height:18px;fill:#fff}
+.nko-wrap{padding:10px}.nko-header{background:linear-gradient(135deg,#003d7a,#0066cc);border-radius:12px;padding:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.nko-header h2{color:#fff;font-size:20px;margin:0}.nko-header .nko-score{font-size:42px;font-weight:900;color:#2ECC71}.nko-header .nko-detail{text-align:right;color:#fff}.nko-header .nko-detail small{opacity:.7;display:block}
+.nko-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}.nko-badge.green{background:rgba(34,197,94,.15);color:var(--grn)}.nko-badge.red{background:rgba(239,68,68,.15);color:var(--red)}
+.nko-section-title{font-size:16px;font-weight:700;margin:16px 0 10px;color:var(--tx)}
+.gi-summary{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px}.gi-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;margin-bottom:16px}
+.gi-stat{padding:8px}.gi-stat-val{font-size:26px;font-weight:800}.gi-stat-lbl{font-size:11px;color:var(--txd);margin-top:2px}
+.gi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(460px,1fr));gap:12px}.gi-box{background:var(--cd);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+.gi-box-header{padding:12px 16px;background:linear-gradient(135deg,#003d7a,#0055aa);color:#fff}.gi-box-header h4{font-size:14px;margin-bottom:2px}.gi-box-header small{opacity:.7;font-size:11px}
+.gi-box-body{padding:12px}.trafo-section{margin-bottom:12px}.trafo-title{font-size:12px;color:var(--pri);margin-bottom:6px;font-weight:600}
+.feeder-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.05)}.feeder-name{color:var(--txd)}.feeder-load{font-weight:600}.feeder-load.high{color:var(--red)}.feeder-load.med{color:var(--ylw)}.feeder-load.ok{color:var(--grn)}
+.dp{position:fixed;right:-420px;top:0;width:420px;height:100vh;background:var(--cd);border-left:1px solid var(--bd);transition:right .3s;z-index:99;display:flex;flex-direction:column}.dp.open{right:0}
+.dp-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)}.dp-head h3{font-size:14px}.dp-head .close{background:none;border:none;color:var(--txd);cursor:pointer}.dp-head .close svg{width:18px;height:18px;fill:currentColor}.dp-body{flex:1;overflow-y:auto;padding:16px}
+.map-wrap{height:100%;width:100%;border-radius:10px;overflow:hidden}#mapEl{height:100%;width:100%}
+.bagian-header{background:linear-gradient(135deg,#003d7a,#0066cc);border-radius:12px;padding:20px;margin-bottom:16px}.bagian-header h2{color:#fff;font-size:20px;margin:0 0 4px}.bagian-header p{color:rgba(255,255,255,.7);font-size:12px}
+.bagian-header .filter-row{display:flex;gap:8px;margin-top:12px;align-items:center}
+.bagian-header .ai-btn,.ai-btn{background:linear-gradient(135deg,var(--pri),var(--cyan));border:none;color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:6px}.ai-btn:hover{opacity:.9}.ai-btn svg{width:14px;height:14px;fill:#fff}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:16px}.kpi-mini{background:var(--cd);border:1px solid var(--bd);border-radius:8px;padding:12px}
+.kpi-mini .kpi-label{font-size:10px;color:var(--txd);text-transform:uppercase;letter-spacing:.5px}.kpi-mini .kpi-val{font-size:22px;font-weight:800;margin:4px 0 2px}.kpi-mini .kpi-sub{font-size:10px;color:var(--txd)}
+.chart-box{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:12px}.chart-box h4{font-size:13px;margin-bottom:10px;color:var(--tx)}.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.chart-container{position:relative;height:250px}
+@media(max-width:768px){.side{display:none}.card-grid{grid-template-columns:1fr}.gi-grid{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="side">
   <div class="slogo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_PLN.png" alt="PLN" onerror="this.style.display='none'"><div><h1>PLN LYTICS</h1><small>INTELLIGENCE</small></div></div>
-  <div class="srole"><label>Akses Level</label><select id="roleSel" onchange="chR(this.value)"><option value="pusat">Pusat (Seluruh UID)</option><option value="uid" selected>UID (Seluruh UP3)</option><option value="up3">UP3 (Seluruh ULP)</option><option value="ulp">ULP (Detail Lokasi)</option></select><div class="rh" id="rh"></div></div>
-  <nav class="snav" id="sn"></nav>
-  <div class="sph"><span>UID Jawa Barat</span></div>
-  <div class="sai" onclick="tC()"><div class="ad"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74zM12 17.94V12h5.94L15 14.89l2.2 2.2-.9.85z"/></svg></div><div><div class="info">AI Assistant</div><div class="st2">Online</div></div></div>
+  <div class="srole"><label>Akses Level</label><select id="levelSel" onchange="changeLevel(this.value)"><option value="all_up3" selected>All UP3 Indramayu</option><option value="53401">ULP Jatibarang (53401)</option><option value="53402">ULP Haurgeulis (53402)</option><option value="53403">ULP Indramayu Kota (53403)</option><option value="43404">ULP Cikedung (43404)</option></select></div>
+  <nav class="snav" id="sn">
+    <div class="ni on" onclick="nav('dash')"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Dashboard</div>
+    <div class="ni" onclick="nav('peta')"><svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Peta</div>
+    <div class="ni" onclick="nav('jaringan')"><svg viewBox="0 0 24 24"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7zM7 9H4V5h3v4zm10 6h3v4h-3v-4zm0-10h3v4h-3V5z"/></svg>Jaringan</div>
+    <div class="ni" onclick="nav('konstruksi')"><svg viewBox="0 0 24 24"><path d="M22 6c0-.55-.45-1-1-1h-3.18C17.4 3.84 16.3 3 15 3c-1.3 0-2.4.84-2.82 2H6L2 22h20L22 6zM15 5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z"/></svg>Konstruksi</div>
+    <div class="ni" onclick="nav('perencanaan')"><svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>Perencanaan</div>
+    <div class="ni" onclick="nav('keuangan')"><svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>Keuangan</div>
+    <div class="ni" onclick="nav('nko')"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>NKO Indramayu</div>
+  </nav>
+  <div class="sph"><span>UP3 Indramayu</span></div>
+  <div class="sai" onclick="toggleChat()"><div class="ad"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74zM12 17.94V12h5.94L15 14.89l2.2 2.2-.9.85z"/></svg></div><div><div class="info">AI Assistant</div><div class="st2">Online</div></div></div>
 </aside>
 <div class="mn">
-  <header class="tb"><div><h2 id="pT">Dashboard</h2><div class="sub" id="pS">PLN UID Jawa Barat</div></div></header>
+  <header class="tb"><div><h2 id="pageTitle">Dashboard</h2><small id="pageSub">UP3 Indramayu</small></div></header>
   <div class="cw">
     <div class="ct" id="ct"></div>
     <div class="cp" id="cpn">
-      <div class="cpH"><div class="lt"><div class="aic"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74zM12 17.94V12h5.94L15 14.89l2.2 2.2-.9.85z"/></svg></div><span class="tt">PLN AI</span></div><button class="cb" onclick="tC()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></div>
-      <div class="cms" id="cms"></div>
-      <div class="ci"><input id="cin" placeholder="Tanyakan..." onkeydown="if(event.key==='Enter')sC()"><button onclick="sC()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button></div>
+      <div class="cpH"><h3><svg viewBox="0 0 24 24" width="18" height="18"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z" fill="currentColor"/></svg>PLN AI</h3><button onclick="toggleChat()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></div>
+      <div class="cms" id="chatMsgs"><div class="msg ai"><div class="bubble">Halo! Saya PLN AI Assistant. Saya menganalisis akar permasalahan dan menampilkan hasil langsung di halaman. Tanya tentang SAIDI, susut, gangguan, keuangan, NKO, atau minta rekomendasi.</div></div></div>
+      <div class="cb"><input id="chatIn" placeholder="Tanya AI tentang data..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button></div>
     </div>
   </div>
 </div>
 <div class="dp" id="dp"><div class="dp-head"><h3 id="dpT">Detail</h3><button class="close" onclick="closeDP()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></div><div class="dp-body" id="dpB"></div></div>
 </div>
 <script>
-var IMG='https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_PLN.png';
-var U=[{id:"BDG",nm:"Bandung",ulps:["Bdg Selatan","Bdg Utara","Bdg Timur","Bdg Barat","Ujungberung","Cijawura","Kopo"],lat:-6.917,lng:107.619},{id:"BGR",nm:"Bogor",ulps:["Bgr Kota","Bgr Barat","Bgr Timur","Cipayung","Jasinga","Leuwiliang"],lat:-6.597,lng:106.806},{id:"BKS",nm:"Bekasi",ulps:["Bks Kota","Babelan","Mustika Jaya","Medan Satria","Bantargebang"],lat:-6.238,lng:106.976},{id:"CJR",nm:"Cianjur",ulps:["Cjr Kota","Cipanas","Mande","Tanggeung","Sukanagara"],lat:-6.734,lng:107.044},{id:"CKG",nm:"Cikarang",ulps:["Ckg Kota","Lemahabang","Tambun","Cibitung"],lat:-6.255,lng:107.152},{id:"CMI",nm:"Cimahi",ulps:["Cmi Kota","Padalarang","Lembang","Cililin"],lat:-6.884,lng:107.541},{id:"CRB",nm:"Cirebon",ulps:["Crb Kota","Sumber","Kuningan","Ciledug","Cilimus"],lat:-6.732,lng:108.552},{id:"DPK",nm:"Depok",ulps:["Dpk Kota","Cimanggis","Sawangan","Bojonggede"],lat:-6.403,lng:106.794},{id:"GPI",nm:"Gn.Putri",ulps:["Citeureup","Cileungsi","Jonggol"],lat:-6.486,lng:106.906},{id:"GRT",nm:"Garut",ulps:["Grt Kota","Cikajang","Pameungpeuk","Leles","Cibatu"],lat:-7.228,lng:107.909},{id:"IDM",nm:"Indramayu",ulps:["Idm Kota","Haurgeulis","Jatibarang","Cikedung"],lat:-6.337,lng:108.320},{id:"KRW",nm:"Karawang",ulps:["Krw Kota","Cikampek","Kosambi","Rengasdengklok"],lat:-6.323,lng:107.338},{id:"MJA",nm:"Majalaya",ulps:["Majalaya","Baleendah","Banjaran","Soreang","Rancaekek"],lat:-7.050,lng:107.758},{id:"PWK",nm:"Purwakarta",ulps:["Pwk Kota","Subang","Pamanukan","Pagaden","Plered"],lat:-6.557,lng:107.442},{id:"SKI",nm:"Sukabumi",ulps:["Ski Kota","Cibadak","Cikembar","Plb Ratu","Cicurug"],lat:-6.922,lng:106.927},{id:"SMD",nm:"Sumedang",ulps:["Smd Kota","Tanjungsari","Majalengka","Jatiwangi"],lat:-6.856,lng:107.927},{id:"TSK",nm:"Tasikmalaya",ulps:["Tsk Kota","Pangandaran","Banjar","Ciamis","Rajapolah","Singaparna"],lat:-7.327,lng:108.221}];
-var D={BDG:{sc:56.76,rk:4,pl:{p:112},dy:{p:134},bp:{p:105},sl:{p:86},tx:{p:149},rp:{p:123},kel:14609,ai:161.12,kt:["Token Gagal","PTL Padam","Sambung"],saidi:19.65,saifi:.33,ens:98,stok:{kabel:72,meter:85,trafo:45,kubikel:38}},BGR:{sc:57.72,rk:3,pl:{p:110},dy:{p:140},bp:{p:125},sl:{p:96},tx:{p:128},rp:{p:112},kel:15222,ai:241.53,kt:["Token Gagal","KWH Rusak","Tagihan"],saidi:27.55,saifi:.35,ens:102,stok:{kabel:45,meter:62,trafo:28,kubikel:52}},BKS:{sc:56.02,rk:9,pl:{p:101},dy:{p:129},bp:{p:84},sl:{p:129},tx:{p:149},rp:{p:124},kel:2610,ai:199.05,kt:["Token Gagal","Display","PTL Padam"],saidi:33.88,saifi:.47,ens:97,stok:{kabel:58,meter:71,trafo:62,kubikel:44}},CJR:{sc:56.42,rk:6,pl:{p:111},dy:{p:138},bp:{p:143},sl:{p:80},tx:{p:102},rp:{p:148},kel:999,ai:93.96,kt:["Token Gagal","KWH Rusak","PB"],saidi:56.58,saifi:.89,ens:95,stok:{kabel:34,meter:48,trafo:22,kubikel:18}},CKG:{sc:40.20,rk:17,pl:{p:106},dy:{p:44},bp:{p:41},sl:{p:34},tx:{p:115},rp:{p:56},kel:7611,ai:246.63,kt:["Token Gagal","Sambung","Tagihan"],saidi:6.98,saifi:.13,ens:103,stok:{kabel:25,meter:33,trafo:15,kubikel:8}},CMI:{sc:56.62,rk:5,pl:{p:112},dy:{p:90},bp:{p:123},sl:{p:175},tx:{p:131},rp:{p:111},kel:8836,ai:104.71,kt:["KWH Rusak","Sambung","PTL Padam"],saidi:17.70,saifi:.25,ens:101,stok:{kabel:65,meter:78,trafo:55,kubikel:42}},CRB:{sc:55.65,rk:10,pl:{p:113},dy:{p:158},bp:{p:131},sl:{p:76},tx:{p:96},rp:{p:101},kel:5172,ai:179.31,kt:["Token Gagal","Geser","PTL Padam"],saidi:18.27,saifi:.33,ens:99,stok:{kabel:51,meter:67,trafo:39,kubikel:31}},DPK:{sc:56.04,rk:8,pl:{p:106},dy:{p:131},bp:{p:134},sl:{p:77},tx:{p:155},rp:{p:143},kel:8197,ai:159.32,kt:["Geser","Sambung","Token Gagal"],saidi:15.29,saifi:.24,ens:104,stok:{kabel:41,meter:56,trafo:33,kubikel:27}},GPI:{sc:49.80,rk:16,pl:{p:114},dy:{p:73},bp:{p:80},sl:{p:69},tx:{p:131},rp:{p:96},kel:5568,ai:129.70,kt:["Token Gagal","KWH Rusak","PTL Padam"],saidi:37.99,saifi:.51,ens:96,stok:{kabel:38,meter:45,trafo:19,kubikel:14}},GRT:{sc:56.40,rk:7,pl:{p:128},dy:{p:139},bp:{p:155},sl:{p:78},tx:{p:106},rp:{p:124},kel:2267,ai:84.62,kt:["Token Gagal","Sambung","KWH Rusak"],saidi:61.12,saifi:.87,ens:94,stok:{kabel:55,meter:82,trafo:48,kubikel:35}},IDM:{sc:52.28,rk:14,pl:{p:119},dy:{p:158},bp:{p:91},sl:{p:35},tx:{p:106},rp:{p:148},kel:999,ai:102.93,kt:["PTL Padam","Token Gagal","Geser"],saidi:49.48,saifi:.59,ens:97,stok:{kabel:62,meter:74,trafo:42,kubikel:29}},KRW:{sc:68.68,rk:2,pl:{p:101},dy:{p:36},bp:{p:125},sl:{p:123},tx:{p:118},rp:{p:53},kel:10720,ai:229.74,kt:["Token Gagal","PTL Diputus","Tagihan"],saidi:42.73,saifi:.49,ens:95,stok:{kabel:18,meter:29,trafo:12,kubikel:9}},MJA:{sc:55.02,rk:12,pl:{p:112},dy:{p:99},bp:{p:87},sl:{p:124},tx:{p:125},rp:{p:77},kel:4350,ai:129.26,kt:["KWH Rusak","Token Gagal","Tagihan"],saidi:38.01,saifi:.66,ens:98,stok:{kabel:47,meter:63,trafo:36,kubikel:25}},PWK:{sc:55.32,rk:11,pl:{p:128},dy:{p:136},bp:{p:78},sl:{p:110},tx:{p:123},rp:{p:74},kel:2763,ai:160.98,kt:["Token Gagal","PTL Diputus","KWH Rusak"],saidi:16.07,saifi:.21,ens:100,stok:{kabel:53,meter:69,trafo:41,kubikel:33}},SKI:{sc:54.88,rk:13,pl:{p:118},dy:{p:113},bp:{p:156},sl:{p:63},tx:{p:105},rp:{p:95},kel:3520,ai:97.54,kt:["Sambung","Token Gagal","PTL Padam"],saidi:36.86,saifi:.43,ens:99,stok:{kabel:61,meter:76,trafo:52,kubikel:40}},SMD:{sc:91.01,rk:1,pl:{p:106},dy:{p:154},bp:{p:184},sl:{p:157},tx:{p:135},rp:{p:101},kel:1309,ai:119.08,kt:["Token Gagal","KWH Rusak","Sambung"],saidi:14.92,saifi:.26,ens:105,stok:{kabel:71,meter:88,trafo:64,kubikel:51}},TSK:{sc:52.11,rk:15,pl:{p:126},dy:{p:152},bp:{p:132},sl:{p:12},tx:{p:124},rp:{p:133},kel:3517,ai:159.74,kt:["KWH Rusak","Token Gagal","PTL Padam"],saidi:32.13,saifi:.63,ens:96,stok:{kabel:43,meter:57,trafo:31,kubikel:22}}};
-var KP=[{n:"Penjualan TL",p:0},{n:"Tambah Pelanggan",p:113},{n:"Tambah Daya",p:108},{n:"Transaksi Mobile",p:126},{n:"Pendapatan BP",p:104},{n:"Saldo Akhir",p:104},{n:"PRR",p:110},{n:"BPBL",p:100},{n:"SAIDI",p:118},{n:"SAIFI",p:125},{n:"ENS",p:99},{n:"Response Time",p:112},{n:"Rating Negatif",p:190},{n:"Gangguan TM",p:200}];
-var KEL=[{n:"Token Gagal",c:4642},{n:"KWH Rusak",c:2682},{n:"Minta Sambung",c:2128},{n:"PTL Padam",c:1780},{n:"Tagihan",c:1234},{n:"PTL Diputus",c:636}];
-var CC=["#2B8AE0","#F5B731","#2ECC71","#E74C3C","#F39C12","#3DB4E8","#9B59B6","#E91E63","#1ABC9C","#E67E22","#8E44AD","#2980B9","#D35400","#16A085","#C0392B","#27AE60","#F1C40F"];
-// STATE: role hierarchy: pusat > uid > up3 > ulp
-var S={tab:'dash',role:'uid',fup3:null,fulp:null,up3:null,co:false};
-var CH={};
-var srt=function(){return Object.entries(D).sort(function(a,b){return a[1].rk-b[1].rk})};
-var pbc=function(p){return p>=110?'var(--ok)':p>=100?'var(--pri)':p>=80?'var(--wn)':'var(--er)'};
-var pbg=function(p){return p>=110?'linear-gradient(90deg,#2ECC71,#6EE7B7)':p>=100?'linear-gradient(90deg,#2B8AE0,#5AADE8)':p>=80?'linear-gradient(90deg,#F39C12,#FBBF24)':'linear-gradient(90deg,#E74C3C,#F87171)'};
-var mkP=function(p,h){h=h||4;return'<div class="pb" style="height:'+h+'px"><div class="fl" style="width:'+Math.min(Math.max(p,0),135)+'%;background:'+pbg(p)+'"></div></div>'};
-var scC=function(s){return s>70?'#2ECC71':s>55?'#2B8AE0':s>50?'#F39C12':'#E74C3C'};
-var RN={pusat:'Kantor Pusat',uid:'UID Jawa Barat',up3:'UP3',ulp:'ULP'};
-// Generate ULP detail data (dummy but realistic)
-function ulpData(up3id,ulpName){var seed=0;for(var i=0;i<ulpName.length;i++)seed+=ulpName.charCodeAt(i);var r=function(mn,mx){seed=(seed*9301+49297)%233280;return mn+Math.floor((seed/233280)*(mx-mn))};
-var spots=['Penyulang '+ulpName.substring(0,3).toUpperCase()+'-'+r(1,20),'GD-'+r(100,999)+' Jl. '+['Merdeka','Sudirman','Gatot Subroto','Ahmad Yani','Diponegoro'][r(0,5)],'Tiang '+r(1,99)+' RT'+r(1,15)+'/'+r(1,8),'Trafo GD-'+r(100,500)+' Kel. '+['Sukamaju','Margahayu','Cibiru','Ciparay','Dayeuh Kolot'][r(0,5)],'Gardu '+r(1,50)+' Perum '+['Griya Asri','Bumi Indah','Permata','Taman Sari','Bukit Hijau'][r(0,5)]];
-var gangguan=spots.slice(0,r(3,5)).map(function(s){return{lokasi:s,jenis:['Jumper Putus','Kabel Putus','Trafo Rusak','Arrester Rusak','Isolator Pecah','FCO Rusak','Pohon Tumbang','Overload'][r(0,8)],freq:r(1,12),lastDate:r(1,28)+'/'+r(1,2)+'/2026',status:r(0,10)>6?'Berulang':'Selesai'}});
-var keluhan=[{n:"Token Gagal",c:r(80,400)},{n:"KWH Rusak",c:r(30,180)},{n:"PTL Padam",c:r(20,120)},{n:"Sambung",c:r(10,80)},{n:"Tagihan",c:r(5,50)}];
-var totalKel=keluhan.reduce(function(a,b){return a+b.c},0);
-return{pelanggan:r(8000,45000),trafo:r(40,300),penyulang:r(3,15),saidi:(r(5,40)+r(0,99)/100).toFixed(2),saifi:(r(1,10)/10).toFixed(2),keluhan:keluhan,totalKel:totalKel,gangguan:gangguan,prediksi7:Math.floor(totalKel/52),rpt:r(18,32),bintang:r(0,10)>3?5:4}}
-
-// FILTER BAR
-function mkFilt(){
-  if(S.role==='uid'||S.role==='pusat') return '';
-  var ci=S.fup3?U.find(function(u){return u.id===S.fup3}):null;
-  var h='<div class="fbar"><div class="flb"><svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>FILTER</div>';
-  h+='<select onchange="setF(\'up3\',this.value)"><option value="">— Pilih UP3 —</option>';
-  U.forEach(function(u){h+='<option value="'+u.id+'" '+(S.fup3===u.id?'selected':'')+'>UP3 '+u.nm+'</option>'});
-  h+='</select>';
-  if(S.role==='ulp'){
-    if(ci){h+='<select onchange="setF(\'ulp\',this.value)"><option value="">— Pilih ULP —</option>';ci.ulps.forEach(function(u){h+='<option value="'+u+'" '+(S.fulp===u?'selected':'')+'>ULP '+u+'</option>'});h+='</select>';}
-    else{h+='<select disabled style="opacity:.5"><option>Pilih UP3 dulu</option></select>'}
-  }
-  if(S.fup3){h+='<div class="ftag">'+(ci?ci.nm:'')+(S.fulp?' / '+S.fulp:'')+'</div>'}
-  else{h+='<span class="fhint">Pilih UP3'+(S.role==='ulp'?' lalu ULP':'')+' untuk data spesifik</span>'}
-  h+='</div>';return h;
-}
-function setF(t,v){if(t==='up3'){S.fup3=v||null;S.fulp=null}else{S.fulp=v||null}nav(S.tab)}
-
-// AI INSIGHT
-function aiI(ctx,d){try{
-if(ctx==='dash')return'<b>Prediksi:</b> Pencapaian penjualan akhir tahun 40-60% tanpa intervensi. Distribusi aman — 6/7 KPI >110%.<br><b>Butuh perhatian:</b> Penjualan TL 0%, UP3 Cikarang 40.2% terendah, ENS 99% tipis.<br><span class="act">Arahan: Percepat captive power 200 GWh + aggressive PB 697 GWh. Intervensi CKG & GPI.</span>';
-if(ctx==='up3')return'<b>Prediksi:</b> ~'+Math.floor(d.kel/52)+' keluhan/minggu, dominasi '+d.kt[0]+'. '+(d.sc<50?'Score KRITIS — tetap bottom 3 tanpa perbaikan.':d.sc>70?'Excellent — jadikan benchmark.':'Moderat — ada ruang perbaikan.')+'<br><b>Butuh perhatian:</b> '+(d.bp.p<90?'BP '+d.bp.p+'%, ':'')+(d.sl.p<80?'Saldo '+d.sl.p+'%, ':'')+(d.dy.p<80?'Daya '+d.dy.p+'%, ':'')+Object.entries(d.stok).filter(function(e){return e[1]<30}).map(function(e){return'Stok '+e[0]+' '+e[1]+'%'}).join(', ')+'<br><span class="act">Arahan: Fokus '+d.kt[0]+'. '+(Object.values(d.stok).some(function(v){return v<30})?'Pengadaan material segera.':'Pertahankan momentum.')+'</span>';
-if(ctx==='ulp'){var ud=d;return'<b>Prediksi:</b> ~'+ud.prediksi7+' keluhan/minggu. Puncak Senin-Selasa (~'+Math.ceil(ud.prediksi7/5*1.3)+'/hari).<br><b>Titik Gangguan Berulang:</b> '+ud.gangguan.filter(function(g){return g.status==='Berulang'}).length+' dari '+ud.gangguan.length+' lokasi — perlu perbaikan permanen.<br><b>Butuh perhatian:</b> '+ud.keluhan[0].n+' mendominasi ('+ud.keluhan[0].c+' laporan, '+(ud.keluhan[0].c/ud.totalKel*100).toFixed(0)+'%). '+(ud.bintang<5?'Rating Bintang '+ud.bintang+' — belum mencapai B5.':'')+'<br><span class="act">Arahan: (1) Perbaiki '+ud.gangguan.filter(function(g){return g.status==='Berulang'}).map(function(g){return g.lokasi}).slice(0,2).join(', ')+' — gangguan berulang. (2) Siapkan '+Math.ceil(ud.prediksi7/5*1.2)+' kapasitas penanganan/hari. (3) '+(ud.keluhan[0].n==='Token Gagal'?'Ganti meter prabayar target '+Math.ceil(ud.keluhan[0].c/12)+'/bulan.':'Percepat penanganan '+ud.keluhan[0].n+'.')+'</span>'}
-}catch(e){return'Sedang menganalisis...'}return''}
-
-function openDP(t,c){document.getElementById('dpT').textContent=t;document.getElementById('dpB').innerHTML=c;document.getElementById('dp').classList.add('open')}
-function closeDP(){document.getElementById('dp').classList.remove('open')}
-function showUP3(id){var d=D[id],inf=U.find(function(u){return u.id===id});
-var h='<div style="height:70px;border-radius:8px;overflow:hidden;margin-bottom:12px;background:url(\'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=60\') center/cover;position:relative"><div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,16,28,.85),rgba(6,16,28,.2))"></div><div style="position:absolute;bottom:8px;left:12px;z-index:1"><div style="font-size:16px;font-weight:800">UP3 '+inf.nm+'</div><div style="font-size:11px;color:var(--t2)">#'+d.rk+'/17 — Score '+d.sc+'%</div></div></div>';
-[{l:"Pelanggan",p:d.pl.p},{l:"Daya",p:d.dy.p},{l:"BP",p:d.bp.p},{l:"Saldo",p:d.sl.p}].forEach(function(k){h+='<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+k.l+'</span><span style="font-weight:700;color:'+pbc(k.p)+'">'+k.p+'%</span></div>'+mkP(k.p)+'</div>'});
-h+='<div style="margin-top:8px;font-size:12px;color:var(--t2)">SAIDI <b style="color:var(--tx)">'+d.saidi+'</b> | SAIFI <b style="color:var(--tx)">'+d.saifi+'</b> | ENS <b style="color:var(--tx)">'+d.ens+'%</b> | Keluhan <b style="color:var(--tx)">'+d.kel.toLocaleString()+'</b></div>';
-h+='<div class="dp-ai"><h4>AI Analysis</h4><p>'+aiI('up3',d)+'</p></div>';
-openDP('UP3 '+inf.nm,h)}
-
-function showULP(up3id,ulpName){var ud=ulpData(up3id,ulpName);
-var h='<div style="height:60px;border-radius:8px;overflow:hidden;margin-bottom:12px;background:url(\'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&q=60\') center/cover;position:relative"><div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,16,28,.85),rgba(6,16,28,.2))"></div><div style="position:absolute;bottom:8px;left:12px;z-index:1"><div style="font-size:15px;font-weight:800">ULP '+ulpName+'</div><div style="font-size:10px;color:var(--t2)">'+ud.pelanggan.toLocaleString()+' pelanggan | '+ud.trafo+' trafo | B'+ud.bintang+'</div></div></div>';
-h+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px"><div style="background:var(--cd);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">SAIDI</div><div style="font-size:18px;font-weight:800">'+ud.saidi+'</div></div><div style="background:var(--cd);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">Keluhan</div><div style="font-size:18px;font-weight:800;color:var(--er)">'+ud.totalKel+'</div></div><div style="background:var(--cd);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:var(--t3)">Prediksi/Minggu</div><div style="font-size:18px;font-weight:800;color:var(--in)">'+ud.prediksi7+'</div></div></div>';
-// Titik gangguan
-h+='<div style="font-size:12px;font-weight:700;color:var(--er);margin-bottom:6px">TITIK GANGGUAN BERULANG</div><table class="gtbl"><thead><tr><th>Lokasi</th><th>Jenis</th><th>Freq</th><th>Status</th></tr></thead><tbody>';
-ud.gangguan.forEach(function(g){h+='<tr><td style="font-size:11px">'+g.lokasi+'</td><td>'+g.jenis+'</td><td style="font-weight:700">'+g.freq+'x</td><td><span class="loc-pin'+(g.status==='Selesai'?' loc-ok':'')+'">'+g.status+'</span></td></tr>'});
-h+='</tbody></table>';
-// Keluhan breakdown
-h+='<div style="font-size:12px;font-weight:700;margin:10px 0 6px">KELUHAN PER JENIS</div>';
-ud.keluhan.forEach(function(k){h+='<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t2)">'+k.n+'</span><b>'+k.c+'</b></div>'+mkP((k.c/ud.keluhan[0].c)*100,3)+'</div>'});
-h+='<div class="dp-ai"><h4>AI Analisis Tajam — ULP '+ulpName+'</h4><p>'+aiI('ulp',ud)+'</p></div>';
-openDP('ULP '+ulpName,h)}
-
-// NAV
-var TB=[{id:'dash',lb:'Dashboard',ic:'<path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>'},{id:'map',lb:'Peta',ic:'<path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>'},{id:'up3',lb:'Analisis UP3',ic:'<path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>'},{id:'kel',lb:'Keluhan',ic:'<path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>'},{id:'inv',lb:'Investasi',ic:'<path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>'},{id:'nko',lb:'NKO Indramayu',ic:'<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>'}];
-function bN(){document.getElementById('sn').innerHTML=TB.map(function(t){return'<div class="ni '+(S.tab===t.id?'on':'')+'" onclick="nav(\''+t.id+'\')"><svg viewBox="0 0 24 24">'+t.ic+'</svg><span>'+t.lb+'</span></div>'}).join('')}
-function nav(id){S.tab=id;bN();closeDP();document.getElementById('pT').textContent=TB.find(function(t){return t.id===id}).lb;var sub=RN[S.role];if(S.fup3){var ci=U.find(function(u){return u.id===S.fup3});sub+=' — '+ci.nm;if(S.fulp)sub+=' / '+S.fulp}document.getElementById('pS').textContent=sub;ren()}
-function chR(r){S.role=r;S.fup3=null;S.fulp=null;S.up3=null;var rh=document.getElementById('rh');if(rh){var msgs={pusat:'Lihat perbandingan seluruh UID Indonesia',uid:'Lihat seluruh UP3 di UID Jawa Barat',up3:'Pilih UP3 — filter muncul di setiap halaman',ulp:'Pilih UP3 lalu ULP — analisis per titik gangguan'};rh.innerHTML=msgs[r]||''}nav(S.tab)}
-function sU3N(id){S.up3=id;S.tab='up3';bN();ren()}
-function ren(){Object.values(CH).forEach(function(c){try{c.destroy()}catch(e){}});CH={};if(S.tab!=='map'&&MAP){MAP.remove();MAP=null;ML={}}document.getElementById('ct').innerHTML=({dash:rD,map:rM,up3:rU,kel:rK,inv:rI,nko:rNKO}[S.tab]||rD)();iC()}
-
-// DASHBOARD
-function rD(){var h=mkFilt();var fd=S.fup3?D[S.fup3]:null,fi=S.fup3?U.find(function(u){return u.id===S.fup3}):null;
-// ULP level detail
-if(S.fulp&&fd){var ud=ulpData(S.fup3,S.fulp);
-h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI — ULP '+S.fulp+'</span></div><p>'+aiI('ulp',ud)+'</p></div>';
-h+='<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px">';
-[{lb:"Pelanggan",vl:ud.pelanggan.toLocaleString(),sc:"var(--pri)"},{lb:"SAIDI",vl:ud.saidi,sc:"var(--in)"},{lb:"Keluhan",vl:ud.totalKel+'',sc:"var(--er)"},{lb:"Prediksi 7hr",vl:'~'+ud.prediksi7,sc:"var(--prl)"},{lb:"Gangguan",vl:ud.gangguan.length+' titik',sc:"var(--wn)"},{lb:"Rating",vl:'B'+ud.bintang,sc:ud.bintang>=5?'var(--ok)':'var(--wn)'}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'});
-h+='</div><div style="display:grid;grid-template-columns:1.2fr 1fr .8fr;gap:8px;height:calc(100vh - 230px);min-height:200px">';
-// Titik gangguan
-h+='<div class="bx" style="overflow-y:auto"><h3 style="color:var(--er)">Titik Gangguan & Prediksi Lokasi</h3><table class="gtbl"><thead><tr><th>Lokasi</th><th>Jenis</th><th>Freq</th><th>Status</th></tr></thead><tbody>';
-ud.gangguan.forEach(function(g){h+='<tr><td style="font-size:11px;max-width:150px;overflow:hidden;text-overflow:ellipsis">'+g.lokasi+'</td><td style="font-size:11px">'+g.jenis+'</td><td style="font-weight:700">'+g.freq+'x</td><td><span class="loc-pin'+(g.status==='Selesai'?' loc-ok':'')+'">'+g.status+'</span></td></tr>'});
-h+='</tbody></table></div>';
-// Keluhan breakdown + prediksi
-h+='<div class="bx"><h3>Keluhan per Jenis + Prediksi</h3>';
-ud.keluhan.forEach(function(k){var pred=Math.ceil(k.c/52);h+='<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+k.n+'</span><span><b>'+k.c+'</b> <span style="font-size:10px;color:var(--in)">(~'+pred+'/mg)</span></span></div>'+mkP((k.c/ud.keluhan[0].c)*100,3)+'</div>'});
-h+='</div>';
-// Chart prediksi
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Prediksi Harian 7 Hari</h3><div style="flex:1;min-height:0"><canvas id="cPred"></canvas></div></div>';
-h+='</div>';return h}
-// UP3 filtered
-if(fd){h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI — UP3 '+fi.nm+'</span></div><p>'+aiI('up3',fd)+'</p></div>';
-h+='<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px">';
-[{lb:"Score",vl:fd.sc+'%',sc:scC(fd.sc)},{lb:"Pelanggan",vl:fd.pl.p+'%',sc:pbc(fd.pl.p)},{lb:"SAIDI",vl:fd.saidi+'',sc:"var(--in)"},{lb:"Keluhan",vl:fd.kel.toLocaleString(),sc:"var(--er)"},{lb:"AI Sar",vl:'Rp '+fd.ai+'M',sc:"var(--acc)"},{lb:"ENS",vl:fd.ens+'%',sc:pbc(fd.ens)}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'});
-h+='</div><div style="display:grid;grid-template-columns:1.3fr 1fr .7fr;gap:8px;height:calc(100vh - 230px);min-height:200px">';
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Tren Penjualan TL</h3><div style="flex:1;min-height:0"><canvas id="cT"></canvas></div></div>';
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>KPI Niaga + Distribusi</h3><div style="flex:1;overflow-y:auto">'+KP.map(function(k,i){return'<div class="clk" style="padding:3px 4px;margin-bottom:2px"><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--t2)">'+k.n+'</span><span style="font-size:12px;font-weight:700;color:'+pbc(k.p)+'">'+k.p+'%</span></div>'+mkP(k.p,3)+'</div>'}).join('')+'</div></div>';
-h+='<div class="bx" style="overflow-y:auto"><h3>ULP — Klik detail</h3>'+fi.ulps.map(function(u){return'<div class="clk" style="padding:6px 4px;border-bottom:1px solid rgba(30,51,82,.3)" onclick="showULP(\''+S.fup3+'\',\''+u+'\')"><div style="font-size:13px;font-weight:600">'+u+'</div><div style="font-size:11px;color:var(--t3)">'+Math.floor(Math.random()*500+80)+' keluhan</div></div>'}).join('')+'</div>';
-h+='</div>';return h}
-// UID level (default)
-h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI Intelligence Briefing</span></div><p>'+aiI('dash')+'</p></div>';
-h+='<div class="al"><div class="ai2"></div><div><h4>Penjualan TL — Realisasi 0%</h4><p>14 poin terancam hilang. Hanya SMD (+8.9) dan KRW (+16.2) positif.</p></div></div>';
-h+='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px">';
-[{lb:"Pelanggan",vl:"18,18 Jt",su:"+3.31%",sc:"var(--pri)"},{lb:"Penjualan",vl:"5.346 GWh",su:"-363 GWh",sc:"var(--er)"},{lb:"Pendapatan",vl:"Rp 5,99 T",su:"+12.70%",sc:"var(--ok)"},{lb:"SAIDI",vl:"32,91",su:"118%",sc:"var(--ok)"},{lb:"NKO",vl:"77.23%",su:"23.17/36",sc:"var(--wn)"}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl">'+s.vl+'</div><div class="su" style="color:'+s.sc+'">'+s.su+'</div></div>'});
-h+='</div><div style="display:grid;grid-template-columns:1.3fr 1fr .7fr;gap:8px;height:calc(100vh - 265px);min-height:200px">';
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Tren Penjualan TL (GWh)</h3><div style="flex:1;min-height:0"><canvas id="cT"></canvas></div></div>';
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>KPI Niaga + Distribusi</h3><div style="flex:1;overflow-y:auto">'+KP.map(function(k){return'<div class="clk" style="padding:3px 4px;margin-bottom:2px"><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--t2)">'+k.n+'</span><span style="font-size:12px;font-weight:700;color:'+pbc(k.p)+'">'+k.p+'%</span></div>'+mkP(k.p,3)+'</div>'}).join('')+'</div></div>';
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Ranking UP3</h3><div style="flex:1;overflow-y:auto">'+srt().map(function(e){var id=e[0],d=e[1];return'<div class="clk" style="display:flex;align-items:center;gap:6px;padding:4px" onclick="showUP3(\''+id+'\')"><span style="font-size:12px;color:var(--t3);width:18px;font-weight:700">'+d.rk+'</span><span style="font-size:13px;flex:1">'+U.find(function(u){return u.id===id}).nm+'</span><span style="font-size:12px;font-weight:800;color:'+scC(d.sc)+'">'+d.sc+'%</span></div>'}).join('')+'</div></div>';
-h+='</div>';return h}
-
-function rM(){
-var h='<div class="map-wrap"><div id="mapLeaflet"></div>';
-h+='<div class="map-ctrl" id="mapCtrl"><h4>Layers</h4>';
-h+='<label><input type="checkbox" checked onchange="tgL(\'mv\',this.checked)"> Medium Voltage</label>';
-h+='<label><input type="checkbox" onchange="tgL(\'lv\',this.checked)"> Low Voltage</label>';
-h+='<label><input type="checkbox" checked onchange="tgL(\'gi\',this.checked)"> Substations (GI)</label>';
-h+='<label><input type="checkbox" checked onchange="tgL(\'tr\',this.checked)"> Dist. Transformers</label>';
-h+='<label><input type="checkbox" checked onchange="tgL(\'sd\',this.checked)"> Switching Devices</label>';
-h+='<label><input type="checkbox" onchange="tgL(\'pmv\',this.checked)"> MV Poles</label>';
-h+='<label><input type="checkbox" onchange="tgL(\'plv\',this.checked)"> LV Poles</label>';
-h+='<label><input type="checkbox" onchange="tgL(\'bg\',this.checked)"> Service Areas</label>';
-h+='<label><input type="checkbox" onchange="tgL(\'ca\',this.checked)"> Cable Accessories</label>';
-h+='<label><input type="checkbox" onchange="tgL(\'mc\',this.checked)"> MV Cells</label>';
-h+='<label><input type="checkbox" onchange="tgL(\'tgi\',this.checked)"> Power Transformers</label>';
-h+='<h4 style="margin-top:8px">Substations</h4>';
-var gic=[["GI HAURGEULIS","#e53935"],["GI INDRAMAYU BARU","#8e24aa"],["GI CIKEDUNG","#43a047"],["GI INDRAMAYU","#1e88e5"],["GI JATIBARANG","#ff8f00"]];
-gic.forEach(function(g){h+='<div class="gi-legend"><span class="gi-dot" style="background:'+g[1]+'"></span>'+g[0].replace("GI ","")+'</div>'});
-h+='</div>';
-h+='<div class="map-load" id="mapLoad">Loading network data...</div>';
-h+='</div>';
-setTimeout(initMap,50);
-return h}
-
-var MAP=null,ML={},MD=null;
-function tgL(k,v){if(ML[k]){if(v)MAP.addLayer(ML[k]);else MAP.removeLayer(ML[k])}}
-function initMap(){
-if(MAP){MAP.remove();MAP=null}
-ML={};
-MAP=L.map('mapLeaflet',{preferCanvas:true,zoomControl:true}).setView([-6.45,108.2],11);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'PLN UP3 Indramayu',maxZoom:19}).addTo(MAP);
-if(MD){buildLayers(MD);return}
-fetch('/data/idm.json').then(function(r){return r.json()}).then(function(d){
-MD=d;buildLayers(d);
-var el=document.getElementById('mapLoad');if(el)el.style.display='none';
-}).catch(function(e){
-var el=document.getElementById('mapLoad');if(el)el.textContent='Failed to load map data';
-console.error(e);
-})}
-function buildLayers(d){
-var el=document.getElementById('mapLoad');if(el)el.style.display='none';
-// MV lines
-var mvLines=[];
-d.MV.forEach(function(m){
-var ll=m.c.map(function(p){return[p[1],p[0]]});
-var line=L.polyline(ll,{color:m.cl||'#43a047',weight:2,opacity:.8});
-line.bindPopup('<b>'+((m.f||''))+' </b><br>GI: '+(m.g||'-')+'<br>Segment: '+(m.h||'-'));
-mvLines.push(line);
-});
-ML.mv=L.layerGroup(mvLines).addTo(MAP);
-// LV lines
-var lvLines=[];
-d.LV.forEach(function(m){
-var ll=m.c.map(function(p){return[p[1],p[0]]});
-lvLines.push(L.polyline(ll,{color:'#78909c',weight:1,opacity:.4}));
-});
-ML.lv=L.layerGroup(lvLines);
-// GI substations
-var giMarkers=[];
-d.GI.forEach(function(g){
-var cm=L.circleMarker([g.y,g.x],{radius:12,fillColor:g.col||'#e53935',color:'#fff',weight:2,fillOpacity:.9});
-cm.bindPopup('<b>'+g.n+'</b><br>Capacity: '+(g.k||'-'));
-giMarkers.push(cm);
-});
-ML.gi=L.layerGroup(giMarkers).addTo(MAP);
-// Distribution Transformers
-var trMarkers=[];
-d.TR.forEach(function(t){
-var cm=L.circleMarker([t.y,t.x],{radius:3,fillColor:t.cl||'#ff9800',color:t.cl||'#ff9800',weight:0,fillOpacity:.7});
-cm.bindPopup('<b>Trafo '+(t.kap||'-')+' kVA</b><br>Feeder: '+(t.f||'-')+'<br>GI: '+(t.g||'-'));
-trMarkers.push(cm);
-});
-ML.tr=L.layerGroup(trMarkers).addTo(MAP);
-// Switching devices
-var sdMarkers=[];
-d.SD.forEach(function(s){
-var col=s.t==='SW'?'#00e676':'#ffeb3b';
-var cm=L.circleMarker([s.y,s.x],{radius:3,fillColor:col,color:col,weight:0,fillOpacity:.7});
-cm.bindPopup('<b>'+(s.t==='SW'?'Switch':'PHBTR')+'</b><br>Feeder: '+(s.f||'-')+'<br>GI: '+(s.g||'-')+'<br>Status: '+(s.to||'-'));
-sdMarkers.push(cm);
-});
-ML.sd=L.layerGroup(sdMarkers).addTo(MAP);
-// MV Poles
-var pmvM=[];d.PMV.forEach(function(p){pmvM.push(L.circleMarker([p[0],p[1]],{radius:1.5,fillColor:'#90a4ae',color:'#90a4ae',weight:0,fillOpacity:.5}))});
-ML.pmv=L.layerGroup(pmvM);
-// LV Poles
-var plvM=[];d.PLV.forEach(function(p){plvM.push(L.circleMarker([p[0],p[1]],{radius:1,fillColor:'#607d8b',color:'#607d8b',weight:0,fillOpacity:.4}))});
-ML.plv=L.layerGroup(plvM);
-// Service areas (polygons)
-var bgP=[];d.BG.forEach(function(b){
-if(b.length>2){var ll=b.map(function(p){return[p[1],p[0]]});bgP.push(L.polygon(ll,{color:'#455a64',weight:1,fillColor:'#263238',fillOpacity:.15}))}
-});
-ML.bg=L.layerGroup(bgP);
-// Cable accessories
-var caM=[];d.CA.forEach(function(c){caM.push(L.circleMarker([c[0],c[1]],{radius:2,fillColor:'#ce93d8',color:'#ce93d8',weight:0,fillOpacity:.6}))});
-ML.ca=L.layerGroup(caM);
-// MV Cells
-var mcM=[];d.MC.forEach(function(m){
-var cm=L.circleMarker([m.y,m.x],{radius:4,fillColor:'#4dd0e1',color:'#fff',weight:1,fillOpacity:.8});
-cm.bindPopup('<b>MV Cell</b>');
-mcM.push(cm);
-});
-ML.mc=L.layerGroup(mcM);
-// Power transformers (TGI)
-var tgiM=[];d.TGI.forEach(function(t){
-var cm=L.circleMarker([t.y,t.x],{radius:8,fillColor:'#ffd600',color:'#fff',weight:2,fillOpacity:.9});
-cm.bindPopup('<b>Power Transformer</b><br>Capacity: '+(t.kap||'-'));
-tgiM.push(cm);
-});
-ML.tgi=L.layerGroup(tgiM);
-}
-
-function rU(){var h=mkFilt();
-if(!S.up3&&!S.fup3){h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI Rangkuman</span></div><p><b>Best:</b> SMD 91.01% (BP 184%, Saldo 157%). <b>Worst:</b> CKG 40.20% (BP 41%, Saldo 34%). Stok kritis: CKG, KRW. <span class="act">Klik UP3 untuk drill-down.</span></p></div>';
-h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px">'+srt().map(function(e){var id=e[0],d=e[1],inf=U.find(function(u){return u.id===id});return'<div class="uc" onclick="sU3N(\''+id+'\')"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div><div style="font-size:14px;font-weight:700">'+inf.nm+'</div><div style="font-size:11px;color:var(--t3)">'+inf.ulps.length+' ULP</div></div><span style="font-size:18px;font-weight:900;color:'+scC(d.sc)+'">#'+d.rk+'</span></div>'+mkP(d.sc/1.1,4)+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:4px;font-size:11px;color:var(--t3)"><span>Plg '+d.pl.p+'%</span><span>SAIDI '+d.saidi+'</span><span>Kel '+(d.kel/1000).toFixed(1)+'K</span><span>Stk Kbl '+d.stok.kabel+'%</span></div></div>'}).join('')+'</div>';
-return h}
-var cid=S.fup3||S.up3;var cp=D[cid],ci=U.find(function(u){return u.id===cid});
-h+='<div class="u3t"><button onclick="S.up3=null;S.fup3=null;ren()" style="background:transparent;color:var(--t2);border:1px solid var(--bd)">Semua</button>'+U.map(function(u){return'<button onclick="S.up3=\''+u.id+'\';S.fup3=\''+u.id+'\';S.fulp=null;ren()" style="background:'+(cid===u.id?'var(--pri)':'var(--cd)')+';color:'+(cid===u.id?'#fff':'var(--t3)')+'">'+u.id+'</button>'}).join('')+'</div>';
-h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI — UP3 '+ci.nm+'</span></div><p>'+aiI('up3',cp)+'</p></div>';
-h+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;height:calc(100vh - 200px);min-height:200px">';
-var kpis=[{l:"Pelanggan",p:cp.pl.p},{l:"Daya",p:cp.dy.p},{l:"BP",p:cp.bp.p},{l:"Saldo",p:cp.sl.p},{l:"Transaksi",p:cp.tx.p},{l:"Rp Trx",p:cp.rp.p}];
-h+='<div class="bx"><h3>KPI Niaga</h3>'+kpis.map(function(k){return'<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t2)">'+k.l+'</span><span style="font-weight:700;color:'+pbc(k.p)+'">'+k.p+'%</span></div>'+mkP(k.p)+'</div>'}).join('')+'<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--bd);font-size:12px;color:var(--in)"><b>Distribusi</b><br>SAIDI <b style="color:var(--tx)">'+cp.saidi+'</b> | SAIFI <b style="color:var(--tx)">'+cp.saifi+'</b> | ENS <b style="color:var(--tx)">'+cp.ens+'%</b></div></div>';
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Profil</h3><div style="flex:1;min-height:0"><canvas id="cR"></canvas></div></div>';
-h+='<div class="bx"><h3>Stok Material</h3>'+[{n:"Kabel JTM",v:cp.stok.kabel},{n:"KWH Meter",v:cp.stok.meter},{n:"Trafo",v:cp.stok.trafo},{n:"Kubikel",v:cp.stok.kubikel}].map(function(m){return'<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>'+m.n+'</span><span class="'+(m.v<30?'stk-lo':m.v<50?'stk-md':'stk-ok')+'">'+m.v+'%</span></div>'+mkP(m.v)+'</div>'}).join('')+'<div style="margin-top:6px;font-size:13px">AI Sar: <b style="color:var(--acc)">Rp '+cp.ai+' M</b></div></div>';
-h+='<div class="bx" style="overflow-y:auto"><h3>ULP ('+ci.ulps.length+')</h3>'+ci.ulps.map(function(u){return'<div class="clk" style="padding:6px 2px;border-bottom:1px solid rgba(30,51,82,.3)" onclick="showULP(\''+cid+'\',\''+u+'\')"><div style="font-size:13px;font-weight:600">'+u+'</div><div style="font-size:11px;color:var(--t3)">'+Math.floor(Math.random()*500+80)+' keluhan</div></div>'}).join('')+'</div>';
-h+='</div>';return h}
-
-function rK(){var h=mkFilt();var fd=S.fup3?D[S.fup3]:null;var totalK=S.fulp?Math.floor(Math.random()*900+200):fd?fd.kel:95482;var pred7=Math.floor(totalK/52);
-if(S.fulp&&fd){var ud=ulpData(S.fup3,S.fulp);
-h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI — ULP '+S.fulp+'</span></div><p>'+aiI('ulp',ud)+'</p></div>';
-h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">';
-[{lb:"Keluhan",vl:ud.totalKel+'',sc:"var(--er)"},{lb:"Prediksi 7hr",vl:'~'+ud.prediksi7,sc:"var(--prl)"},{lb:"Gangguan Berulang",vl:ud.gangguan.filter(function(g){return g.status==='Berulang'}).length+'',sc:"var(--wn)"},{lb:"#1 Jenis",vl:ud.keluhan[0].n,sc:"var(--er)"}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'});
-h+='</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;height:calc(100vh - 230px);min-height:180px">';
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Prediksi Harian</h3><div style="flex:1;min-height:0"><canvas id="cKU"></canvas></div></div>';
-h+='<div class="bx" style="overflow-y:auto"><h3>Breakdown + Prediksi/Minggu</h3>'+ud.keluhan.map(function(k){return'<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+k.n+'</span><span><b>'+k.c+'</b> <span style="font-size:10px;color:var(--in)">(~'+Math.ceil(k.c/52)+'/mg)</span></span></div>'+mkP((k.c/ud.keluhan[0].c)*100,3)+'</div>'}).join('')+'</div>';
-h+='<div class="bx" style="overflow-y:auto"><h3 style="color:var(--er)">Titik Gangguan</h3><table class="gtbl"><thead><tr><th>Lokasi</th><th>Jenis</th><th>F</th></tr></thead><tbody>'+ud.gangguan.map(function(g){return'<tr><td style="font-size:10px">'+g.lokasi+'</td><td style="font-size:10px">'+g.jenis+'</td><td style="font-weight:700">'+g.freq+'x</td></tr>'}).join('')+'</tbody></table></div>';
-h+='</div>';return h}
-h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI Keluhan'+(fd?' — '+U.find(function(u){return u.id===S.fup3}).nm:'')+'</span></div><p>'+(fd?aiI('up3',fd):'Total <b>95.482</b> keluhan 2024. BGR 15.222, BDG 14.609. Token Gagal #1 (4.642). <b>Prediksi: ~1.836/minggu.</b> <span class="act">Arahan: Ganti meter prabayar 1.000/bulan.</span>')+'</p></div>';
-h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">';
-[{lb:"Total",vl:totalK.toLocaleString(),sc:"var(--er)"},{lb:"#1",vl:fd?fd.kt[0]:'Token Gagal',sc:"var(--wn)"},{lb:"Prediksi 7hr",vl:'~'+pred7,sc:"var(--prl)"},{lb:"Resolve",vl:(70+Math.random()*25).toFixed(0)+'%',sc:"var(--ok)"}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'});
-h+='</div><div style="display:grid;grid-template-columns:1.3fr .7fr;gap:8px;height:calc(100vh - 240px);min-height:180px">';
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>Keluhan per '+(fd?'ULP':'UP3')+'</h3><div style="flex:1;min-height:0"><canvas id="cKU"></canvas></div></div>';
-h+='<div class="bx" style="overflow-y:auto"><h3>Jenis</h3>'+(fd?fd.kt.map(function(n,i){var c=Math.floor(fd.kel*([.3,.2,.15,.1,.08][i]||.05));return'<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+n+'</span><b>'+c.toLocaleString()+'</b></div>'+mkP((c/(fd.kel*.3))*100,3)+'</div>'}).join(''):KEL.map(function(k){return'<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--t2)">'+k.n+'</span><b>'+k.c.toLocaleString()+'</b></div>'+mkP((k.c/4642)*100,3)+'</div>'}).join(''))+'</div>';
-h+='</div>';return h}
-
-function rI(){var h=mkFilt();var fd=S.fup3?D[S.fup3]:null,fi=S.fup3?U.find(function(u){return u.id===S.fup3}):null;
-h+='<div class="ai-box"><div class="ai-hd"><img src="'+IMG+'" style="width:20px;height:20px" onerror="this.style.display=\'none\'"><span>AI Investasi'+(fi?' — '+fi.nm:'')+'</span></div><p>'+(fd?'AI Sar <b>Rp '+fd.ai+'M</b>. '+Object.entries(fd.stok).filter(function(e){return e[1]<30}).map(function(e){return e[0]+' '+e[1]+'% KRITIS'}).join(', ')+'. <span class="act">Arahan: Pengadaan segera.</span>':'Total MDU <b>Rp 1.95T</b>. Stok kritis: CKG, KRW. <span class="act">Arahan: Audit MDU + pengadaan darurat.</span>')+'</p></div>';
-h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">';
-if(fd){[{lb:"AI Sar",vl:'Rp '+fd.ai+'M',sc:"var(--acc)"},{lb:"Kabel",vl:fd.stok.kabel+'%',sc:fd.stok.kabel<30?'var(--er)':'var(--ok)'},{lb:"Trafo",vl:fd.stok.trafo+'%',sc:fd.stok.trafo<30?'var(--er)':'var(--ok)'},{lb:"Kubikel",vl:fd.stok.kubikel+'%',sc:fd.stok.kubikel<30?'var(--er)':'var(--ok)'}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'})}
-else{[{lb:"Jasa",vl:"Rp 646.71M",sc:"var(--pri)"},{lb:"MDU",vl:"Rp 1.95T",sc:"var(--acc)"},{lb:"Kabel",vl:"Rp 524M",sc:"var(--wn)"},{lb:"Meter",vl:"Rp 247M",sc:"var(--in)"}].forEach(function(s){h+='<div class="st" style="border-color:'+s.sc+'"><div class="lb">'+s.lb+'</div><div class="vl" style="font-size:18px">'+s.vl+'</div></div>'})}
-h+='</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;height:calc(100vh - 240px);min-height:180px">';
-h+='<div class="bx" style="display:flex;flex-direction:column"><h3>AI Sar per UP3</h3><div style="flex:1;min-height:0"><canvas id="cIV"></canvas></div></div>';
-h+='<div class="bx" style="overflow-y:auto"><h3>Stok Material</h3><table class="gtbl"><thead><tr><th>UP3</th><th>Kabel</th><th>Meter</th><th>Trafo</th><th>Kubkl</th></tr></thead><tbody>'+srt().map(function(e){var id=e[0],s=e[1].stok;var c=function(v){return v<30?'stk-lo':v<50?'stk-md':'stk-ok'};return'<tr onclick="showUP3(\''+id+'\')"><td style="font-weight:700">'+id+'</td><td class="'+c(s.kabel)+'">'+s.kabel+'%</td><td class="'+c(s.meter)+'">'+s.meter+'%</td><td class="'+c(s.trafo)+'">'+s.trafo+'%</td><td class="'+c(s.kubikel)+'">'+s.kubikel+'%</td></tr>'}).join('')+'</tbody></table></div>';
-h+='</div>';return h}
-
-// CHARTS
-var TS={background:'#101F35',borderColor:'#1E3352',borderWidth:1,borderRadius:6,titleColor:'#F0F4F8',bodyColor:'#A0B4CC',titleFont:{size:12},bodyFont:{size:11},padding:8};
-var AX={grid:{color:'rgba(30,51,82,.4)'},ticks:{color:'#6B83A0',font:{size:10}},border:{display:false}};
-function iC(){
-var el=document.getElementById('cT');
-if(el)CH.t=new Chart(el,{type:'line',data:{labels:['2019','2020','2021','2022','2023','2024','2025','T26'],datasets:[{data:[50884,49883,53318,56226,58564,61637,63503,67016],borderColor:'#2B8AE0',backgroundColor:'rgba(43,138,224,.1)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#2B8AE0',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:Object.assign({},TS,{callbacks:{label:function(c){return c.parsed.y.toLocaleString('id-ID')+' GWh'}}})},scales:{x:AX,y:Object.assign({},AX,{min:48000,max:69000,ticks:Object.assign({},AX.ticks,{callback:function(v){return(v/1000).toFixed(0)+'K'}})})}}});
-el=document.getElementById('cR');
-if(el){var cid=S.fup3||S.up3;if(cid&&D[cid]){var cp=D[cid];CH.r=new Chart(el,{type:'radar',data:{labels:['Plg','Daya','BP','Saldo','Trx','Rp'],datasets:[{data:[Math.min(cp.pl.p,130),Math.min(cp.dy.p,130),Math.min(cp.bp.p,130),Math.min(cp.sl.p,130),Math.min(cp.tx.p,130),Math.min(cp.rp.p,130)],borderColor:'#2B8AE0',backgroundColor:'rgba(43,138,224,.1)',borderWidth:2,pointBackgroundColor:'#2B8AE0',pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{grid:{color:'#1E3352'},angleLines:{color:'#1E3352'},ticks:{display:false,stepSize:25},min:0,max:140,pointLabels:{color:'#A0B4CC',font:{size:11}}}}}})}}
-el=document.getElementById('cKU');
-if(el){var d;
-if(S.fulp){d=['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(function(w,i){return{id:w,v:Math.floor(Math.random()*40+10+(i<2?20:i>4?-5:0))}});
-}else if(S.fup3){var ci=U.find(function(u){return u.id===S.fup3});d=ci.ulps.map(function(u){return{id:u,v:Math.floor(Math.random()*800+100)}}).sort(function(a,b){return b.v-a.v})}
-else{d=Object.entries(D).map(function(e){return{id:e[0],v:e[1].kel}}).sort(function(a,b){return b.v-a.v})}
-CH.ku=new Chart(el,{type:'bar',data:{labels:d.map(function(x){return x.id}),datasets:[{data:d.map(function(x){return x.v}),backgroundColor:d.map(function(_,i){return CC[i%CC.length]}),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TS},scales:{x:Object.assign({},AX,{ticks:Object.assign({},AX.ticks,{maxRotation:45})}),y:Object.assign({},AX,{ticks:Object.assign({},AX.ticks,{callback:function(v){return v>999?(v/1000)+'K':v}})})}}})}
-el=document.getElementById('cPred');
-if(el){var pd=['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(function(w,i){return{d:w,v:Math.floor(Math.random()*30+15+(i<2?15:i>4?-8:0))}});
-CH.pred=new Chart(el,{type:'bar',data:{labels:pd.map(function(x){return x.d}),datasets:[{data:pd.map(function(x){return x.v}),backgroundColor:pd.map(function(_,i){return i>=5?'rgba(43,138,224,.4)':CC[0]}),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TS},scales:{x:AX,y:AX}}})}
-el=document.getElementById('cIV');
-if(el){var d=Object.entries(D).map(function(e){return{id:e[0],v:e[1].ai}}).sort(function(a,b){return b.v-a.v});CH.iv=new Chart(el,{type:'bar',data:{labels:d.map(function(x){return x.id}),datasets:[{data:d.map(function(x){return x.v}),backgroundColor:d.map(function(x){return x.v>200?'#E74C3C':x.v>150?'#F39C12':'#2B8AE0'}),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:TS},scales:{x:AX,y:Object.assign({},AX,{min:0,max:260})}}})}}
-
-// CHAT — POWERED BY CLAUDE API
-var chatHistory=[];
-function tC(){S.co=!S.co;document.getElementById('cpn').classList.toggle('op',S.co);if(S.co&&!document.getElementById('cms').children.length){aM('a','Halo! Saya AI PLN Lytics.\n\nTanya saya apa saja soal kinerja PLN Jawa Barat — saya punya semua datanya.\n\nContoh:\n• "Kenapa Cikarang ranking terakhir?"\n• "Stok mana yang paling bahaya?"\n• "Bandingkan Bogor vs Bandung"\n• "Apa yang harus dilakukan minggu ini?"')}}
-function aM(r,t){var d=document.getElementById('cms'),el=document.createElement('div');el.className='cm '+r;el.innerHTML='<div class="cb2"><div class="sn">'+(r==='a'?'PLN LYTICS AI':'ANDA')+'</div>'+t.replace(/\n/g,'<br>')+'</div>';d.appendChild(el);d.scrollTop=d.scrollHeight}
-function buildSystemPrompt(){
-  var s='Kamu adalah AI analis PLN yang cerdas. Kamu bicara seperti konsultan senior yang ngobrol santai dengan manager PLN — bahasa sederhana, langsung ke inti masalah, pakai angka konkret.\n\n';
-  s+='ATURAN MENJAWAB:\n';
-  s+='1. LANGSUNG jawab inti pertanyaan di kalimat pertama. Jangan basa-basi.\n';
-  s+='2. Pakai ANGKA SPESIFIK dari data, bukan kata-kata umum. Contoh: "Cikarang skornya 40.2%, terendah dari 17 UP3" bukan "performanya kurang baik".\n';
-  s+='3. Jawab MAKSIMAL 4-6 kalimat. Kalau butuh lebih, pakai bullet points pendek.\n';
-  s+='4. Selalu akhiri dengan 1 AKSI KONKRET yang harus dilakukan. Mulai dengan "Yang harus dilakukan:" atau "Langkah selanjutnya:".\n';
-  s+='5. Jangan pakai kata "berdasarkan data", "perlu diperhatikan", "dapat disimpulkan" — langsung saja bicarakan faktanya.\n';
-  s+='6. Kalau ditanya perbandingan, buat format sederhana berdampingan.\n';
-  s+='7. Kalau ditanya prediksi, berikan angka estimasi + alasan singkat 1 kalimat.\n';
-  s+='8. Bicara seperti rekan kerja yang pintar, bukan seperti laporan formal.\n\n';
-  s+='CONTOH JAWABAN YANG BAGUS:\n';
-  s+='Q: "Kenapa penjualan jelek?"\n';
-  s+='A: "Penjualan Januari minus 363 GWh karena formula baru menghitung penambahan, bukan total. 15 dari 17 UP3 negatif — cuma Sumedang (+8.9) dan Karawang (+16.2) yang positif. Target setahun 3.512 GWh itu belum pernah tercapai sejak 2019. Langkah selanjutnya: fokus captive power 200 GWh dan aggressive PB 697 GWh, ini kontributor terbesar."\n\n';
-  s+='DATA LENGKAP UID JAWA BARAT s.d FEBRUARI 2026:\n';
-  s+='• 18,18 juta pelanggan | 35.822 MVA | 17 UP3 | 92 ULP\n';
-  s+='• Penjualan: 5.346 GWh, target 67.016 → MINUS 363 GWh (0 poin!)\n';
-  s+='• Pendapatan: Rp 5,99 T (+12.70%)\n';
-  s+='• NKO Niaga: 77.23% (23.17/36 poin)\n';
-  s+='• SAIDI: 32.91 mnt/plg (118% target=bagus, makin rendah makin baik)\n';
-  s+='• SAIFI: 0.38 kali/plg (125%)\n';
-  s+='• ENS: 2.199 MWh (99% — tipis!)\n';
-  s+='• Response Time: 26.4 mnt (112%), Rating Negatif: 190%, Gangguan TM: 200%\n';
-  s+='• Kontribusi SAIDI: Penyulang 40%, Bencana Alam 34% (naik drastis dari 2%!)\n';
-  s+='• PDKB: 107% target. RC baru: 154 titik. FLISR: 0% (belum jalan!)\n';
-  s+='• 665 penyulang belum pola RC 1-1-1\n';
-  s+='• Keluhan 2024: 95.482 total → Token Gagal 4.642, KWH Rusak 2.682, Minta Sambung 2.128\n';
-  s+='• Rencana penjualan: Captive Power 200 GWh + Aggressive PB 697 + KTT Baru 214 + Data Center 177\n\n';
-  s+='DATA 17 UP3:\n';
-  Object.entries(D).forEach(function(e){var id=e[0],d=e[1],nm=U.find(function(u){return u.id===id}).nm;
-    s+=nm+'('+id+'): skor '+d.sc+'% #'+d.rk+' | Plg '+d.pl.p+'% Daya '+d.dy.p+'% BP '+d.bp.p+'% Saldo '+d.sl.p+'% | Kel '+d.kel+' ['+d.kt.join(',')+'] | SAIDI '+d.saidi+' SAIFI '+d.saifi+' ENS '+d.ens+'% | Stok: Kabel '+d.stok.kabel+'% Meter '+d.stok.meter+'% Trafo '+d.stok.trafo+'% Kubikel '+d.stok.kubikel+'% | AI Sar Rp'+d.ai+'M\n'});
-  s+='\nSTOK KRITIS: CKG(kabel 25%,trafo 15%,kubikel 8%), KRW(kabel 18%,meter 29%,trafo 12%,kubikel 9%), CJR(kubikel 18%), GPI(kubikel 14%)\n';
-  s+='\nUser sedang melihat: '+RN[S.role];
-  if(S.fup3){s+=' → UP3 '+U.find(function(u){return u.id===S.fup3}).nm}
-  if(S.fulp){s+=' → ULP '+S.fulp}
-  return s;
-}
-function sC(){
-  var inp=document.getElementById('cin'),q=inp.value.trim();
-  if(!q)return;
-  aM('u',q);inp.value='';
-  var d=document.getElementById('cms'),dots=document.createElement('div');
-  dots.className='td';dots.id='typing';
-  dots.innerHTML='<span></span><span></span><span></span>';
-  d.appendChild(dots);d.scrollTop=d.scrollHeight;
-  chatHistory.push({role:'user',content:q});
-  // Build conversation: system context as first user msg, then assistant ack, then real history
-  var msgs=[
-    {role:'user',content:buildSystemPrompt()},
-    {role:'assistant',content:'Siap. Saya punya semua data PLN UID Jawa Barat. Tanya saja, saya jawab langsung dan konkret.'}
-  ];
-  var recent=chatHistory.slice(-14);
-  recent.forEach(function(m){msgs.push(m)});
-  fetch('/api/chat',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:msgs})
-  }).then(function(r){return r.json()}).then(function(data){
-    var typing=document.getElementById('typing');if(typing)typing.remove();
-    var reply='';
-    if(data.content){data.content.forEach(function(b){if(b.type==='text')reply+=b.text})}
-    if(!reply)reply='Maaf, coba tanya lagi dengan cara berbeda.';
-    chatHistory.push({role:'assistant',content:reply});
-    aM('a',reply);
-  }).catch(function(err){
-    var typing=document.getElementById('typing');if(typing)typing.remove();
-    aM('a','Koneksi gagal. Coba lagi.');
-    console.error(err);
-  });
-}
-bN();ren();
-
-var NKO_DATA={totalAgregat:101.98,totalProporsional:101.98,lossPointTHD:3.08,potensiPoint110:8.02,categories:[
-{no:1,name:'Penjualan Tenaga Listrik',bobot:14,nilai:12.82,lp100:1.18,pp110:2.58,items:[{id:'a',name:'Penjualan Tenaga Listrik',satuan:'GWh',bobot:14,target:12.81,realisasi:11.73,pct:91.54,nilai:12.82,lp:1.18,pp:2.58}]},
-{no:2,name:'Susut Distribusi Tanpa E-min',bobot:12,nilai:13.16,lp100:0,pp110:0.04,items:[{id:'a',name:'Susut Distribusi Tanpa E-min',satuan:'%',bobot:12,target:10.00,realisasi:9.04,pct:109.63,nilai:13.16,lp:0,pp:0.04}]},
-{no:3,name:'Keandalan Penyaluran TL',bobot:12,nilai:13.20,lp100:0,pp110:0,items:[{id:'a',name:'SAIDI',satuan:'Menit/plg',bobot:5,target:39.43,realisasi:22.69,pct:142.45,nilai:5.50,lp:0,pp:0},{id:'b',name:'SAIFI',satuan:'Kali/plg',bobot:5,target:0.51,realisasi:0.32,pct:137.24,nilai:5.50,lp:0,pp:0},{id:'c',name:'ENS',satuan:'MWh',bobot:2,target:96.12,realisasi:79.37,pct:117.42,nilai:2.20,lp:0,pp:0}]},
-{no:4,name:'Penyelesaian Eksekusi RUPTL & Investasi',bobot:10,nilai:10.00,lp100:0,pp110:1.00,items:[{id:'a',name:'Penambahan Aset RUPTL',satuan:'%',bobot:5,target:100,realisasi:100,pct:100,nilai:5.00,lp:0,pp:0.50},{id:'b',name:'Penambahan Aset Fisik Investasi',satuan:'%',bobot:5,target:100,realisasi:100,pct:100,nilai:5.00,lp:0,pp:0.50}]},
-{no:5,name:'Percepatan Penyambungan Pelanggan',bobot:10,nilai:9.40,lp100:0.71,pp110:1.60,items:[{id:'a1',name:'Penambahan Pelanggan',satuan:'Pelanggan',bobot:0.50,target:2838,realisasi:2597,pct:91.51,nilai:0.46,lp:0.04,pp:0.09},{id:'a2',name:'Penambahan Daya Tersambung',satuan:'MVA',bobot:1.50,target:13.24,realisasi:14.19,pct:107.15,nilai:1.61,lp:0,pp:0.04},{id:'b',name:'Pendapatan Biaya Penyambungan',satuan:'Rp Milyar',bobot:2,target:13.12,realisasi:8.76,pct:66.75,nilai:1.34,lp:0.66,pp:0.86},{id:'c',name:'Penambahan Pelanggan RT Lisdes',satuan:'Pelanggan',bobot:4,target:0,realisasi:0,pct:100,nilai:4.00,lp:0,pp:0.40},{id:'d',name:'Peningkatan kWh dari RT Lisdes',satuan:'kWh',bobot:2,target:0,realisasi:0,pct:100,nilai:2.00,lp:0,pp:0.20}]},
-{no:6,name:'Peningkatan Pelayanan Pelanggan',bobot:8,nilai:8.55,lp100:0.02,pp110:0.25,items:[{id:'a',name:'Feedback Rating Negatif PLN Mobile',satuan:'Kali',bobot:2,target:2,realisasi:0,pct:200,nilai:2.20,lp:0,pp:0},{id:'b',name:'Response Time Gangguan',satuan:'Menit',bobot:2,target:28,realisasi:26.73,pct:104.54,nilai:2.09,lp:0,pp:0.11},{id:'c',name:'Success Rate Auto Dispatch',satuan:'%',bobot:2,target:18.99,realisasi:40.83,pct:214.99,nilai:2.20,lp:0,pp:0},{id:'d1',name:'Transaksi Keuangan PLN Mobile',satuan:'Ribuan',bobot:1.20,target:37.18,realisasi:36.43,pct:97.99,nilai:1.18,lp:0.02,pp:0.14},{id:'d2',name:'Rupiah Transaksi PLN Mobile',satuan:'Rp Milyar',bobot:0.80,target:5.84,realisasi:7.02,pct:120.23,nilai:0.88,lp:0,pp:0}]},
-{no:7,name:'Keandalan JTM',bobot:7,nilai:7.50,lp100:0,pp110:0.20,items:[{id:'a',name:'Gangguan TM',satuan:'Kali',bobot:5,target:100,realisasi:56,pct:144,nilai:5.50,lp:0,pp:0.20},{id:'b',name:'Kerusakan Peralatan Distribusi',satuan:'Unit',bobot:2,target:4,realisasi:4,pct:100,nilai:2.00,lp:0,pp:0}]},
-{no:8,name:'Emergency Response Time (ERT)',bobot:6,nilai:6.54,lp100:0,pp110:0.06,items:[{id:'a',name:'MVOD',satuan:'%',bobot:4,target:100,realisasi:108.39,pct:108.39,nilai:4.34,lp:0,pp:0.06},{id:'b',name:'MTTR Siaga 1 TM',satuan:'%',bobot:2,target:100,realisasi:110,pct:110,nilai:2.20,lp:0,pp:0}]},
-{no:9,name:'Management Cash In',bobot:6,nilai:5.04,lp100:1.16,pp110:1.56,items:[{id:'a',name:'Saldo Rata-Rata Akhir Bulan',satuan:'Rp Juta',bobot:2,target:997.60,realisasi:1575.85,pct:42.04,nilai:0.84,lp:1.16,pp:1.36},{id:'b',name:'Pelunasan PRR & Piutang Prabayar',satuan:'Rp Juta',bobot:2,target:0,realisasi:16.29,pct:110,nilai:2.20,lp:0,pp:0.20},{id:'c',name:'Usulan Penghapusan PRR',satuan:'Rp Miliar',bobot:2,target:0,realisasi:0,pct:100,nilai:2.00,lp:0,pp:0}]},
-{no:10,name:'Pengendalian Anggaran',bobot:5,nilai:5.20,lp100:0,pp110:0.30,items:[{id:'a',name:'Pengendalian Anggaran Investasi RKAP',satuan:'%',bobot:2,target:97.5,realisasi:100,pct:110,nilai:2.20,lp:0,pp:0},{id:'b',name:'Usulan Penghapusan ATTB',satuan:'Rp Juta',bobot:2,target:0,realisasi:0,pct:100,nilai:2.00,lp:0,pp:0.20},{id:'c',name:'Pengendalian NAC',satuan:'Rp Juta',bobot:2,target:0,realisasi:0,pct:100,nilai:1.00,lp:0,pp:0.10}]},
-{no:11,name:'Pengelolaan Transaksi Energi',bobot:6,nilai:6.31,lp100:0,pp110:0.29,items:[{id:'a',name:'Perolehan Temuan P2TL',satuan:'kWh',bobot:3,target:2660306,realisasi:2668199,pct:100.30,nilai:3.01,lp:0,pp:0.29},{id:'b',name:'Penyelesaian Ganti Meter',satuan:'Unit',bobot:2,target:1699,realisasi:1879,pct:110.59,nilai:2.20,lp:0,pp:0},{id:'c',name:'Tindak Lanjut LBKB',satuan:'%',bobot:1,target:99,realisasi:100,pct:110,nilai:1.10,lp:0,pp:0}]},
-{no:12,name:'Digitalisasi Aplikasi Korporat',bobot:4,nilai:4.28,lp100:0,pp110:0.12,items:[{id:'a',name:'Pengembangan Aset Distribusi',satuan:'%',bobot:2,target:100,realisasi:103.96,pct:103.96,nilai:2.08,lp:0,pp:0.12},{id:'b',name:'Efektivitas Pemeliharaan',satuan:'%',bobot:2,target:100,realisasi:110,pct:110,nilai:2.20,lp:0,pp:0}]},
-{no:13,name:'Kepatuhan & Tata Kelola',bobot:0,nilai:0,lp100:0,pp110:0,items:[{id:'a',name:'Implementasi Maturity Level',satuan:'Max 3',bobot:0,target:0,realisasi:0,pct:0,nilai:0,lp:0,pp:0},{id:'b',name:'Kepatuhan',satuan:'Max 3',bobot:0,target:0,realisasi:0,pct:0,nilai:0,lp:0,pp:0},{id:'c',name:'Tata Kelola Perusahaan',satuan:'Max 3',bobot:0,target:0,realisasi:0,pct:0,nilai:0,lp:0,pp:0}]}
-]};
-
-var GI_DATA=[
-{name:'GI HAURGEULIS',rm:33.596,trafos:[
-{name:'TRAFO I 60 MVA',kv:20.9,amp:763,pct:44,feeders:[{name:'CILEGEH',code:'CLGH',amp:106},{name:'BUGIS',code:'BGIS',amp:106},{name:'GABUSWETAN',code:'GBWN',amp:99},{name:'BALERAJA',code:'BLRJ',amp:175},{name:'MARGAMULYA',code:'MGMA',amp:141},{name:'PATROL',code:'PTRL',amp:136}]},
-{name:'TRAFO III 60 MVA',kv:21,amp:348,pct:20,feeders:[{name:'BONGAS',code:'BNGS',amp:118},{name:'GANTAR',code:'GNTR',amp:145},{name:'BANTARHUNI',code:'BTHN',amp:85}]}]},
-{name:'GI INDRAMAYU BARU',rm:42.45,trafos:[
-{name:'TRAFO I 60 MVA',kv:20.8,amp:507,pct:29,feeders:[{name:'BHAKTI MINGAS UTAMA',code:'BMU',amp:28},{name:'KANDANGHAUR',code:'KDHR',amp:194},{name:'SUKRA',code:'SKRA',amp:123},{name:'SUMURADEM',code:'SUMD',amp:162}]}]},
-{name:'GI JATIBARANG',rm:20.72,trafos:[
-{name:'TRAFO 1 60 MVA',kv:21,amp:1135,pct:66,feeders:[{name:'WANASARI',code:'WNSR',amp:148},{name:'KEDOKAN',code:'KDKN',amp:113},{name:'SLIYEG',code:'SLYG',amp:144},{name:'BANGODUA',code:'BNGD',amp:82},{name:'LOSARANG',code:'LSRG',amp:115},{name:'PILANGSARI',code:'PLSR',amp:150},{name:'KERTASEMAYA',code:'KSMY',amp:193},{name:'KARANGAMPEL',code:'KRAM',amp:190}]},
-{name:'TRAFO III 60 MVA',kv:21,amp:1048,pct:61,feeders:[{name:'CHANGJUIFANG',code:'CHJF',amp:125},{name:'GADEL',code:'GADL',amp:170},{name:'POLYTAMA A',code:'PLTA',amp:122},{name:'POLYTAMA B',code:'PLTB',amp:122},{name:'JUNTINYUAT',code:'JNTY',amp:232},{name:'CANGKINGAN',code:'CKGN',amp:152},{name:'KAPLONGAN',code:'KPGN',amp:125}]}]},
-{name:'GI INDRAMAYU LAMA',rm:12.32,trafos:[
-{name:'TRAFO I 30 MVA',kv:21.1,amp:720,pct:83,feeders:[{name:'MALL INDRAMAYU',code:'MID',amp:115},{name:'ERETAN',code:'ERTN',amp:105},{name:'LOMBANG',code:'LBNG',amp:50},{name:'SWISBELL',code:'SWBL',amp:115},{name:'GREAT WALL POLYCEM',code:'GWP',amp:25},{name:'KARANGSONG',code:'KRSG',amp:135},{name:'TAMBAK',code:'TBAK',amp:80}]},
-{name:'TRAFO III 30 MVA',kv:21.3,amp:658,pct:76,feeders:[{name:'LOHBENER',code:'LBNR',amp:199},{name:'LANGUT',code:'LNGT',amp:121},{name:'PEMDA',code:'PEMD',amp:73},{name:'PENDOPO',code:'PIM',amp:75},{name:'BALONGAN',code:'BALG',amp:115},{name:'RS BUMI PATRA',code:'RBA',amp:75}]}]},
-{name:'GI CIKEDUNG',rm:73.63,trafos:[
-{name:'TRAFO I 60 MVA',kv:20.5,amp:432,pct:25,feeders:[{name:'TAMIYANGSARI',code:'TMYS',amp:157},{name:'LOYANG',code:'LYNG',amp:96},{name:'PEGAGAN',code:'PGGN',amp:117},{name:'SUKASELAMET',code:'SKSM',amp:62}]},
-{name:'TRAFO II 60 MVA',kv:21,amp:908,pct:52,feeders:[{name:'KARANGSINOM',code:'KRSM',amp:141},{name:'JANGGA',code:'JNGA',amp:192},{name:'KROYA',code:'KRYA',amp:80},{name:'PABRIK CHANGJUIFANG',code:'PKC',amp:120},{name:'FOOD PACKAGING 1',code:'FPG1',amp:125},{name:'FOOD PACKAGING 2',code:'FPG2',amp:124},{name:'FOOD PACKAGING 3',code:'FPG3',amp:125}]}]}
-];
-var GI_SUMMARY={totalGI:5,totalTrafo:9,trafo60:7,trafo30:2,totalBebanA:6021,totalBebanMW:208.33,totalBebanPct:47,totalRM:182.71,totalPenyulang:52,bebanGt200:1,spotload:2};
-
-function rNKO(){var scoreColor=NKO_DATA.totalAgregat>=100?'green':NKO_DATA.totalAgregat>=85?'yellow':'red';var af=window._nkoFilter||'all';var fm={'all':'Semua KPI','tel':'Transaksi Energi','jar':'Jaringan','kon':'Konstruksi','ren':'Perencanaan','ku':'Keuangan','um':'Umum','peta':'Peta Kelistrikan'};var cf={'tel':[1,2,11],'jar':[3,7,8],'kon':[4],'ren':[5,12],'ku':[9,10],'um':[6,13]};var h='<div class="nko-wrap">';h+='<div class="nko-header"><div><h2>NKO UP3 INDRAMAYU 2025</h2><small style="color:rgba(255,255,255,.7)">Nilai Kinerja Organisasi - Monitoring Dashboard</small></div>';h+='<div class="nko-detail"><div class="nko-score '+scoreColor+'">'+NKO_DATA.totalAgregat.toFixed(2)+'</div><small>Total Agregat / 100</small>';h+='<div style="margin-top:4px"><span class="nko-badge yellow">Loss Point: '+NKO_DATA.lossPointTHD.toFixed(2)+'</span> ';h+='<span class="nko-badge green">Potensi 110%: '+NKO_DATA.potensiPoint110.toFixed(2)+'</span></div></div></div>';h+='<div class="nko-filters">';Object.keys(fm).forEach(function(k){h+='<button class="'+(af===k?'active':'')+'" onclick="window._nkoFilter=\''+k+'\';nav(\'nko\')">'+fm[k]+'</button>';});h+='</div>';if(af==='peta'){h+=renderPetaKelistrikan();}else{h+=renderNKOCards(af,cf);h+=renderNKOCharts();h+=renderNKOTable(af,cf);}h+='</div>';setTimeout(function(){if(af!=='peta')initNKOCharts();},100);return h;}
-function renderNKOCards(filter,cf){var cats=NKO_DATA.categories;if(filter!=='all'){cats=cats.filter(function(c){return cf[filter]&&cf[filter].indexOf(c.no)>-1;});}var h='<div class="nko-cards">';cats.forEach(function(cat){var pct=cat.bobot>0?(cat.nilai/cat.bobot*100):100;var cl=pct>=110?'green':pct>=85?'yellow':'red';h+='<div class="nko-card '+cl+'">';h+='<div class="kpi-name">'+cat.no+'. '+cat.name+'</div>';h+='<div class="kpi-val">'+cat.nilai.toFixed(2)+' <span style="font-size:12px;opacity:.5">/ '+cat.bobot+'</span></div>';h+='<div class="kpi-target">Pencapaian: '+pct.toFixed(1)+'%</div>';h+='<div class="kpi-bar"><div class="kpi-bar-fill" style="width:'+Math.min(pct,120)+'%"></div></div>';h+='</div>';});h+='</div>';return h;}
-function renderNKOCharts(){var h='<div class="nko-chart-wrap">';h+='<div class="nko-chart-box"><h4>Pencapaian per Kategori KPI</h4><canvas id="nkoBarChart"></canvas></div>';h+='<div class="nko-chart-box"><h4>Distribusi Bobot NKO</h4><canvas id="nkoPieChart"></canvas></div>';h+='</div>';return h;}
-function initNKOCharts(){var cats=NKO_DATA.categories.filter(function(c){return c.bobot>0;});var labels=cats.map(function(c){return c.name.length>20?c.name.substring(0,20)+'...':c.name;});var data=cats.map(function(c){return c.bobot>0?(c.nilai/c.bobot*100).toFixed(1):0;});var colors=data.map(function(d){return d>=110?'#2ECC71':d>=85?'#F39C12':'#E74C3C';});var el1=document.getElementById('nkoBarChart');var el2=document.getElementById('nkoPieChart');if(el1){var c1=new Chart(el1,{type:'bar',data:{labels:labels,datasets:[{label:'Pencapaian (%)',data:data,backgroundColor:colors,borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'rgba(255,255,255,.5)'}},x:{ticks:{color:'rgba(255,255,255,.5)',maxRotation:45},grid:{display:false}}}}});CH.nkoBar=c1;}if(el2){var bd=cats.map(function(c){return c.bobot;});var bc=['#3498DB','#E74C3C','#2ECC71','#F39C12','#9B59B6','#1ABC9C','#E67E22','#34495E','#16A085','#C0392B','#8E44AD','#D35400'];var c2=new Chart(el2,{type:'doughnut',data:{labels:cats.map(function(c){return c.name.length>18?c.name.substring(0,18)+'...':c.name;}),datasets:[{data:bd,backgroundColor:bc.slice(0,cats.length)}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'rgba(255,255,255,.7)',font:{size:9},padding:6}}}}});CH.nkoPie=c2;}}
-
-function renderNKOTable(filter,cf){var cats=NKO_DATA.categories;if(filter!=='all'){cats=cats.filter(function(c){return cf[filter]&&cf[filter].indexOf(c.no)>-1;});}var h='<div class="nko-section-title">Detail Indikator Kinerja</div>';h+='<div class="nko-table-wrap"><table class="nko-table"><thead><tr>';h+='<th>NO</th><th>INDIKATOR KINERJA</th><th>SATUAN</th><th>BOBOT</th><th>TARGET</th><th>REALISASI</th><th>PENCAPAIAN (%)</th><th>NILAI</th><th>LOSS POINT</th><th>POTENSI 110%</th>';h+='</tr></thead><tbody>';cats.forEach(function(cat){var cp=cat.bobot>0?(cat.nilai/cat.bobot*100):100;var cc=cp>=110?'val-green':cp>=85?'val-yellow':'val-red';h+='<tr class="cat-row"><td>'+cat.no+'</td><td colspan="2">'+cat.name+'</td><td>'+cat.bobot.toFixed(2)+'</td><td></td><td></td><td></td><td class="'+cc+'">'+cat.nilai.toFixed(2)+'</td><td>'+(cat.lp100||0).toFixed(2)+'</td><td>'+(cat.pp110||0).toFixed(2)+'</td></tr>';if(cat.items){cat.items.forEach(function(item){var cl=item.pct>=110?'val-green':item.pct>=85?'val-yellow':'val-red';h+='<tr><td style="padding-left:20px">'+item.id+'</td><td>'+item.name+'</td><td>'+item.satuan+'</td><td>'+(item.bobot||0).toFixed(2)+'</td>';h+='<td>'+(item.target!==undefined&&item.target!==0?Number(item.target).toLocaleString('id-ID'):'')+'</td>';h+='<td>'+(item.realisasi!==undefined&&item.realisasi!==0?Number(item.realisasi).toLocaleString('id-ID'):'')+'</td>';h+='<td class="'+cl+'">'+(item.pct||0).toFixed(2)+'</td>';h+='<td class="'+cl+'">'+(item.nilai||0).toFixed(2)+'</td>';h+='<td>'+(item.lp||0).toFixed(2)+'</td>';h+='<td>'+(item.pp||0).toFixed(2)+'</td></tr>';});}});h+='<tr style="background:linear-gradient(135deg,#003d7a,#0052a3)"><td colspan="3" style="font-weight:900;color:#fff;text-align:center">TOTAL AGREGAT</td>';h+='<td style="color:#fff;font-weight:700">100</td><td colspan="3"></td>';h+='<td style="color:#2ECC71;font-weight:900;font-size:16px">'+NKO_DATA.totalAgregat.toFixed(2)+'</td>';h+='<td style="color:#F39C12;font-weight:700">'+NKO_DATA.lossPointTHD.toFixed(2)+'</td>';h+='<td style="color:#2ECC71;font-weight:700">'+NKO_DATA.potensiPoint110.toFixed(2)+'</td></tr>';h+='</tbody></table></div>';return h;}
-function renderPetaKelistrikan(){var h='<div class="nko-section-title">Kesiapan Pasokan Kelistrikan 2026 - GI & Penyulang Existing</div>';h+='<div class="gi-summary"><div class="gi-summary-grid">';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalGI+'</div><div class="gi-stat-lbl">Gardu Induk</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalTrafo+'</div><div class="gi-stat-lbl">Trafo Tenaga</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalPenyulang+'</div><div class="gi-stat-lbl">Penyulang</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalBebanA.toLocaleString('id-ID')+'A</div><div class="gi-stat-lbl">Total Beban</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val">'+GI_SUMMARY.totalBebanMW+'MW</div><div class="gi-stat-lbl">'+GI_SUMMARY.totalBebanPct+'% Kapasitas</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val" style="color:#F5B731">'+GI_SUMMARY.totalRM.toFixed(2)+'</div><div class="gi-stat-lbl">Total Reverse Margin (MVA)</div></div>';h+='</div>';h+='<div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--tx);opacity:.7">';h+='<span>60 MVA: <strong>'+GI_SUMMARY.trafo60+' Trafo</strong></span>';h+='<span>30 MVA: <strong>'+GI_SUMMARY.trafo30+' Trafo</strong></span>';h+='<span style="color:#E74C3C">Beban > 200A: <strong>'+GI_SUMMARY.bebanGt200+' Penyulang</strong></span>';h+='<span style="color:#F39C12">Spotload: <strong>'+GI_SUMMARY.spotload+' Penyulang</strong></span>';h+='</div></div>';h+='<div class="gi-grid">';GI_DATA.forEach(function(gi){h+='<div class="gi-box">';h+='<div class="gi-box-header"><h3>'+gi.name+'</h3><div class="rm">Reverse Margin: <strong>'+gi.rm.toFixed(2)+' MVA</strong></div></div>';h+='<div class="gi-box-body">';gi.trafos.forEach(function(tr){h+='<div class="trafo-section">';h+='<div class="trafo-title">'+tr.name+' ('+tr.kv+' kV / '+tr.amp+' A / '+tr.pct+' %)</div>';tr.feeders.forEach(function(f){var lc=f.amp>=200?'high':f.amp>=150?'med':'ok';h+='<div class="feeder-row"><span class="feeder-name">P. '+f.name+' ('+f.code+')</span><span class="feeder-load '+lc+'">= '+f.amp+' A</span></div>';});h+='</div>';});h+='</div></div>';});h+='</div>';return h;}
-
+var S={page:"dash",level:"all_up3",chatOpen:false};
+var ULP_DATA={"53401":{id:"53401",name:"ULP Jatibarang",pelanggan:48520,daya_tersambung:62.4,trafo:186,penyulang:8,saidi:2.34,saifi:0.18,losses:8.2,gangguan_tm:12,gangguan_tr:45,kabel_tm_km:124.5,kabel_tr_km:312.8,tiang:4280,penjualan_gwh:3.21,pendapatan_m:48.5,piutang_m:6.2,tunggakan_pct:4.8,proyek_aktif:8,proyek_selesai:24,anggaran_m:850,realisasi_m:612,keluhan_bln:89,response_time:28,rating:4.2},
+"53402":{id:"53402",name:"ULP Haurgeulis",pelanggan:38210,daya_tersambung:48.6,trafo:142,penyulang:6,saidi:3.85,saifi:0.31,losses:9.8,gangguan_tm:18,gangguan_tr:62,kabel_tm_km:98.2,kabel_tr_km:245.6,tiang:3420,penjualan_gwh:2.65,pendapatan_m:38.2,piutang_m:8.4,tunggakan_pct:7.2,proyek_aktif:5,proyek_selesai:18,anggaran_m:620,realisasi_m:428,keluhan_bln:142,response_time:45,rating:3.6},
+"53403":{id:"53403",name:"ULP Indramayu Kota",pelanggan:52840,daya_tersambung:78.2,trafo:198,penyulang:10,saidi:1.92,saifi:0.14,losses:6.8,gangguan_tm:8,gangguan_tr:32,kabel_tm_km:86.4,kabel_tr_km:198.5,tiang:3120,penjualan_gwh:4.12,pendapatan_m:62.8,piutang_m:4.8,tunggakan_pct:3.2,proyek_aktif:12,proyek_selesai:32,anggaran_m:1200,realisasi_m:945,keluhan_bln:65,response_time:22,rating:4.5},
+"43404":{id:"43404",name:"ULP Cikedung",pelanggan:32150,daya_tersambung:38.4,trafo:118,penyulang:5,saidi:4.12,saifi:0.28,losses:10.5,gangguan_tm:22,gangguan_tr:78,kabel_tm_km:112.8,kabel_tr_km:286.4,tiang:3860,penjualan_gwh:2.18,pendapatan_m:32.4,piutang_m:9.6,tunggakan_pct:8.5,proyek_aktif:4,proyek_selesai:14,anggaran_m:480,realisasi_m:312,keluhan_bln:168,response_time:52,rating:3.2}};
+var MONTHS=["Jan","Feb","Mar","Apr","Mei"];
+var MONTHLY={"53401":{saidi:[2.8,2.6,2.5,2.4,2.34],saifi:[.22,.20,.19,.18,.18],losses:[9.1,8.8,8.6,8.4,8.2],gangguan:[15,14,13,12,12],penjualan:[2.9,3.0,3.05,3.12,3.21],pendapatan:[44,45.2,46.8,47.5,48.5]},"53402":{saidi:[4.5,4.3,4.1,3.95,3.85],saifi:[.38,.36,.34,.32,.31],losses:[11.2,10.8,10.4,10.1,9.8],gangguan:[24,22,20,19,18],penjualan:[2.4,2.48,2.52,2.58,2.65],pendapatan:[34,35.2,36.5,37.2,38.2]},"53403":{saidi:[2.4,2.2,2.1,2.0,1.92],saifi:[.18,.17,.16,.15,.14],losses:[7.8,7.5,7.2,7.0,6.8],gangguan:[12,11,10,9,8],penjualan:[3.8,3.9,3.95,4.05,4.12],pendapatan:[58,59.5,60.8,61.5,62.8]},"43404":{saidi:[5.2,4.9,4.6,4.3,4.12],saifi:[.35,.33,.31,.29,.28],losses:[12.5,12.0,11.5,11.0,10.5],gangguan:[28,26,24,23,22],penjualan:[1.9,1.98,2.05,2.12,2.18],pendapatan:[28,29.5,30.8,31.5,32.4]}};
+var GI_DATA=[{name:"GI HAURGEULIS",rm:33.60,trafos:[{name:"TRAFO I 60 MVA",kv:20.9,amp:763,pct:44,feeders:[{name:"CILEGEH",code:"CLGH",amp:106},{name:"BUGIS",code:"BGIS",amp:106},{name:"GABUSWETAN",code:"GBWN",amp:99},{name:"BALERAJA",code:"BLRJ",amp:175},{name:"MARGAMULYA",code:"MGMA",amp:141},{name:"PATROL",code:"PTRL",amp:136}]},{name:"TRAFO III 60 MVA",kv:21,amp:348,pct:20,feeders:[{name:"BONGAS",code:"BNGS",amp:118},{name:"GANTAR",code:"GNTR",amp:52},{name:"HAURGEULIS",code:"HRGL",amp:92},{name:"GABUSWETAN II",code:"GBW2",amp:86}]}]},{name:"GI INDRAMAYU BARU",rm:42.45,trafos:[{name:"TRAFO I 60 MVA",kv:20.8,amp:507,pct:29,feeders:[{name:"BHAKTI MINGAS UTAMA",code:"BMU",amp:28},{name:"KANDANGHAUR",code:"KDHR",amp:194},{name:"SUKRA",code:"SKRA",amp:123},{name:"SUMURADEM",code:"SUMD",amp:162}]},{name:"TRAFO II 60 MVA",kv:20.9,amp:620,pct:36,feeders:[{name:"SINDANG",code:"SNDG",amp:168},{name:"BALONGAN",code:"BLGN",amp:142},{name:"PEKANDANGAN",code:"PKDG",amp:155},{name:"DERMAYU",code:"DRMY",amp:155}]}]},{name:"GI JATIBARANG",rm:28.12,trafos:[{name:"TRAFO I 60 MVA",kv:20.7,amp:842,pct:48,feeders:[{name:"JATIBARANG",code:"JTBR",amp:186},{name:"LOHBENER",code:"LHBN",amp:145},{name:"BANGODUA",code:"BGDA",amp:128},{name:"KRANGKENG",code:"KRKN",amp:195},{name:"ARAHAN",code:"ARHN",amp:188}]}]},{name:"GI CIKEDUNG",rm:18.84,trafos:[{name:"TRAFO I 30 MVA",kv:20.6,amp:568,pct:65,feeders:[{name:"CIKEDUNG",code:"CKDG",amp:142},{name:"LELEA",code:"LLEA",amp:118},{name:"SLIYEG",code:"SLYG",amp:165},{name:"TUKDANA",code:"TKDN",amp:143}]},{name:"TRAFO II 30 MVA",kv:20.5,amp:425,pct:49,feeders:[{name:"WIDASARI",code:"WDSR",amp:128},{name:"KERTASEMAYA",code:"KRSM",amp:156},{name:"KARANGAMPEL",code:"KRGL",amp:141}]}]},{name:"GI PATROL",rm:22.56,trafos:[{name:"TRAFO I 60 MVA",kv:20.8,amp:695,pct:40,feeders:[{name:"ANJATAN",code:"AJTN",amp:148},{name:"LOSARANG",code:"LSRG",amp:132},{name:"PATROL",code:"PTRL2",amp:165},{name:"CIKEDUNG II",code:"CKD2",amp:125},{name:"BONGAS II",code:"BNG2",amp:125}]}]}];
+var NKO_DATA={totalAgregat:101.98,lossPointTHD:3.08,potensiPoint110:8.02,categories:[{no:1,name:"Penjualan Tenaga Listrik",bobot:14,nilai:12.82,lp100:1.18,pp110:2.58,items:[{name:"Penjualan TL",bobot:14,target:12.81,realisasi:11.73,pct:91.54,nilai:12.82,lp:1.18,pp:2.58}]},{no:2,name:"Susut Distribusi",bobot:12,nilai:13.16,lp100:0,pp110:0.04,items:[{name:"Susut Distribusi",bobot:12,target:10,realisasi:9.04,pct:109.63,nilai:13.16,lp:0,pp:0.04}]},{no:3,name:"Keandalan Jaringan",bobot:10,nilai:10.2,lp100:0,pp110:0.8,items:[{name:"SAIDI",bobot:5,target:2.86,realisasi:2.41,pct:115.73,nilai:5.5,lp:0,pp:0.5},{name:"SAIFI",bobot:5,target:0.3,realisasi:0.22,pct:126.67,nilai:4.7,lp:0,pp:0.3}]},{no:4,name:"Pelayanan Pelanggan",bobot:10,nilai:9.8,lp100:0.2,pp110:0.62,items:[{name:"Response Time",bobot:5,target:30,realisasi:32,pct:93.75,nilai:4.69,lp:0.31,pp:0},{name:"Rating",bobot:5,target:4.5,realisasi:4.2,pct:93.33,nilai:5.11,lp:0,pp:0.62}]},{no:5,name:"Tambah Daya & Pelanggan",bobot:8,nilai:8.92,lp100:0,pp110:0.52,items:[{name:"Tambah Pelanggan",bobot:4,target:2500,realisasi:2842,pct:113.68,nilai:4.55,lp:0,pp:0.15},{name:"Tambah Daya",bobot:4,target:8000000,realisasi:9245000,pct:115.56,nilai:4.37,lp:0,pp:0.37}]},{no:6,name:"Efisiensi Operasi",bobot:12,nilai:12.48,lp100:0,pp110:0.48,items:[{name:"BPBL",bobot:6,target:980,realisasi:945,pct:103.57,nilai:6.21,lp:0,pp:0.21},{name:"PRR",bobot:6,target:95,realisasi:96.2,pct:101.26,nilai:6.27,lp:0,pp:0.27}]},{no:7,name:"Gangguan Jaringan",bobot:8,nilai:7.42,lp100:0.58,pp110:0,items:[{name:"Gangguan TM",bobot:4,target:10,realisasi:12,pct:83.33,nilai:3.33,lp:0.67,pp:0},{name:"Gangguan TR",bobot:4,target:40,realisasi:35,pct:112.5,nilai:4.09,lp:0,pp:0}]},{no:8,name:"Program Strategis",bobot:10,nilai:10.86,lp100:0,pp110:0.86,items:[{name:"Realisasi Investasi",bobot:5,target:90,realisasi:94.8,pct:105.33,nilai:5.27,lp:0,pp:0.27},{name:"Transaksi Digital",bobot:5,target:85,realisasi:91.2,pct:107.29,nilai:5.59,lp:0,pp:0.59}]}]};
+var chartInstances={};
+function getSelectedData(){var lv=S.level;if(lv==="all_up3"){var keys=Object.keys(ULP_DATA),agg={id:"all",name:"All UP3 Indramayu",pelanggan:0,daya_tersambung:0,trafo:0,penyulang:0,saidi:0,saifi:0,losses:0,gangguan_tm:0,gangguan_tr:0,kabel_tm_km:0,kabel_tr_km:0,tiang:0,penjualan_gwh:0,pendapatan_m:0,piutang_m:0,tunggakan_pct:0,proyek_aktif:0,proyek_selesai:0,anggaran_m:0,realisasi_m:0,keluhan_bln:0,response_time:0,rating:0};keys.forEach(function(k){var d=ULP_DATA[k];agg.pelanggan+=d.pelanggan;agg.daya_tersambung+=d.daya_tersambung;agg.trafo+=d.trafo;agg.penyulang+=d.penyulang;agg.gangguan_tm+=d.gangguan_tm;agg.gangguan_tr+=d.gangguan_tr;agg.kabel_tm_km+=d.kabel_tm_km;agg.kabel_tr_km+=d.kabel_tr_km;agg.tiang+=d.tiang;agg.penjualan_gwh+=d.penjualan_gwh;agg.pendapatan_m+=d.pendapatan_m;agg.piutang_m+=d.piutang_m;agg.proyek_aktif+=d.proyek_aktif;agg.proyek_selesai+=d.proyek_selesai;agg.anggaran_m+=d.anggaran_m;agg.realisasi_m+=d.realisasi_m;agg.keluhan_bln+=d.keluhan_bln});var n=keys.length;agg.saidi=+(keys.reduce(function(s,k){return s+ULP_DATA[k].saidi},0)/n).toFixed(2);agg.saifi=+(keys.reduce(function(s,k){return s+ULP_DATA[k].saifi},0)/n).toFixed(2);agg.losses=+(keys.reduce(function(s,k){return s+ULP_DATA[k].losses},0)/n).toFixed(1);agg.tunggakan_pct=+(keys.reduce(function(s,k){return s+ULP_DATA[k].tunggakan_pct},0)/n).toFixed(1);agg.response_time=Math.round(keys.reduce(function(s,k){return s+ULP_DATA[k].response_time},0)/n);agg.rating=+(keys.reduce(function(s,k){return s+ULP_DATA[k].rating},0)/n).toFixed(1);return agg}return ULP_DATA[lv]||ULP_DATA["53403"]}
+function getLevelLabel(){if(S.level==="all_up3")return"All UP3 Indramayu";return ULP_DATA[S.level]?ULP_DATA[S.level].name:"UP3 Indramayu"}
+function changeLevel(v){S.level=v;renderPage()}
+function nav(page){S.page=page;document.querySelectorAll(".ni").forEach(function(el){el.classList.remove("on")});var items=document.querySelectorAll(".ni"),map=["dash","peta","jaringan","konstruksi","perencanaan","keuangan","nko"],idx=map.indexOf(page);if(idx>=0&&items[idx])items[idx].classList.add("on");renderPage()}
+function destroyCharts(){Object.keys(chartInstances).forEach(function(k){if(chartInstances[k]){chartInstances[k].destroy();delete chartInstances[k]}})}
+function makeChart(id,cfg){var c=document.getElementById(id);if(!c)return null;Chart.defaults.color="#94a3b8";Chart.defaults.borderColor="#1e3054";var ch=new Chart(c.getContext("2d"),cfg);chartInstances[id]=ch;return ch}
+function statusBadge(s){var c={Berjalan:"#3b82f6",Selesai:"#22c55e",Draft:"#f59e0b",Approved:"#22c55e",Kritis:"#ef4444",Tinggi:"#f97316",Sedang:"#3b82f6"};return'<span style="background:'+((c[s]||"#3b82f6")+"22")+";color:"+(c[s]||"#3b82f6")+';padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600">'+s+"</span>"}
+function renderPage(){destroyCharts();var ct=document.getElementById("ct"),t={dash:"Dashboard",peta:"Peta Jaringan",jaringan:"Jaringan",konstruksi:"Konstruksi",perencanaan:"Perencanaan",keuangan:"Keuangan",nko:"NKO Indramayu"};document.getElementById("pageTitle").textContent=t[S.page]||"Dashboard";document.getElementById("pageSub").textContent=getLevelLabel()+" \u2014 Monitoring Real-time";switch(S.page){case"dash":renderDashboard();break;case"peta":renderPeta();break;case"jaringan":renderJaringan();break;case"konstruksi":renderKonstruksi();break;case"perencanaan":renderPerencanaan();break;case"keuangan":renderKeuangan();break;case"nko":renderNKO();break;default:renderDashboard()}}
+function aggregateMonthly(){var keys=Object.keys(MONTHLY),agg={saidi:[],saifi:[],losses:[],gangguan:[],penjualan:[],pendapatan:[]};for(var i=0;i<5;i++){var ss=0,sf=0,ls=0,gg=0,pj=0,pd=0;keys.forEach(function(k){ss+=MONTHLY[k].saidi[i];sf+=MONTHLY[k].saifi[i];ls+=MONTHLY[k].losses[i];gg+=MONTHLY[k].gangguan[i];pj+=MONTHLY[k].penjualan[i];pd+=MONTHLY[k].pendapatan[i]});var n=keys.length;agg.saidi.push(+(ss/n).toFixed(2));agg.saifi.push(+(sf/n).toFixed(2));agg.losses.push(+(ls/n).toFixed(1));agg.gangguan.push(Math.round(gg/n));agg.penjualan.push(+pj.toFixed(2));agg.pendapatan.push(+pd.toFixed(1))}return agg}
+function renderDashboard(){var d=getSelectedData(),ct=document.getElementById("ct"),h='<div class="sec-header"><h2>Dashboard Overview</h2><span class="loc-badge">'+getLevelLabel()+"</span></div>";h+='<div class="card-grid">';h+='<div class="stat-card blue"><div class="val">'+d.pelanggan.toLocaleString()+'</div><div class="lbl">Total Pelanggan</div></div>';h+='<div class="stat-card cyan"><div class="val">'+d.daya_tersambung.toFixed(1)+' MW</div><div class="lbl">Daya Tersambung</div></div>';h+='<div class="stat-card '+(d.saidi<=2.5?"green":d.saidi<=3.5?"yellow":"red")+'"><div class="val">'+d.saidi+'</div><div class="lbl">SAIDI (Menit)</div></div>';h+='<div class="stat-card '+(d.saifi<=.2?"green":d.saifi<=.3?"yellow":"red")+'"><div class="val">'+d.saifi+'</div><div class="lbl">SAIFI (Kali)</div></div>';h+='<div class="stat-card '+(d.losses<=8?"green":d.losses<=10?"yellow":"red")+'"><div class="val">'+d.losses+'%</div><div class="lbl">Susut Distribusi</div></div>';h+='<div class="stat-card green"><div class="val">'+d.penjualan_gwh.toFixed(2)+' GWh</div><div class="lbl">Penjualan TL</div></div>';h+='<div class="stat-card blue"><div class="val">Rp '+d.pendapatan_m.toFixed(1)+' M</div><div class="lbl">Pendapatan</div></div>';h+='<div class="stat-card '+(d.gangguan_tm<=10?"green":d.gangguan_tm<=15?"yellow":"red")+'"><div class="val">'+d.gangguan_tm+'</div><div class="lbl">Gangguan TM</div></div></div>';
+if(S.level==="all_up3"){h+='<div class="card"><h3>Perbandingan ULP</h3><table class="tbl"><thead><tr><th>ULP</th><th>Pelanggan</th><th>SAIDI</th><th>SAIFI</th><th>Susut</th><th>Gangguan TM</th><th>Pendapatan</th><th>Rating</th></tr></thead><tbody>';Object.keys(ULP_DATA).forEach(function(k){var u=ULP_DATA[k];h+="<tr><td><strong>"+u.name+"</strong></td><td>"+u.pelanggan.toLocaleString()+"</td>";h+='<td class="'+(u.saidi<=2.5?"green":u.saidi<=3.5?"yellow":"red")+'">'+u.saidi+"</td>";h+='<td class="'+(u.saifi<=.2?"green":u.saifi<=.3?"yellow":"red")+'">'+u.saifi+"</td>";h+='<td class="'+(u.losses<=8?"green":u.losses<=10?"yellow":"red")+'">'+u.losses+"%</td>";h+='<td class="'+(u.gangguan_tm<=10?"green":u.gangguan_tm<=15?"yellow":"red")+'">'+u.gangguan_tm+"</td>";h+="<td>Rp "+u.pendapatan_m+' M</td><td class="'+(u.rating>=4?"green":u.rating>=3.5?"yellow":"red")+'">'+u.rating+"</td></tr>"});h+="</tbody></table></div>"}
+h+='<div class="chart-row"><div class="chart-box"><h4>Trend SAIDI & SAIFI</h4><div class="chart-container"><canvas id="chTrend"></canvas></div></div><div class="chart-box"><h4>Penjualan & Pendapatan</h4><div class="chart-container"><canvas id="chRev"></canvas></div></div></div>';h+='<div id="aiAnalysisArea"></div>';ct.innerHTML=h;var md=S.level==="all_up3"?aggregateMonthly():MONTHLY[S.level];if(md){makeChart("chTrend",{type:"line",data:{labels:MONTHS,datasets:[{label:"SAIDI",data:md.saidi,borderColor:"#ef4444",backgroundColor:"rgba(239,68,68,.1)",tension:.4,fill:true},{label:"SAIFI x10",data:md.saifi.map(function(v){return v*10}),borderColor:"#f59e0b",backgroundColor:"rgba(245,158,11,.1)",tension:.4,fill:true,yAxisID:"y1"}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{title:{display:true,text:"SAIDI"}},y1:{position:"right",title:{display:true,text:"SAIFIx10"},grid:{display:false}}}}});makeChart("chRev",{type:"bar",data:{labels:MONTHS,datasets:[{label:"Penjualan GWh",data:md.penjualan,backgroundColor:"rgba(59,130,246,.6)",borderRadius:4},{label:"Pendapatan M",data:md.pendapatan,backgroundColor:"rgba(34,197,94,.6)",borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false}})}}
+function renderPeta(){var ct=document.getElementById("ct");ct.innerHTML='<div class="sec-header"><h2>Peta Jaringan</h2><span class="loc-badge">'+getLevelLabel()+'</span></div><div class="map-wrap" style="height:calc(100vh - 160px)"><div id="mapEl"></div></div><div id="aiAnalysisArea"></div>';setTimeout(initMap,100)}
+function initMap(){var el=document.getElementById("mapEl");if(!el)return;var map=L.map("mapEl").setView([-6.337,108.32],11);L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"CartoDB"}).addTo(map);[[-6.35,108.45,"GI Haurgeulis"],[-6.33,108.32,"GI Indramayu Baru"],[-6.34,108.25,"GI Jatibarang"],[-6.38,108.18,"GI Cikedung"],[-6.36,108.38,"GI Patrol"]].forEach(function(g){L.circleMarker([g[0],g[1]],{radius:10,color:"#3b82f6",fillColor:"#3b82f6",fillOpacity:.8}).addTo(map).bindPopup("<strong>"+g[2]+"</strong>")})}
+function renderJaringan(){var d=getSelectedData(),ct=document.getElementById("ct"),h='<div class="bagian-header"><h2>Bagian Jaringan</h2><p>Monitoring kondisi jaringan distribusi - '+getLevelLabel()+'</p><div class="filter-row"><button class="ai-btn" onclick="runAIAnalysis(\'jaringan\')"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z"/></svg>Analisis AI</button></div></div>';
+h+='<div class="kpi-row">';h+='<div class="kpi-mini"><div class="kpi-label">Penyulang</div><div class="kpi-val" style="color:var(--pri)">'+d.penyulang+'</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">Gardu Distribusi</div><div class="kpi-val" style="color:var(--cyan)">'+d.trafo+'</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">Kabel TM (km)</div><div class="kpi-val" style="color:var(--grn)">'+d.kabel_tm_km.toFixed(1)+'</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">SAIDI</div><div class="kpi-val" style="color:'+(d.saidi<=2.5?"var(--grn)":d.saidi<=3.5?"var(--ylw)":"var(--red)")+'">'+d.saidi+'</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">Susut</div><div class="kpi-val" style="color:'+(d.losses<=8?"var(--grn)":d.losses<=10?"var(--ylw)":"var(--red)")+'">'+d.losses+'%</div></div>';h+='<div class="kpi-mini"><div class="kpi-label">Gangguan TM</div><div class="kpi-val" style="color:'+(d.gangguan_tm<=10?"var(--grn)":d.gangguan_tm<=15?"var(--ylw)":"var(--red)")+'">'+d.gangguan_tm+'</div></div></div>';
+h+='<div class="nko-section-title">Kesiapan Pasokan Kelistrikan - GI & Penyulang</div>';h+='<div class="gi-summary"><div class="gi-summary-grid">';h+='<div class="gi-stat"><div class="gi-stat-val" style="color:var(--pri)">'+GI_DATA.length+'</div><div class="gi-stat-lbl">Gardu Induk</div></div>';var tt=GI_DATA.reduce(function(s,g){return s+g.trafos.length},0),tf=GI_DATA.reduce(function(s,g){return s+g.trafos.reduce(function(ss,t){return ss+t.feeders.length},0)},0);h+='<div class="gi-stat"><div class="gi-stat-val" style="color:var(--cyan)">'+tt+'</div><div class="gi-stat-lbl">Trafo Tenaga</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val" style="color:var(--grn)">'+tf+'</div><div class="gi-stat-lbl">Penyulang</div></div>';h+='<div class="gi-stat"><div class="gi-stat-val" style="color:var(--org)">6.021A</div><div class="gi-stat-lbl">Total Beban</div></div></div></div>';
+h+='<div class="gi-grid">';GI_DATA.forEach(function(gi){h+='<div class="gi-box"><div class="gi-box-header"><h4>'+gi.name+'</h4><small>Reverse Margin: '+gi.rm.toFixed(2)+' MVA</small></div><div class="gi-box-body">';gi.trafos.forEach(function(t){h+='<div class="trafo-section"><div class="trafo-title">'+t.name+" ("+t.kv+" kV / "+t.amp+" A / "+t.pct+' %)</div>';t.feeders.forEach(function(f){var cls=f.amp>=180?"high":f.amp>=140?"med":"ok";h+='<div class="feeder-row"><span class="feeder-name">P. '+f.name+" ("+f.code+')</span><span class="feeder-load '+cls+'">= '+f.amp+" A</span></div>"});h+="</div>"});h+="</div></div>"});h+="</div>";
+h+='<div class="chart-row" style="margin-top:16px"><div class="chart-box"><h4>Trend Gangguan TM</h4><div class="chart-container"><canvas id="chGang"></canvas></div></div><div class="chart-box"><h4>Trend Susut</h4><div class="chart-container"><canvas id="chLoss"></canvas></div></div></div>';h+='<div id="aiAnalysisArea"></div>';ct.innerHTML=h;var md=S.level==="all_up3"?aggregateMonthly():MONTHLY[S.level];if(md){makeChart("chGang",{type:"line",data:{labels:MONTHS,datasets:[{label:"Gangguan TM",data:md.gangguan,borderColor:"#ef4444",backgroundColor:"rgba(239,68,68,.1)",tension:.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false}});makeChart("chLoss",{type:"line",data:{labels:MONTHS,datasets:[{label:"Susut %",data:md.losses,borderColor:"#f59e0b",backgroundColor:"rgba(245,158,11,.1)",tension:.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false}})}}
+function renderKonstruksi(){var d=getSelectedData(),ct=document.getElementById("ct"),h='<div class="bagian-header"><h2>Bagian Konstruksi</h2><p>Monitoring proyek konstruksi - '+getLevelLabel()+'</p><div class="filter-row"><button class="ai-btn" onclick="runAIAnalysis(\'konstruksi\')"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z"/></svg>Analisis AI</button></div></div>';h+='<div class="kpi-row"><div class="kpi-mini"><div class="kpi-label">Proyek Aktif</div><div class="kpi-val" style="color:var(--pri)">'+d.proyek_aktif+'</div></div><div class="kpi-mini"><div class="kpi-label">Proyek Selesai</div><div class="kpi-val" style="color:var(--grn)">'+d.proyek_selesai+'</div></div><div class="kpi-mini"><div class="kpi-label">Anggaran</div><div class="kpi-val" style="color:var(--cyan)">'+d.anggaran_m+' Jt</div></div><div class="kpi-mini"><div class="kpi-label">Realisasi</div><div class="kpi-val" style="color:var(--ylw)">'+d.realisasi_m+' Jt</div></div><div class="kpi-mini"><div class="kpi-label">% Realisasi</div><div class="kpi-val" style="color:'+(d.realisasi_m/d.anggaran_m*100>=70?"var(--grn)":"var(--red)")+'">'+((d.anggaran_m>0)?(d.realisasi_m/d.anggaran_m*100).toFixed(1):0)+'%</div></div></div>';h+='<div class="card"><h3>Info Proyek</h3><p style="color:var(--txd);font-size:13px">Halaman ini menampilkan monitoring proyek konstruksi dan investasi per ULP. Gunakan filter Akses Level untuk melihat detail per ULP. Klik tombol Analisis AI untuk mendapatkan insight otomatis.</p></div>';h+='<div id="aiAnalysisArea"></div>';ct.innerHTML=h}
+function renderPerencanaan(){var d=getSelectedData(),ct=document.getElementById("ct"),h='<div class="bagian-header"><h2>Bagian Perencanaan</h2><p>Rencana pengembangan & program kerja - '+getLevelLabel()+'</p><div class="filter-row"><button class="ai-btn" onclick="runAIAnalysis(\'perencanaan\')"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z"/></svg>Analisis AI</button></div></div>';h+='<div class="kpi-row"><div class="kpi-mini"><div class="kpi-label">Total Pelanggan</div><div class="kpi-val" style="color:var(--pri)">'+d.pelanggan.toLocaleString()+'</div></div><div class="kpi-mini"><div class="kpi-label">Daya Tersambung</div><div class="kpi-val" style="color:var(--cyan)">'+d.daya_tersambung.toFixed(1)+' MW</div></div><div class="kpi-mini"><div class="kpi-label">Trafo</div><div class="kpi-val" style="color:var(--grn)">'+d.trafo+'</div></div><div class="kpi-mini"><div class="kpi-label">Penyulang</div><div class="kpi-val" style="color:var(--ylw)">'+d.penyulang+'</div></div></div>';h+='<div class="card"><h3>Program Kerja & Rencana Pengembangan</h3><p style="color:var(--txd);font-size:13px">Halaman perencanaan menampilkan rencana program kerja dan target pengembangan jaringan. Gunakan AI Analysis untuk mendapatkan rekomendasi strategis berdasarkan data.</p></div>';h+='<div id="aiAnalysisArea"></div>';ct.innerHTML=h}
+function renderKeuangan(){var d=getSelectedData(),ct=document.getElementById("ct"),h='<div class="bagian-header"><h2>Bagian Keuangan</h2><p>Monitoring keuangan & efisiensi - '+getLevelLabel()+'</p><div class="filter-row"><button class="ai-btn" onclick="runAIAnalysis(\'keuangan\')"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z"/></svg>Analisis AI</button></div></div>';h+='<div class="kpi-row"><div class="kpi-mini"><div class="kpi-label">Pendapatan</div><div class="kpi-val" style="color:var(--grn)">Rp '+d.pendapatan_m.toFixed(1)+' M</div></div><div class="kpi-mini"><div class="kpi-label">Piutang</div><div class="kpi-val" style="color:var(--red)">Rp '+d.piutang_m.toFixed(1)+' M</div></div><div class="kpi-mini"><div class="kpi-label">Tunggakan</div><div class="kpi-val" style="color:'+(d.tunggakan_pct<=5?"var(--grn)":d.tunggakan_pct<=7?"var(--ylw)":"var(--red)")+'">'+d.tunggakan_pct+'%</div></div><div class="kpi-mini"><div class="kpi-label">Penjualan</div><div class="kpi-val" style="color:var(--pri)">'+d.penjualan_gwh.toFixed(2)+' GWh</div></div></div>';
+if(S.level==="all_up3"){h+='<div class="card"><h3>Perbandingan Keuangan per ULP</h3><table class="tbl"><thead><tr><th>ULP</th><th>Pendapatan</th><th>Piutang</th><th>Tunggakan</th><th>Rating</th></tr></thead><tbody>';Object.keys(ULP_DATA).forEach(function(k){var u=ULP_DATA[k];h+="<tr><td><strong>"+u.name+"</strong></td><td>Rp "+u.pendapatan_m+' M</td><td class="red">Rp '+u.piutang_m+' M</td><td class="'+(u.tunggakan_pct<=5?"green":u.tunggakan_pct<=7?"yellow":"red")+'">'+u.tunggakan_pct+'%</td><td class="'+(u.rating>=4?"green":u.rating>=3.5?"yellow":"red")+'">'+u.rating+"</td></tr>"});h+="</tbody></table></div>"}
+h+='<div class="chart-row"><div class="chart-box"><h4>Trend Pendapatan</h4><div class="chart-container"><canvas id="chFin"></canvas></div></div><div class="chart-box"><h4>Perbandingan ULP</h4><div class="chart-container"><canvas id="chULP"></canvas></div></div></div>';h+='<div id="aiAnalysisArea"></div>';ct.innerHTML=h;var md=S.level==="all_up3"?aggregateMonthly():MONTHLY[S.level];if(md){makeChart("chFin",{type:"line",data:{labels:MONTHS,datasets:[{label:"Pendapatan (M)",data:md.pendapatan,borderColor:"#22c55e",backgroundColor:"rgba(34,197,94,.1)",tension:.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false}})}if(S.level==="all_up3"){var labels=Object.keys(ULP_DATA).map(function(k){return ULP_DATA[k].name}),vals=Object.keys(ULP_DATA).map(function(k){return ULP_DATA[k].pendapatan_m});makeChart("chULP",{type:"bar",data:{labels:labels,datasets:[{label:"Pendapatan (M)",data:vals,backgroundColor:["#3b82f6","#22c55e","#f59e0b","#ef4444"],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false}})}}
+function renderNKO(){var ct=document.getElementById("ct"),h='<div class="nko-wrap"><div class="nko-header"><div><h2>NKO UP3 INDRAMAYU 2025</h2><small>Nilai Kinerja Organisasi</small></div><div class="nko-detail"><div class="nko-score">'+NKO_DATA.totalAgregat.toFixed(2)+'</div><small>Total Agregat / 100</small><div style="margin-top:4px"><span class="nko-badge red">Loss Point: '+NKO_DATA.lossPointTHD.toFixed(2)+'</span> <span class="nko-badge green">Potensi 110%: '+NKO_DATA.potensiPoint110.toFixed(2)+"</span></div></div></div>";
+h+='<div class="card"><h3>Detail Indikator NKO</h3><table class="tbl"><thead><tr><th>No</th><th>Indikator</th><th>Bobot</th><th>Nilai</th><th>Loss Point</th><th>Potensi 110%</th></tr></thead><tbody>';NKO_DATA.categories.forEach(function(cat){h+='<tr style="background:rgba(59,130,246,.05)"><td><strong>'+cat.no+"</strong></td><td><strong>"+cat.name+'</strong></td><td>'+cat.bobot+'</td><td class="'+(cat.nilai>=cat.bobot?"green":"yellow")+'"><strong>'+cat.nilai.toFixed(2)+'</strong></td><td class="'+(cat.lp100>0?"red":"green")+'">'+cat.lp100.toFixed(2)+'</td><td class="'+(cat.pp110>0?"green":"")+'">'+cat.pp110.toFixed(2)+"</td></tr>";if(cat.items)cat.items.forEach(function(item){h+="<tr><td></td><td style=\"padding-left:24px;color:var(--txd)\">"+item.name+"</td><td>"+item.bobot+"</td><td>"+item.nilai.toFixed(2)+"</td><td>"+(item.lp>0?'<span class="red">'+item.lp.toFixed(2)+"</span>":"-")+"</td><td>"+(item.pp>0?'<span class="green">'+item.pp.toFixed(2)+"</span>":"-")+"</td></tr>"})});
+h+="</tbody></table></div>";h+='<div style="margin-top:12px"><button class="ai-btn" style="display:inline-flex" onclick="runAIAnalysis(\'nko\')"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:#fff"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z"/></svg>Analisis AI NKO</button></div><div id="aiAnalysisArea"></div></div>';ct.innerHTML=h}
+function runAIAnalysis(section){var area=document.getElementById("aiAnalysisArea");if(!area)return;area.innerHTML='<div class="ai-analysis"><div class="ai-title"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z"/></svg>PLN AI sedang menganalisis...</div><div class="thinking"><div class="dots"><span></span><span></span><span></span></div><span>Mengumpulkan data dan mencari akar permasalahan...</span></div></div>';setTimeout(function(){var r=generateAnalysis(section);area.innerHTML='<div class="ai-analysis"><div class="ai-title"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z"/></svg>Hasil Analisis AI \u2014 '+section.charAt(0).toUpperCase()+section.slice(1)+'</div><div class="ai-body">'+r.summary+"</div></div>"+r.cards;area.scrollIntoView({behavior:"smooth"})},1500)}
+function generateAnalysis(section){var d=getSelectedData(),lv=S.level;switch(section){case"jaringan":return analyzeJaringan(d,lv);case"konstruksi":return analyzeKonstruksi(d);case"perencanaan":return analyzePerencanaan(d);case"keuangan":return analyzeKeuangan(d,lv);case"nko":return analyzeNKO();default:return{summary:"",cards:""}}}
+function analyzeJaringan(d,lv){var p=[],rc=[];if(d.saidi>3){p.push("SAIDI tinggi: <span class=\"metric bad\">"+d.saidi+" menit</span> (target < 2.5)");rc.push({t:"SAIDI Tinggi",d:"Penyebab: jaringan tua, minimnya proteksi otomatis, panjang penyulang melebihi standar.",s:"critical",a:"Pasang recloser/sectionalizer, rehab jaringan tua, implementasi SCADA."})}if(d.losses>9){p.push("Susut tinggi: <span class=\"metric bad\">"+d.losses+"%</span> (target < 8%)");rc.push({t:"Susut Distribusi Tinggi",d:"Faktor: tegangan jatuh, trafo overload, sambungan korosi, potensi pencurian listrik.",s:"critical",a:"Audit energi, pasang AMR, rehab sambungan, balancing beban trafo."})}if(d.gangguan_tm>12){p.push("Gangguan TM: <span class=\"metric bad\">"+d.gangguan_tm+"</span> (target < 10)");rc.push({t:"Gangguan TM Berulang",d:"Akar masalah: vegetasi tak terkontrol, isolator aging, sambungan kendor.",s:"warning",a:"Pemangkasan pohon intensif, ganti isolator >10 tahun, perkuat sambungan."})}
+if(lv==="all_up3"){var worst=null,ws=0;Object.keys(ULP_DATA).forEach(function(k){if(ULP_DATA[k].saidi>ws){ws=ULP_DATA[k].saidi;worst=k}});if(worst){p.push("ULP terburuk: <span class=\"highlight\">"+ULP_DATA[worst].name+"</span> (SAIDI: "+ws+")");rc.push({t:"Disparitas Performa ULP",d:ULP_DATA[worst].name+" memiliki SAIDI tertinggi ("+ws+") dan gangguan TM "+ULP_DATA[worst].gangguan_tm+". Jaringan paling tua dengan density rendah.",s:"critical",a:"Alokasi anggaran khusus, percepat rehab, tambah switching otomatis."})}}if(!p.length)p.push("Kondisi jaringan <span class=\"metric\">BAIK</span>");var sm="<h4>Ringkasan Temuan</h4><ul>";p.forEach(function(x){sm+="<li>"+x+"</li>"});sm+="</ul>";var cd='<div class="rc-grid">';rc.forEach(function(r){cd+='<div class="rc-card '+r.s+'"><div class="rc-title">'+r.t+'</div><div class="rc-desc">'+r.d+'</div><div class="rc-action">Rekomendasi: '+r.a+"</div></div>"});cd+="</div>";return{summary:sm,cards:cd}}
+function analyzeKonstruksi(d){var rp=d.anggaran_m>0?(d.realisasi_m/d.anggaran_m*100).toFixed(1):0,p=[],rc=[];if(rp<70){p.push("Realisasi anggaran: <span class=\"metric bad\">"+rp+"%</span>");rc.push({t:"Realisasi Anggaran Rendah",d:"Realisasi investasi baru "+rp+"% dari Rp "+d.anggaran_m+" Jt. Penyebab: keterlambatan pengadaan, kendala lahan, kontraktor terbatas.",s:"critical",a:"Percepat tender, gunakan framework agreement, koordinasi pemda."})}p.push("Proyek aktif: "+d.proyek_aktif+", selesai: "+d.proyek_selesai);var sm="<h4>Analisis Konstruksi</h4><ul>";p.forEach(function(x){sm+="<li>"+x+"</li>"});sm+="</ul>";var cd='<div class="rc-grid">';rc.forEach(function(r){cd+='<div class="rc-card '+r.s+'"><div class="rc-title">'+r.t+'</div><div class="rc-desc">'+r.d+'</div><div class="rc-action">'+r.a+"</div></div>"});cd+="</div>";return{summary:sm,cards:cd}}
+function analyzePerencanaan(d){var sm="<h4>Analisis Perencanaan</h4><ul>";sm+="<li>Total pelanggan: <span class=\"metric\">"+d.pelanggan.toLocaleString()+"</span></li>";sm+="<li>Kebutuhan pengembangan jaringan berdasarkan pertumbuhan pelanggan dan beban</li>";sm+="</ul><h4>Rekomendasi Strategis</h4><ul>";sm+="<li>Prioritaskan ULP dengan performa rendah (Cikedung, Haurgeulis)</li>";sm+="<li>Integrasikan rencana rehab dengan program konstruksi berjalan</li>";sm+="<li>Pertimbangkan smart grid pilot project untuk efisiensi</li></ul>";return{summary:sm,cards:""}}
+function analyzeKeuangan(d,lv){var p=[],rc=[];if(d.tunggakan_pct>5){p.push("Tunggakan: <span class=\"metric bad\">"+d.tunggakan_pct+"%</span>");rc.push({t:"Tunggakan Pelanggan Tinggi",d:"Tunggakan "+d.tunggakan_pct+"% menunjukkan masalah penagihan. Penyebab: kemampuan bayar rendah, kurang edukasi digital.",s:"critical",a:"Sosialisasi pembayaran online, kolaborasi perbankan auto-debit, optimalkan rute tagih."})}if(d.piutang_m>6){p.push("Piutang: <span class=\"metric bad\">Rp "+d.piutang_m.toFixed(1)+" M</span>")}if(lv==="all_up3"){var w=null,wt=0;Object.keys(ULP_DATA).forEach(function(k){if(ULP_DATA[k].tunggakan_pct>wt){wt=ULP_DATA[k].tunggakan_pct;w=k}});if(w)rc.push({t:"ULP Tunggakan Tertinggi: "+ULP_DATA[w].name,d:"Tunggakan "+wt+"%, piutang Rp "+ULP_DATA[w].piutang_m+" M. Perlu strategi khusus.",s:"critical",a:"Tim penagihan tambahan, prepaid meter, review kebijakan pemutusan."})}var sm="<h4>Analisis Keuangan</h4><ul><li>Pendapatan: <span class=\"metric\">Rp "+d.pendapatan_m.toFixed(1)+" M</span></li>";p.forEach(function(x){sm+="<li>"+x+"</li>"});sm+="</ul>";var cd='<div class="rc-grid">';rc.forEach(function(r){cd+='<div class="rc-card '+r.s+'"><div class="rc-title">'+r.t+'</div><div class="rc-desc">'+r.d+'</div><div class="rc-action">'+r.a+"</div></div>"});cd+="</div>";return{summary:sm,cards:cd}}
+function analyzeNKO(){var sm="<h4>Analisis NKO UP3 Indramayu</h4><ul>";sm+="<li>Total Agregat: <span class=\"metric\">"+NKO_DATA.totalAgregat.toFixed(2)+"</span> \u2014 Di atas target 100</li>";sm+="<li>Loss Point: <span class=\"metric bad\">"+NKO_DATA.lossPointTHD.toFixed(2)+"</span></li>";sm+="<li>Potensi 110%: <span class=\"metric\">"+NKO_DATA.potensiPoint110.toFixed(2)+"</span> poin</li></ul>";var weak=NKO_DATA.categories.filter(function(c){return c.lp100>0}).sort(function(a,b){return b.lp100-a.lp100});if(weak.length){sm+="<h4>Perlu Perbaikan (Loss Point > 0)</h4><ul>";weak.forEach(function(w){sm+="<li><span class=\"highlight\">"+w.name+"</span>: LP "+w.lp100.toFixed(2)+" (Nilai: "+w.nilai.toFixed(2)+"/"+w.bobot+")</li>"});sm+="</ul>"}var cd='<div class="rc-grid">';weak.forEach(function(w){cd+='<div class="rc-card critical"><div class="rc-title">LOSS: '+w.name+'</div><div class="rc-desc">Kehilangan '+w.lp100.toFixed(2)+' poin. Perlu perbaikan signifikan.</div><div class="rc-action">Fokus sumber daya pada indikator ini.</div></div>'});cd+="</div>";return{summary:sm,cards:cd}}
+function toggleChat(){S.chatOpen=!S.chatOpen;document.getElementById("cpn").classList.toggle("open",S.chatOpen)}
+function escHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function sendChat(){var input=document.getElementById("chatIn"),msg=input.value.trim();if(!msg)return;input.value="";var msgs=document.getElementById("chatMsgs");msgs.innerHTML+='<div class="msg user"><div class="bubble">'+escHtml(msg)+"</div></div>";msgs.scrollTop=msgs.scrollHeight;msgs.innerHTML+='<div class="msg ai" id="typing"><div class="bubble"><div class="thinking"><div class="dots"><span></span><span></span><span></span></div><span>Menganalisis...</span></div></div></div>';msgs.scrollTop=msgs.scrollHeight;setTimeout(function(){var t=document.getElementById("typing");if(t)t.remove();var r=generateChatResponse(msg);msgs.innerHTML+='<div class="msg ai"><div class="bubble">'+r.chat+"</div></div>";msgs.scrollTop=msgs.scrollHeight;if(r.pageAnalysis){var area=document.getElementById("aiAnalysisArea");if(area){area.innerHTML='<div class="ai-analysis"><div class="ai-title"><svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74z"/></svg>Hasil Analisis AI</div><div class="ai-body">'+r.pageAnalysis+"</div></div>"+(r.pageCards||"");area.scrollIntoView({behavior:"smooth"})}}},1200)}
+function generateChatResponse(msg){var lo=msg.toLowerCase(),d=getSelectedData(),r={chat:"",pageAnalysis:null,pageCards:null};
+if(lo.includes("saidi")||lo.includes("keandalan")){r.chat="SAIDI "+getLevelLabel()+": <strong>"+d.saidi+" menit</strong>. "+(d.saidi>3?"Di atas target. Analisis ditampilkan di halaman.":"Performa cukup baik.");if(d.saidi>2.5){r.pageAnalysis="<h4>Analisis SAIDI \u2014 "+getLevelLabel()+"</h4><ul><li>Saat ini: <span class=\"metric bad\">"+d.saidi+"</span> menit</li><li>Target: 2.5 menit</li><li>Gap: "+(d.saidi-2.5).toFixed(2)+" menit</li></ul><h4>Akar Masalah</h4><ul><li>Panjang penyulang melebihi standar ekonomis</li><li>Kurangnya switching otomatis</li><li>Ketergantungan manuver manual</li></ul>";r.pageCards='<div class="rc-grid"><div class="rc-card critical"><div class="rc-title">Jangka Pendek</div><div class="rc-desc">Optimasi rute manuver, siapkan contingency.</div><div class="rc-action">Target: -0.3 menit/3 bulan</div></div><div class="rc-card warning"><div class="rc-title">Jangka Menengah</div><div class="rc-desc">Pasang recloser, SCADA, splitting penyulang.</div><div class="rc-action">Target SAIDI &lt; 2.5/6 bulan</div></div></div>'}}
+else if(lo.includes("susut")||lo.includes("losses")){r.chat="Susut "+getLevelLabel()+": <strong>"+d.losses+"%</strong>. "+(d.losses>9?"Perlu perhatian serius.":"Masih wajar.");if(d.losses>8)r.pageAnalysis="<h4>Susut Distribusi</h4><ul><li>Saat ini: <span class=\"metric bad\">"+d.losses+"%</span></li><li>Target: &lt; 8%</li></ul><h4>Komponen</h4><ul><li>Teknis ~60%: losses trafo, kabel, sambungan</li><li>Non-teknis ~40%: pencurian, meter error</li></ul>"}
+else if(lo.includes("gangguan")||lo.includes("padam")){r.chat="Gangguan TM: <strong>"+d.gangguan_tm+"</strong>, TR: <strong>"+d.gangguan_tr+"</strong>.";r.pageAnalysis="<h4>Analisis Gangguan</h4><ul><li>TM: <span class=\"metric"+(d.gangguan_tm>12?" bad":"")+"\">" +d.gangguan_tm+"</span></li><li>TR: "+d.gangguan_tr+"</li></ul><h4>Penyebab</h4><ul><li>Pohon tumbang (35%)</li><li>Kegagalan isolasi (25%)</li><li>Overload (20%)</li><li>Sambungan kendor (12%)</li></ul>"}
+else if(lo.includes("keuangan")||lo.includes("pendapatan")||lo.includes("piutang")){r.chat="Pendapatan: <strong>Rp "+d.pendapatan_m.toFixed(1)+" M</strong>, Piutang: <strong>Rp "+d.piutang_m.toFixed(1)+" M</strong>, Tunggakan: <strong>"+d.tunggakan_pct+"%</strong>.";r.pageAnalysis="<h4>Keuangan "+getLevelLabel()+"</h4><ul><li>Pendapatan: <span class=\"metric\">Rp "+d.pendapatan_m.toFixed(1)+" M</span></li><li>Piutang: <span class=\"metric bad\">Rp "+d.piutang_m.toFixed(1)+" M</span></li></ul>"}
+else if(lo.includes("nko")||lo.includes("kinerja")){r.chat="NKO: <strong>"+NKO_DATA.totalAgregat.toFixed(2)+"</strong>. LP: "+NKO_DATA.lossPointTHD.toFixed(2);var a=analyzeNKO();r.pageAnalysis=a.summary;r.pageCards=a.cards}
+else if(lo.includes("masalah")||lo.includes("problem")||lo.includes("akar")){r.chat="Menganalisis akar permasalahan "+getLevelLabel()+". Lihat halaman.";var j=analyzeJaringan(d,S.level),k=analyzeKeuangan(d,S.level);r.pageAnalysis="<h4>Akar Permasalahan "+getLevelLabel()+"</h4>"+j.summary+k.summary;r.pageCards=j.cards+k.cards}
+else if(lo.includes("rekomendasi")||lo.includes("saran")){r.chat="Rekomendasi strategis ditampilkan di halaman.";r.pageAnalysis="<h4>Rekomendasi Strategis</h4><ul><li><strong>Jangka Pendek:</strong> Manuver beban, P2TL, penagihan tunggakan</li><li><strong>Jangka Menengah:</strong> Rehab jaringan tua, proteksi otomatis, AMR</li><li><strong>Jangka Panjang:</strong> Smart grid, underground cable, pengembangan GI</li></ul>";r.pageCards='<div class="rc-grid"><div class="rc-card critical"><div class="rc-title">Prioritas 1: Turunkan Gangguan</div><div class="rc-desc">Pemangkasan, ganti isolator, pasang recloser.</div><div class="rc-action">Target: -30% dalam 6 bulan</div></div><div class="rc-card warning"><div class="rc-title">Prioritas 2: Tekan Susut</div><div class="rc-desc">P2TL, ganti meter tua, balancing trafo.</div><div class="rc-action">Target: Susut &lt;8% dalam 12 bulan</div></div><div class="rc-card good"><div class="rc-title">Prioritas 3: Tingkatkan Revenue</div><div class="rc-desc">Penagihan, koleksi, tambah daya bisnis.</div><div class="rc-action">Collection rate &gt;95%</div></div></div>'}
+else if(lo.includes("bandingkan")||lo.includes("compare")){r.chat="Perbandingan ULP ditampilkan.";var tbl="<h4>Komparasi ULP</h4><table class=\"tbl\"><thead><tr><th>ULP</th><th>Pelanggan</th><th>SAIDI</th><th>Susut</th><th>Gangguan</th><th>Pendapatan</th></tr></thead><tbody>";Object.keys(ULP_DATA).forEach(function(k){var u=ULP_DATA[k];tbl+="<tr><td><strong>"+u.name+"</strong></td><td>"+u.pelanggan.toLocaleString()+"</td><td class=\"" +(u.saidi<=2.5?"green":u.saidi<=3.5?"yellow":"red")+"\">"+u.saidi+"</td><td class=\"" +(u.losses<=8?"green":"red")+"\">"+u.losses+"%</td><td class=\"" +(u.gangguan_tm<=10?"green":"red")+"\">"+u.gangguan_tm+"</td><td>Rp "+u.pendapatan_m+" M</td></tr>"});tbl+="</tbody></table>";r.pageAnalysis=tbl}
+else{r.chat="Untuk "+getLevelLabel()+":<br>Pelanggan: <strong>"+d.pelanggan.toLocaleString()+"</strong><br>SAIDI: <strong>"+d.saidi+"</strong> | Susut: <strong>"+d.losses+"%</strong><br>Gangguan TM: <strong>"+d.gangguan_tm+"</strong><br>Pendapatan: <strong>Rp "+d.pendapatan_m.toFixed(1)+" M</strong><br><br>Tanya: saidi, susut, gangguan, keuangan, nko, rekomendasi, bandingkan ULP."}
+return r}
+function openDP(t,h){document.getElementById("dpT").textContent=t;document.getElementById("dpB").innerHTML=h;document.getElementById("dp").classList.add("open")}
+function closeDP(){document.getElementById("dp").classList.remove("open")}
+document.addEventListener("DOMContentLoaded",function(){renderPage()});
 </script>
 </body>
-<!-- NKO Dashboard v1.1 -->
 </html>
