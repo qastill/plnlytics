@@ -6,7 +6,7 @@
 
 // Wait for MAP to be available
 var checkInterval = setInterval(function(){
-  if(!window.MAP) return;
+    if(!window.MAP || !document.querySelector('.map-wrap') || document.querySelector('.map-wrap').offsetHeight===0) return;
   clearInterval(checkInterval);
   initVegetation();
 },1000);
@@ -162,16 +162,16 @@ function addLayerControls(counts){
   vegToggle.addEventListener('change',function(){
     var filters=document.querySelectorAll('.veg-risk-filter');
     if(this.checked){
-      filters.forEach(function(f){f.disabled=false;if(f.checked)map.addLayer(window.vegRiskGroups[f.dataset.risk])});
+      filters.forEach(function(f){f.disabled=false;if(f.checked)try{map.addLayer(window.vegRiskGroups[f.dataset.risk])}catch(e){}});
     }else{
-      filters.forEach(function(f){f.disabled=true;map.removeLayer(window.vegRiskGroups[f.dataset.risk])});
+      filters.forEach(function(f){f.disabled=true;try{map.removeLayer(window.vegRiskGroups[f.dataset.risk])}catch(e){}});
     }
   });
   document.querySelectorAll('.veg-risk-filter').forEach(function(f){
     f.addEventListener('change',function(){
       if(!document.getElementById('vegLayerToggle').checked)return;
-      if(this.checked)map.addLayer(window.vegRiskGroups[this.dataset.risk]);
-      else map.removeLayer(window.vegRiskGroups[this.dataset.risk]);
+      if(this.checked)try{map.addLayer(window.vegRiskGroups[this.dataset.risk])}catch(e){}
+      else try{map.removeLayer(window.vegRiskGroups[this.dataset.risk])}catch(e){};
     });
   });
 
@@ -247,7 +247,7 @@ function addInfoPanel(vegData,counts,powerPts){
     +'<div style="margin-top:8px;padding-top:8px;border-top:1px solid #21262d;text-align:center;font-size:9px;color:#484f58">PLN Lytics Intelligence \u2022 Jaringan: PLN UP3 Indramayu \u2022 Vegetasi: OpenStreetMap (Overpass API) \u2022 Analisis: Haversine Distance</div>';
 
   ct.appendChild(panel);
-  setTimeout(function(){map.invalidateSize()},200);
+  setTimeout(function(){try{try{map.invalidateSize()}catch(e){}}catch(e){}},200);
 }
 
 } // end initVegetation
