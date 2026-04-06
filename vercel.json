@@ -5,6 +5,7 @@
           { "src": "/data/(.*)", "dest": "/data/$1" },
           { "src": "/vegetation.js", "dest": "/vegetation.js" },
                 { "src": "/ai-assistant.js", "dest": "/ai-assistant.js" },
+                { "src": "/har-meter.js", "dest": "/har-meter.js" },
           { "src": "/(.*)", "dest": "/index.html" }
     ]
 }
