@@ -877,5 +877,3 @@ if(document.readyState === 'loading'){
 }
 
 })();
-
-})();
