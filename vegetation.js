@@ -9,7 +9,7 @@
        if(!window.MAP || !document.querySelector('.map-wrap') || document.querySelector('.map-wrap').offsetHeight===0) return;
        clearInterval(checkInterval);
        initVegetation();
- },1000);
+ },1000)
 
  function initVegetation(){
      var map = window.MAP;
@@ -136,7 +136,7 @@
 
     // === ADD LAYER CONTROLS ===
     function addLayerControls(counts){
-        var ctrl=document.querySelector('.layers');
+        var ctrl=document.querySelector('#mapCtrl');
         if(!ctrl)return;
 
      // Vegetation section
