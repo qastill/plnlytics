@@ -164,7 +164,7 @@ section.innerHTML+=''+
 '<div style="text-align:center;padding:8px;color:#475569;font-size:.7em">Sumber: Data KWH Meter Tua (&gt;10 Tahun) | UP3 Indramayu | Bidang Transaksi Energi \u2014 Pemeliharaan Meter</div>';
 kondisiPanel.appendChild(section);
 }
-e MutationObserver to detect when meter-kondisi panel is created
+// Use MutationObserver to detect when meter-kondisi panel is created
  var observer=new MutationObserver(function(mutations){
    mutations.forEach(function(m){
      m.addedNodes.forEach(function(node){
