@@ -47,7 +47,7 @@ var GRAND={c53401:69978,c53402:65242,c53403:48593,c53404:58991,total:242804};
 function fmt(n){if(n==null)return"-";return Number(n).toLocaleString("id-ID",{minimumFractionDigits:0,maximumFractionDigits:0});}
 
 function renderKMT(){
-var kondisiPanel=document.getElementById("kondisi-meter-panel");
+var kondisiPanel=document.getElementById("meter-kondisi");
 if(!kondisiPanel)return;
 var existing=document.getElementById("kmt-section");
 if(existing)existing.remove();
