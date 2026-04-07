@@ -7,6 +7,7 @@
                 { "src": "/ai-assistant.js", "dest": "/ai-assistant.js" },
                 { "src": "/har-meter.js", "dest": "/har-meter.js" },
                 { "src": "/kwh-meter-tua.js", "dest": "/kwh-meter-tua.js" },
+                    { "src": "/p2tl-kinerja.js", "dest": "/p2tl-kinerja.js" },
           { "src": "/(.*)", "dest": "/index.html" }
     ]
 }
