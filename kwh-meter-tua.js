@@ -4,6 +4,38 @@
 (function(){
 "use strict";
 
+   // Remove invalid sections above KWH Meter Tua
+   function removeInvalidSections() {
+        var panel = document.getElementById("meter-kondisi");
+        if (!panel) return false;
+        var kmtSection = document.getElementById("kmt-section");
+        if (!kmtSection) return false;
+        var toRemove = [];
+        for (var i = 0; i < panel.children.length; i++) {
+               var child = panel.children[i];
+               if (child === kmtSection) break;
+               toRemove.push(child);
+        }
+        if (toRemove.length === 0) return false;
+        toRemove.forEach(function(el) { el.remove(); });
+        return true;
+   }
+
+   // Poll to remove sections when they appear
+   var removeInterval = setInterval(function() {
+        if (removeInvalidSections()) {
+               clearInterval(removeInterval);
+        }
+   }, 500);
+
+   // Also observe for dynamic re-rendering
+   var removeObserver = new MutationObserver(function() {
+        removeInvalidSections();
+   });
+   removeObserver.observe(document.body, { childList: true, subtree: true });
+
+ 
+
 var KMT_DATA=[
 {tahun:"",c53401:1,c53402:null,c53403:1,c53404:null,total:2},
 {tahun:"0000",c53401:2,c53402:2,c53403:null,c53404:1,total:5},
