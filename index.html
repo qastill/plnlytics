@@ -525,7 +525,18 @@ window.parseAIMarkdown=function(t){return t.replace(/\*\*RINGKASAN EKSEKUTIF:\*\
 document.addEventListener("DOMContentLoaded",function(){renderPage()});
 </script>
 <script src="vegetation.js"></script>
-<script src="ai-assistant.js?v=5"></script>
+<script src="ai-assistant.js?v=6"></script>
 <script src="har-meter.js"></script>
-  <script src="kwh-meter-tua.js"></script>
+<script src="kwh-meter-tua.js"></script>
+<script>
+// FINAL OVERRIDE - ensure callGroqAPI always uses Anthropic, no matter what ai-assistant.js does
+window.callGroqAPI=function(msg,cb){
+  var ctx="";
+  try{ctx=JSON.stringify(getSelectedData())}catch(e){}
+  fetch("/api/groq",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:msg}],context:ctx})})
+  .then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error("HTTP "+r.status+": "+t.substring(0,300))});return r.json()})
+  .then(function(d){if(d.content)cb(null,d.content);else cb(d.error||d.detail||JSON.stringify(d))})
+  .catch(function(e){cb("Error: "+e.message)});
+};
+</script>
 </html>
