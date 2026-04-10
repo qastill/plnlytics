@@ -2,6 +2,7 @@
     "version": 2,
     "routes": [
           { "src": "/api/chat", "dest": "/api/chat.js" },
+      { "src": "/api/groq", "dest": "/api/groq.js" },
           { "src": "/data/(.*)", "dest": "/data/$1" },
           { "src": "/vegetation.js", "dest": "/vegetation.js" },
                 { "src": "/ai-assistant.js", "dest": "/ai-assistant.js" },
