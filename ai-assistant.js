@@ -1069,6 +1069,9 @@ function getSuggestionChips(intent){
 }
 
 /* --- Initialize --- */
+window.callGroqAPI = callGroqAPI;
+window.parseAIMarkdown = parseAIMarkdown;
+
 if(document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', initAIAssistant);
 } else {
