@@ -1,6 +1,57 @@
-// ai-assistant.js - PLN Lytics AI Agent v1.0
-// Intelligent AI Assistant connected to PLN Database
-// Simulated AI engine with deep data analysis capabilities
+// ai-assistant.js - PLN Lytics AI Agent v2.0
+// Intelligent AI Assistant connected to PLN Database + Groq LLM
+
+// === GLOBAL API (accessible from index.html) ===
+window.callGroqAPI = function(userMsg, callback){
+  var context = '';
+  try {
+    if(typeof getSelectedData === 'function'){
+      var d = getSelectedData();
+      if(d) context = JSON.stringify(d);
+    }
+  } catch(e){}
+  var msgs = [{ role: 'user', content: userMsg }];
+  fetch('/api/groq', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: msgs, context: context })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if(data.content){ callback(null, data.content); }
+    else { callback(data.error || 'No response'); }
+  })
+  .catch(function(err){ callback(err.message || 'Network error'); });
+};
+
+window.parseAIMarkdown = function(text){
+  var html = text
+    .replace(/\*\*ANALISIS:\*\*/gi, '<h4 class="ai-section-title analysis-title">ANALISIS</h4>')
+    .replace(/\*\*AKAR MASALAH - ASPEK TEKNIS:\*\*/gi, '<h4 class="ai-section-title root-title">AKAR MASALAH - ASPEK TEKNIS</h4>')
+    .replace(/\*\*AKAR MASALAH - ASPEK NON-TEKNIS:\*\*/gi, '<h4 class="ai-section-title impact-title">AKAR MASALAH - ASPEK NON-TEKNIS</h4>')
+    .replace(/\*\*AKAR MASALAH:\*\*/gi, '<h4 class="ai-section-title root-title">AKAR MASALAH</h4>')
+    .replace(/\*\*DAMPAK OPERASIONAL:\*\*/gi, '<h4 class="ai-section-title impact-title">DAMPAK OPERASIONAL</h4>')
+    .replace(/\*\*DAMPAK:\*\*/gi, '<h4 class="ai-section-title impact-title">DAMPAK</h4>')
+    .replace(/\*\*SOLUSI & REKOMENDASI:\*\*/gi, '<h4 class="ai-section-title solution-title">SOLUSI & REKOMENDASI</h4>')
+    .replace(/\*\*WHAT TO DO - ACTION PLAN:\*\*/gi, '<h4 class="ai-section-title solution-title" style="background:rgba(139,92,246,0.1);color:#8b5cf6">WHAT TO DO - ACTION PLAN</h4>')
+    .replace(/\*\*PRIORITAS:\*\*/gi, '<h4 class="ai-section-title priority-title">PRIORITAS</h4>')
+    .replace(/\*\*TARGET PERBAIKAN:\*\*/gi, '<h4 class="ai-section-title target-title">TARGET PERBAIKAN</h4>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/^### (.+)$/gm, '<h5 style="color:#06b6d4;margin:12px 0 6px">$1</h5>')
+    .replace(/^## (.+)$/gm, '<h4 style="color:#3b82f6;margin:14px 0 8px">$1</h4>')
+    .replace(/^# (.+)$/gm, '<h3 style="color:#fff;margin:16px 0 10px">$1</h3>')
+    .replace(/^\d+\.\s+(.+)$/gm, '<li class="ai-ordered">$1</li>')
+    .replace(/^[-*]\s+(.+)$/gm, '<li class="ai-unordered">$1</li>')
+    .replace(/KRITIS/g, '<span class="ai-severity kritis">KRITIS</span>')
+    .replace(/TINGGI/g, '<span class="ai-severity tinggi">TINGGI</span>')
+    .replace(/SEDANG/g, '<span class="ai-severity sedang">SEDANG</span>')
+    .replace(/RENDAH/g, '<span class="ai-severity rendah">RENDAH</span>')
+    .replace(/\n/g, '<br>');
+  html = html.replace(/((?:<li class="ai-(?:ordered|unordered)">[^<]*<\/li><br>?)+)/g, '<ul class="ai-list">$1</ul>');
+  return html;
+};
+// === END GLOBAL API ===
 
 (function(){
 'use strict';
