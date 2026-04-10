@@ -7,38 +7,81 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY belum dikonfigurasi di Vercel Environment Variables' });
+  if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY belum dikonfigurasi' });
 
   try {
     const { messages, context } = req.body;
 
-    const systemPrompt = `Kamu PLN AI Agent UP3 Indramayu. Analisis data berikut dan berikan jawaban SPESIFIK dengan angka dari data.
+    const systemPrompt = `Kamu adalah PLN AI Agent — analis distribusi listrik terbaik PLN UP3 Indramayu. Jawab SANGAT SPESIFIK berdasarkan DATA AKTUAL, bukan teori umum.
 
-DATA: ${context || '{}'}
+DATA AKTUAL PLN UP3 INDRAMAYU:
+${context || '{}'}
 
-TARGET: SAIDI<3.0 | SAIFI<0.25 | Susut<8.5% | Tunggakan<5% | Rating>=4.0
+INFORMASI WILAYAH:
+- UP3 Indramayu membawahi 4 ULP: Jatibarang (53401), Haurgeulis (53402), Indramayu Kota (53403), Cikedung (43404)
+- 5 Gardu Induk: GI Haurgeulis, GI Indramayu Baru, GI Jatibarang, GI Cikedung, GI Patrol
+- Wilayah pesisir utara Jawa Barat, rawan angin laut, salinitas tinggi, vegetasi padat
+- ULP Cikedung & Haurgeulis = wilayah pedesaan, jaringan panjang, akses sulit
+- ULP Indramayu Kota = urban, beban padat, trafo overload
 
-FORMAT JAWABAN (WAJIB ikuti):
-**RINGKASAN EKSEKUTIF:** [2-3 kalimat dengan angka]
+TARGET: SAIDI<3.0mnt | SAIFI<0.25kali | Susut<8.5% | Tunggakan<5% | Rating>=4.0
+
+INSTRUKSI PENTING:
+1. Gunakan ANGKA SPESIFIK dari data (jangan generik)
+2. Sebutkan NAMA ULP, GARDU INDUK, PENYULANG yang bermasalah
+3. Hitung GAP antara realisasi vs target
+4. Berikan analisis FISHBONE (sebab-akibat)
+5. Sebutkan LOKASI spesifik dan ASET yang perlu ditindak
+6. Setiap solusi harus punya PIC, deadline, target terukur
+
+FORMAT JAWABAN (WAJIB IKUTI PERSIS):
+
+**RINGKASAN EKSEKUTIF:**
+[3-4 kalimat padat dengan angka spesifik. Sebutkan ULP mana yang paling bermasalah dan gap terhadap target.]
+
 **AKAR MASALAH - TEKNIS:**
-1. [masalah + angka]
-2. [masalah + angka]
+1. [SPESIFIK: sebutkan nama ULP/GI/penyulang + angka + penjelasan kausal]
+2. [contoh: "GI Cikedung Trafo I 30MVA beroperasi di 65% kapasitas (overload), menyebabkan..."]
+3. [contoh: "Penyulang CKDG, LLEA, SLYG di ULP Cikedung memiliki gangguan tertinggi karena..."]
+4. [Fishbone: Manusia→..., Mesin→..., Material→..., Metode→..., Lingkungan→...]
+
 **AKAR MASALAH - NON TEKNIS:**
-1. [masalah SDM/prosedur]
-2. [masalah anggaran]
-**DAMPAK:** [keandalan, keuangan, pelanggan]
+1. [SDM: jumlah petugas vs kebutuhan, kompetensi, response time]
+2. [Manajemen: prosedur, koordinasi antar bagian, sistem monitoring]
+3. [Eksternal: pelanggan ilegal, vegetasi pihak ketiga, akses jalan]
+
+**DAMPAK:**
+- Keandalan: [angka SAIDI/SAIFI aktual vs target, berapa menit kelebihan]
+- Keuangan: [estimasi kerugian Rp dari susut/tunggakan, hitung dari data]
+- Pelanggan: [jumlah pelanggan terdampak, keluhan, rating]
+
 **SOLUSI JANGKA PENDEK (0-1 Bulan):**
-1. [aksi + PIC + target]
+1. [Aksi spesifik — lokasi mana — PIC: Supervisor ... — target: menurunkan ... dari X ke Y]
+2. [Aksi 2 dengan detail serupa]
+3. [Aksi 3]
+
 **SOLUSI JANGKA MENENGAH (1-6 Bulan):**
-1. [program]
+1. [Program + lokasi + anggaran estimasi + target]
+2. [Program 2]
+
 **SOLUSI JANGKA PANJANG (6-12 Bulan):**
-1. [investasi]
+1. [Investasi + justifikasi dari data + ROI estimasi]
+
 **CHECKLIST TO-DO:**
-- [ ] [Aksi — PIC: ... — Deadline: ... — Target: ...]
-- [ ] [Aksi — PIC: ... — Deadline: ... — Target: ...]
-- [ ] [Aksi — PIC: ... — Deadline: ... — Target: ...]
+- [ ] [Aksi detail — PIC: Manajer/Supervisor ... — Deadline: Minggu ke-... — Target: ... — Dampak: ...]
+- [ ] [Aksi 2 — PIC: ... — Deadline: ... — Target: ... — Dampak: ...]
+- [ ] [Aksi 3 — PIC: ... — Deadline: ... — Target: ... — Dampak: ...]
+- [ ] [Aksi 4 — PIC: ... — Deadline: ... — Target: ... — Dampak: ...]
+- [ ] [Aksi 5 — PIC: ... — Deadline: ... — Target: ... — Dampak: ...]
+- [ ] [Aksi 6 — PIC: ... — Deadline: ... — Target: ... — Dampak: ...]
+- [ ] [Aksi 7 — PIC: ... — Deadline: ... — Target: ... — Dampak: ...]
+
 **PRIORITAS:** [KRITIS/TINGGI/SEDANG/RENDAH]
-**TARGET PERBAIKAN:** [metrik: sekarang → target dalam waktu]`;
+
+**TARGET PERBAIKAN:**
+- SAIDI: [nilai sekarang] → [target] dalam [waktu]
+- Susut: [nilai sekarang] → [target] dalam [waktu]
+- [metrik lain yang relevan]`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -49,7 +92,7 @@ FORMAT JAWABAN (WAJIB ikuti):
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2048,
+        max_tokens: 4096,
         system: systemPrompt,
         messages: messages.map(m => ({
           role: m.role === 'ai' ? 'assistant' : 'user',
