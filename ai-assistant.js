@@ -82,12 +82,16 @@ function callGroqAPI(userMsg, callback){
 /* ─── Markdown Parser ─── */
 function parseAIMarkdown(text){
   var html = text
-    .replace(/\*\*ANALISIS:\*\*/gi, '<h4 class="ai-section-title analysis-title">ANALISIS</h4>')
-    .replace(/\*\*AKAR MASALAH:\*\*/gi, '<h4 class="ai-section-title root-title">AKAR MASALAH</h4>')
-    .replace(/\*\*DAMPAK:\*\*/gi, '<h4 class="ai-section-title impact-title">DAMPAK</h4>')
-    .replace(/\*\*SOLUSI & REKOMENDASI:\*\*/gi, '<h4 class="ai-section-title solution-title">SOLUSI & REKOMENDASI</h4>')
-    .replace(/\*\*PRIORITAS:\*\*/gi, '<h4 class="ai-section-title priority-title">PRIORITAS</h4>')
-    .replace(/\*\*TARGET PERBAIKAN:\*\*/gi, '<h4 class="ai-section-title target-title">TARGET PERBAIKAN</h4>')
+    .replace(/\*\*ANALISIS:\*\*/gi, '<h4 class="ai-section-title analysis-title"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg> ANALISIS</h4>')
+    .replace(/\*\*AKAR MASALAH - ASPEK TEKNIS:\*\*/gi, '<h4 class="ai-section-title root-title"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3z"/></svg> AKAR MASALAH - ASPEK TEKNIS</h4>')
+    .replace(/\*\*AKAR MASALAH - ASPEK NON-TEKNIS:\*\*/gi, '<h4 class="ai-section-title impact-title"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z"/></svg> AKAR MASALAH - ASPEK NON-TEKNIS</h4>')
+    .replace(/\*\*AKAR MASALAH:\*\*/gi, '<h4 class="ai-section-title root-title"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M15.73 3H8.27L3 8.27v7.46L8.27 21h7.46L21 15.73V8.27L15.73 3zM12 17.3c-.72 0-1.3-.58-1.3-1.3s.58-1.3 1.3-1.3 1.3.58 1.3 1.3-.58 1.3-1.3 1.3zm1-4.3h-2V7h2v6z"/></svg> AKAR MASALAH</h4>')
+    .replace(/\*\*DAMPAK OPERASIONAL:\*\*/gi, '<h4 class="ai-section-title impact-title"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> DAMPAK OPERASIONAL</h4>')
+    .replace(/\*\*DAMPAK:\*\*/gi, '<h4 class="ai-section-title impact-title"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> DAMPAK</h4>')
+    .replace(/\*\*SOLUSI & REKOMENDASI:\*\*/gi, '<h4 class="ai-section-title solution-title"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg> SOLUSI & REKOMENDASI</h4>')
+    .replace(/\*\*WHAT TO DO - ACTION PLAN:\*\*/gi, '<h4 class="ai-section-title solution-title" style="background:rgba(139,92,246,0.1);color:#8b5cf6"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg> WHAT TO DO - ACTION PLAN</h4>')
+    .replace(/\*\*PRIORITAS:\*\*/gi, '<h4 class="ai-section-title priority-title"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg> PRIORITAS</h4>')
+    .replace(/\*\*TARGET PERBAIKAN:\*\*/gi, '<h4 class="ai-section-title target-title"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> TARGET PERBAIKAN</h4>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
     .replace(/^### (.+)$/gm, '<h5 style="color:#06b6d4;margin:12px 0 6px">$1</h5>')
