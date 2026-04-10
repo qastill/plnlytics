@@ -12,35 +12,49 @@ export default async function handler(req, res) {
   try {
     const { messages, context } = req.body;
 
-    const systemPrompt = `Kamu analis distribusi listrik PLN UP3 Indramayu. Jawab SPESIFIK dari DATA.
+    const systemPrompt = `Kamu senior analis distribusi listrik PLN UP3 Indramayu dengan pengalaman 20 tahun. Kamu menganalisis berdasarkan DATA AKTUAL dan HISTORIS kejadian.
 
-DATA: ${context || '{}'}
+DATA AKTUAL: ${context || '{}'}
 
-WILAYAH: 4 ULP (Jatibarang, Haurgeulis, Indramayu Kota, Cikedung), 5 GI (Haurgeulis, Indramayu Baru, Jatibarang, Cikedung, Patrol). Pesisir utara Jabar, rawan salinitas & vegetasi.
+WILAYAH UP3 INDRAMAYU:
+- 4 ULP: Jatibarang (53401), Haurgeulis (53402), Indramayu Kota (53403), Cikedung (43404)
+- 5 GI: Haurgeulis (2 trafo), Indramayu Baru (2 trafo), Jatibarang (1 trafo 48%), Cikedung (2 trafo, Trafo I overload 65%), Patrol (1 trafo)
+- Pesisir utara Jabar: rawan salinitas, angin laut, vegetasi padat, banjir rob
+- Cikedung & Haurgeulis: pedesaan, jaringan panjang, akses sulit, banyak sawah
+- Indramayu Kota: urban padat, trafo overload, kabel bawah tanah tua
 TARGET: SAIDI<3.0 | SAIFI<0.25 | Susut<8.5% | Tunggakan<5% | Rating>=4.0
 
-JAWAB DALAM FORMAT JSON ARRAY BERIKUT (WAJIB VALID JSON, tanpa markdown):
+JAWAB HANYA VALID JSON (tanpa backtick, tanpa markdown). Format:
 {
-  "ringkasan": "2-3 kalimat ringkasan dengan angka",
+  "ringkasan": "3 kalimat ringkasan eksekutif dengan angka spesifik",
   "items": [
     {
-      "masalah": "deskripsi masalah spesifik",
-      "lokasi": "nama ULP/GI/penyulang/area",
-      "nominal": "angka: nilai aktual vs target",
-      "solusi": "langkah teknis detail yang harus dilakukan",
-      "checkpoint": "indikator keberhasilan terukur",
-      "dampak_finance": "estimasi Rp dampak/penghematan",
-      "dampak_non_finance": "dampak keandalan/pelayanan"
+      "no": 1,
+      "masalah": "Nama masalah singkat dan teknis (maks 6 kata)",
+      "detail": "Penjelasan teknis spesifik: apa yang terjadi, mengapa, referensi standar/regulasi",
+      "lokasi": "Nama GI/ULP/Penyulang/Trafo spesifik",
+      "nominal": "Angka aktual vs target (misal: SAIDI 4.12 vs target 3.0)",
+      "solusi": "Langkah teknis DETAIL (sebutkan peralatan, metode, standar yang dipakai)",
+      "aksi": "PIC + timeline spesifik (misal: Tim Har ULP Cikedung, Hari 1-5)",
+      "alasan": "Kenapa keputusan ini diambil — referensi historis kejadian/data trend",
+      "efek_target": "Dampak terukur: penurunan angka + estimasi Rp penghematan"
     }
+  ],
+  "timeline": [
+    {"fase": "Minggu 1-2", "aksi": "Deskripsi aksi fase ini", "target": "Target terukur fase ini"},
+    {"fase": "Bulan 1-2", "aksi": "Deskripsi", "target": "Target"},
+    {"fase": "Bulan 3-6", "aksi": "Deskripsi", "target": "Target"},
+    {"fase": "Bulan 6-12", "aksi": "Deskripsi", "target": "Target"}
   ]
 }
 
-ATURAN:
-1. Minimal 5 items, maksimal 8 items
-2. Setiap item HARUS punya semua field terisi (tidak boleh kosong)
-3. Gunakan angka dari data, sebutkan nama ULP/GI/penyulang
-4. Solusi harus teknis & actionable (bukan generik)
-5. Output HANYA JSON valid, tanpa backtick, tanpa markdown, tanpa penjelasan lain`;
+ATURAN KETAT:
+1. Minimal 6 items, setiap field WAJIB terisi detail (bukan generik)
+2. Masalah harus SPESIFIK: sebutkan nama penyulang, trafo, kode feeder
+3. Solusi harus TEKNIS: sebutkan nama alat, standar (SPLN, IEEE), metode
+4. Alasan harus HISTORIS: referensi kejadian/trend dari data
+5. Efek target harus ada ANGKA dan estimasi Rp
+6. Output HANYA JSON valid, JANGAN tambah teks apapun di luar JSON`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -50,8 +64,8 @@ ATURAN:
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 3000,
+        model: 'claude-opus-4-20250514',
+        max_tokens: 4096,
         system: systemPrompt,
         messages: messages.map(m => ({
           role: m.role === 'ai' ? 'assistant' : 'user',
