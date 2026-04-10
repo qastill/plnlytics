@@ -7,10 +7,164 @@
 
 /* ─── Configuration ─── */
 const AI_NAME = 'PLN AI Agent';
-const AI_VERSION = '1.0';
-const TYPING_SPEED = 30; // ms per character for typing effect
+const AI_VERSION = '2.0';
+const TYPING_SPEED = 30;
 const THINKING_MIN = 800;
 const THINKING_MAX = 2000;
+const GROQ_API_URL = '/api/groq';
+var _groqEnabled = true;
+
+/* ─── Groq API Call ─── */
+function buildDataContext(){
+  var d = getCurrentData();
+  if(!d) return '';
+  var allUlps = [];
+  try{ allUlps = getAllULPData().filter(function(u){return u.id!=='all';}); }catch(e){}
+  var nko = null;
+  try{ nko = typeof NKO_DATA !== 'undefined' ? NKO_DATA : null; }catch(e){}
+  var ctx = 'DATA SAAT INI (' + (d.name||'UP3 Indramayu') + '):\n';
+  ctx += '- Pelanggan: ' + (d.pelanggan||0).toLocaleString() + '\n';
+  ctx += '- Daya Tersambung: ' + (d.daya_tersambung||0) + ' MW\n';
+  ctx += '- SAIDI: ' + (d.saidi||0) + ' menit (target: 3.0)\n';
+  ctx += '- SAIFI: ' + (d.saifi||0) + ' kali (target: 0.25)\n';
+  ctx += '- Susut Distribusi: ' + (d.losses||0) + '% (target: 8.5%)\n';
+  ctx += '- Gangguan TM: ' + (d.gangguan_tm||0) + ' kali\n';
+  ctx += '- Gangguan TR: ' + (d.gangguan_tr||0) + ' kali\n';
+  ctx += '- Penyulang: ' + (d.penyulang||0) + '\n';
+  ctx += '- Trafo: ' + (d.trafo||0) + '\n';
+  ctx += '- Kabel TM: ' + (d.kabel_tm_km||0) + ' km\n';
+  ctx += '- Kabel TR: ' + (d.kabel_tr_km||0) + ' km\n';
+  ctx += '- Tiang: ' + (d.tiang||0) + '\n';
+  ctx += '- Penjualan: ' + (d.penjualan_gwh||0) + ' GWh\n';
+  ctx += '- Pendapatan: Rp ' + (d.pendapatan_m||0) + ' M\n';
+  ctx += '- Piutang: Rp ' + (d.piutang_m||0) + ' M\n';
+  ctx += '- Tunggakan: ' + (d.tunggakan_pct||0) + '%\n';
+  ctx += '- Response Time: ' + (d.response_time||0) + ' menit\n';
+  ctx += '- Rating: ' + (d.rating||0) + '/5\n';
+  ctx += '- Anggaran: Rp ' + (d.anggaran_m||0) + ' M, Realisasi: Rp ' + (d.realisasi_m||0) + ' M\n';
+  if(allUlps.length > 0){
+    ctx += '\nDATA SEMUA ULP:\n';
+    allUlps.forEach(function(u){
+      ctx += u.name + ': SAIDI=' + u.saidi + ', SAIFI=' + u.saifi + ', Susut=' + u.losses + '%, Gangguan TM=' + u.gangguan_tm + ', TR=' + u.gangguan_tr + ', Pelanggan=' + u.pelanggan + ', Pendapatan=Rp' + u.pendapatan_m + 'M, Tunggakan=' + u.tunggakan_pct + '%, Rating=' + u.rating + '\n';
+    });
+  }
+  if(nko){
+    ctx += '\nNKO (Nilai Kinerja Operasi): Agregat=' + nko.totalAgregat + ', Loss Point=' + nko.lossPointTHD + '\n';
+    if(nko.categories){
+      nko.categories.forEach(function(c){
+        if(c.bobot > 0) ctx += '- ' + c.name + ': Bobot=' + c.bobot + ', Nilai=' + c.nilai + ', LossPoint=' + c.lp100 + '\n';
+      });
+    }
+  }
+  return ctx;
+}
+
+function callGroqAPI(userMsg, callback){
+  var context = buildDataContext();
+  var msgs = conversationHistory.slice(-6).map(function(m){
+    return { role: m.role === 'ai' ? 'assistant' : 'user', content: m.content.replace(/<[^>]*>/g,'').substring(0,500) };
+  });
+  msgs.push({ role: 'user', content: userMsg });
+
+  fetch(GROQ_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: msgs, context: context })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if(data.content){ callback(null, data.content); }
+    else { callback(data.error || 'No response'); }
+  })
+  .catch(function(err){ callback(err.message || 'Network error'); });
+}
+
+/* ─── Markdown Parser ─── */
+function parseAIMarkdown(text){
+  var html = text
+    .replace(/\*\*ANALISIS:\*\*/gi, '<h4 class="ai-section-title analysis-title">ANALISIS</h4>')
+    .replace(/\*\*AKAR MASALAH:\*\*/gi, '<h4 class="ai-section-title root-title">AKAR MASALAH</h4>')
+    .replace(/\*\*DAMPAK:\*\*/gi, '<h4 class="ai-section-title impact-title">DAMPAK</h4>')
+    .replace(/\*\*SOLUSI & REKOMENDASI:\*\*/gi, '<h4 class="ai-section-title solution-title">SOLUSI & REKOMENDASI</h4>')
+    .replace(/\*\*PRIORITAS:\*\*/gi, '<h4 class="ai-section-title priority-title">PRIORITAS</h4>')
+    .replace(/\*\*TARGET PERBAIKAN:\*\*/gi, '<h4 class="ai-section-title target-title">TARGET PERBAIKAN</h4>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/^### (.+)$/gm, '<h5 style="color:#06b6d4;margin:12px 0 6px">$1</h5>')
+    .replace(/^## (.+)$/gm, '<h4 style="color:#3b82f6;margin:14px 0 8px">$1</h4>')
+    .replace(/^# (.+)$/gm, '<h3 style="color:#fff;margin:16px 0 10px">$1</h3>')
+    .replace(/^\d+\.\s+(.+)$/gm, '<li class="ai-ordered">$1</li>')
+    .replace(/^[-*]\s+(.+)$/gm, '<li class="ai-unordered">$1</li>')
+    .replace(/KRITIS/g, '<span class="ai-severity kritis">KRITIS</span>')
+    .replace(/TINGGI/g, '<span class="ai-severity tinggi">TINGGI</span>')
+    .replace(/SEDANG/g, '<span class="ai-severity sedang">SEDANG</span>')
+    .replace(/RENDAH/g, '<span class="ai-severity rendah">RENDAH</span>')
+    .replace(/\n/g, '<br>');
+  // Wrap consecutive li items in ul
+  html = html.replace(/((?:<li class="ai-(?:ordered|unordered)">[^<]*<\/li><br>?)+)/g, '<ul class="ai-list">$1</ul>');
+  return html;
+}
+
+/* ─── Render AI Analysis on Page ─── */
+function renderPageAnalysis(question, aiText){
+  var d = getCurrentData();
+  var container = document.getElementById('aiAnalysisArea');
+  if(!container){
+    // Create container if not exists
+    var ct = document.getElementById('ct');
+    if(!ct) return;
+    var div = document.createElement('div');
+    div.id = 'aiAnalysisArea';
+    ct.insertBefore(div, ct.firstChild);
+    container = div;
+  }
+
+  var parsedHTML = parseAIMarkdown(aiText);
+  var severity = 'info';
+  var severityLabel = 'ANALISIS AI';
+  var lowerText = aiText.toLowerCase();
+  if(lowerText.includes('kritis')){ severity = 'kritis'; severityLabel = 'KRITIS'; }
+  else if(lowerText.includes('tinggi')){ severity = 'tinggi'; severityLabel = 'PERLU PERHATIAN'; }
+  else if(lowerText.includes('sedang')){ severity = 'sedang'; severityLabel = 'SEDANG'; }
+  else if(lowerText.includes('baik') || lowerText.includes('rendah')){ severity = 'baik'; severityLabel = 'BAIK'; }
+
+  // Build visual metrics from current data
+  var metricsHTML = '';
+  if(d){
+    var saidiColor = d.saidi <= 3 ? '#22c55e' : '#ef4444';
+    var lossColor = d.losses <= 8.5 ? '#22c55e' : '#ef4444';
+    var tunggakanColor = d.tunggakan_pct <= 5 ? '#22c55e' : '#ef4444';
+    metricsHTML = '<div class="aip-metrics">'
+      + '<div class="aip-metric-card"><div class="aip-metric-icon" style="background:rgba(59,130,246,0.15);color:#3b82f6"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z"/></svg></div><div class="aip-metric-val">' + (d.pelanggan||0).toLocaleString() + '</div><div class="aip-metric-lbl">Pelanggan</div></div>'
+      + '<div class="aip-metric-card"><div class="aip-metric-icon" style="background:rgba(239,68,68,0.15);color:' + saidiColor + '"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7 2v11h3v9l7-12h-4l4-8z"/></svg></div><div class="aip-metric-val" style="color:' + saidiColor + '">' + d.saidi + '</div><div class="aip-metric-lbl">SAIDI (mnt)</div></div>'
+      + '<div class="aip-metric-card"><div class="aip-metric-icon" style="background:rgba(245,158,11,0.15);color:' + lossColor + '"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="aip-metric-val" style="color:' + lossColor + '">' + d.losses + '%</div><div class="aip-metric-lbl">Susut</div></div>'
+      + '<div class="aip-metric-card"><div class="aip-metric-icon" style="background:rgba(34,197,94,0.15);color:#22c55e"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div><div class="aip-metric-val">Rp ' + d.pendapatan_m + 'M</div><div class="aip-metric-lbl">Pendapatan</div></div>'
+      + '<div class="aip-metric-card"><div class="aip-metric-icon" style="background:rgba(239,68,68,0.15);color:' + tunggakanColor + '"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></div><div class="aip-metric-val" style="color:' + tunggakanColor + '">' + d.tunggakan_pct + '%</div><div class="aip-metric-lbl">Tunggakan</div></div>'
+      + '</div>';
+  }
+
+  var html = '<div class="aip-panel aip-' + severity + '">'
+    + '<div class="aip-glow"></div>'
+    + '<div class="aip-header">'
+    + '<div class="aip-header-left">'
+    + '<div class="aip-logo"><svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M21 10.12h-6.78l2.74-2.82-2.2-2.2L8 11.86V22h10.12L22 17.35l-2.2-2.2 2.82-2.74zM12 17.94V12h5.94L15 14.89l2.2 2.2-.9.85z"/></svg></div>'
+    + '<div><h3 class="aip-title">PLN AI Agent &mdash; Analisis Cerdas</h3>'
+    + '<span class="aip-subtitle">Powered by Groq LLM &bull; ' + (d ? d.name : 'UP3 Indramayu') + '</span></div>'
+    + '</div>'
+    + '<div class="aip-badge aip-badge-' + severity + '">' + severityLabel + '</div>'
+    + '</div>'
+    + '<div class="aip-question"><strong>Pertanyaan:</strong> ' + escHtml(question) + '</div>'
+    + metricsHTML
+    + '<div class="aip-body">' + parsedHTML + '</div>'
+    + '<div class="aip-footer">'
+    + '<span class="aip-timestamp">Dianalisis: ' + new Date().toLocaleString('id-ID') + '</span>'
+    + '<button class="aip-close-btn" onclick="document.getElementById(\'aiAnalysisArea\').innerHTML=\'\'">Tutup Analisis</button>'
+    + '</div>'
+    + '</div>';
+
+  container.innerHTML = html;
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 /* ─── Data Access Layer ─── */
 function getAllULPData(){
@@ -229,15 +383,15 @@ function handleGreeting(msg){
 }
 
 function handleIdentity(){
-  return 'Saya adalah <strong>PLN AI Agent v' + AI_VERSION + '</strong>, asisten kecerdasan buatan yang dikembangkan khusus untuk PLN UP3 Indramayu.'
+  return 'Saya adalah <strong>PLN AI Agent v' + AI_VERSION + '</strong>, asisten kecerdasan buatan berbasis <strong>Groq LLM</strong> yang dikembangkan khusus untuk PLN UP3 Indramayu.'
     + '<br><br><strong>Kemampuan saya:</strong>'
+    + '<br>\u2022 Root Cause Analysis mendalam dengan AI LLM'
     + '<br>\u2022 Analisis real-time data operasional (SAIDI/SAIFI, gangguan, susut)'
     + '<br>\u2022 Evaluasi kinerja keuangan & NKO'
     + '<br>\u2022 Perbandingan antar ULP'
     + '<br>\u2022 Rekomendasi strategis berbasis data'
-    + '<br>\u2022 Analisis vegetasi & peta jaringan'
-    + '<br>\u2022 Root cause analysis'
-    + '<br><br>Saya terhubung langsung ke database PLN dan dapat menganalisis data dari 4 ULP di wilayah UP3 Indramayu.';
+    + '<br>\u2022 Menampilkan hasil analisis secara visual di halaman utama'
+    + '<br><br>Saya terhubung ke <strong>Groq LLM (Llama 3.3 70B)</strong> dan database PLN untuk menganalisis data dari 4 ULP di wilayah UP3 Indramayu.';
 }
 
 function handleHelp(){
@@ -762,75 +916,116 @@ var conversationHistory = [];
 /* --- Override sendChat --- */
 function initAIAssistant(){
   injectStyles();
-  
+
   window.sendChat = function(){
     var input = document.getElementById('chatIn');
     var msg = input.value.trim();
     if(!msg) return;
-    
+
     var chatMsgs = document.getElementById('chatMsgs');
-    
+
     chatMsgs.innerHTML += '<div class="msg user"><div class="bubble">' + escHtml(msg) + '</div></div>';
     input.value = '';
-    
+
     conversationHistory.push({role:'user', content:msg});
-    
+
+    // Switch ULP if user mentions specific one
+    var ulpId = detectULP(msg);
+    if(ulpId){
+      var sel = document.querySelector('select');
+      if(sel){ sel.value = ulpId; sel.dispatchEvent(new Event('change',{bubbles:true})); }
+    }
+
     var thinkingId = 'thinking-' + Date.now();
     chatMsgs.innerHTML += '<div class="msg ai" id="' + thinkingId + '"><div class="bubble"><div class="ai-thinking">'
       + '<div class="dots"><span></span><span></span><span></span></div>'
-      + '<span>Menganalisis data...</span>'
+      + '<span>AI sedang menganalisis akar masalah...</span>'
       + '</div></div></div>';
-    
+
     chatMsgs.scrollTop = chatMsgs.scrollHeight;
-    
-    var thinkTime = THINKING_MIN + Math.random() * (THINKING_MAX - THINKING_MIN);
-    
-    setTimeout(function(){
-      var thinkEl = document.getElementById(thinkingId);
-      if(thinkEl) thinkEl.remove();
-      
-      var response;
-      try {
-        response = generateResponse(msg);
-      } catch(e) {
-        response = 'Maaf, terjadi kesalahan saat memproses: ' + e.message;
-      }
-      
-      var chips = getSuggestionChips(detectIntent(msg)[0]);
-      if(chips) response += chips;
-      
-      chatMsgs.innerHTML += '<div class="msg ai"><div class="bubble">' + response + '</div></div>';
-      conversationHistory.push({role:'ai', content:response});
-      
-      var lastMsg = chatMsgs.querySelector('.msg:last-child');
-      if(lastMsg) lastMsg.scrollIntoView({behavior:'smooth'});
-      
-      chatMsgs.querySelectorAll('.ai-chip').forEach(function(chip){
-        chip.addEventListener('click', function(){
-          var q = this.dataset.query;
-          if(q){
-            document.getElementById('chatIn').value = q;
-            window.sendChat();
-          }
-        });
+
+    if(_groqEnabled){
+      // Call Groq LLM API
+      callGroqAPI(msg, function(err, aiResponse){
+        var thinkEl = document.getElementById(thinkingId);
+        if(thinkEl) thinkEl.remove();
+
+        if(err){
+          // Fallback to rule-based
+          var fallback;
+          try { fallback = generateResponse(msg); } catch(e){ fallback = 'Terjadi kesalahan.'; }
+          var chips = getSuggestionChips(detectIntent(msg)[0]);
+          if(chips) fallback += chips;
+          chatMsgs.innerHTML += '<div class="msg ai"><div class="bubble">' + fallback + '</div></div>';
+          conversationHistory.push({role:'ai', content:fallback});
+        } else {
+          // Show in chat bubble (short version)
+          var shortResponse = parseAIMarkdown(aiResponse);
+          var chatBubble = '<div class="msg ai"><div class="bubble">'
+            + shortResponse
+            + '<br><br><div class="ai-page-hint" onclick="document.getElementById(\'aiAnalysisArea\').scrollIntoView({behavior:\'smooth\'})">'
+            + '<svg viewBox="0 0 24 24" width="14" height="14" style="fill:#3b82f6;vertical-align:middle"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'
+            + ' Hasil analisis ditampilkan di halaman utama'
+            + '</div>'
+            + '</div></div>';
+          chatMsgs.innerHTML += chatBubble;
+          conversationHistory.push({role:'ai', content:aiResponse});
+
+          // Render visual analysis on page
+          renderPageAnalysis(msg, aiResponse);
+        }
+
+        var chips2 = getSuggestionChips(detectIntent(msg)[0]);
+        if(chips2){
+          chatMsgs.innerHTML += '<div class="msg ai"><div class="bubble">' + chips2 + '</div></div>';
+        }
+
+        var lastMsg = chatMsgs.querySelector('.msg:last-child');
+        if(lastMsg) lastMsg.scrollIntoView({behavior:'smooth'});
+        bindChips(chatMsgs);
       });
-    }, thinkTime);
+    } else {
+      // Fallback: rule-based
+      var thinkTime = THINKING_MIN + Math.random() * (THINKING_MAX - THINKING_MIN);
+      setTimeout(function(){
+        var thinkEl = document.getElementById(thinkingId);
+        if(thinkEl) thinkEl.remove();
+        var response;
+        try { response = generateResponse(msg); } catch(e){ response = 'Error: ' + e.message; }
+        var chips = getSuggestionChips(detectIntent(msg)[0]);
+        if(chips) response += chips;
+        chatMsgs.innerHTML += '<div class="msg ai"><div class="bubble">' + response + '</div></div>';
+        conversationHistory.push({role:'ai', content:response});
+        var lastMsg = chatMsgs.querySelector('.msg:last-child');
+        if(lastMsg) lastMsg.scrollIntoView({behavior:'smooth'});
+        bindChips(chatMsgs);
+      }, thinkTime);
+    }
   };
+
+  function bindChips(container){
+    container.querySelectorAll('.ai-chip').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        var q = this.dataset.query;
+        if(q){ document.getElementById('chatIn').value = q; window.sendChat(); }
+      });
+    });
+  }
   
   var chatMsgs = document.getElementById('chatMsgs');
   if(chatMsgs){
     var d = getCurrentData();
     chatMsgs.innerHTML = '<div class="msg ai"><div class="bubble">'
-      + '<strong>\ud83e\udd16 PLN AI Agent v' + AI_VERSION + '</strong>'
-      + '<br><br>Halo! Saya asisten AI cerdas yang terhubung langsung dengan database PLN UP3 Indramayu. Saya dapat menganalisis data secara real-time dan memberikan rekomendasi strategis.'
-      + '<br><br>Saat ini memantau <strong>' + fmt(d?.pelanggan,0) + ' pelanggan</strong> | SAIDI: <strong>' + fmt(d?.saidi) + ' mnt</strong> | Susut: <strong>' + fmt(d?.losses,1) + '%</strong>'
+      + '<strong>PLN AI Agent v' + AI_VERSION + ' (Groq LLM)</strong>'
+      + '<br><br>Halo! Saya PLN AI Agent yang terhubung ke <strong>Groq LLM</strong> dan database PLN UP3 Indramayu. Saya menganalisis <strong>akar masalah</strong> secara mendalam dan menampilkan hasil analisis langsung di halaman utama secara visual.'
+      + '<br><br>Memantau <strong>' + fmt(d?.pelanggan,0) + ' pelanggan</strong> | SAIDI: <strong>' + fmt(d?.saidi) + ' mnt</strong> | Susut: <strong>' + fmt(d?.losses,1) + '%</strong>'
       + '<br><br><div class="ai-chips">'
-      + '<span class="ai-chip" data-query="Overview status terkini">\ud83d\udcca Overview</span>'
-      + '<span class="ai-chip" data-query="Analisis SAIDI SAIFI">\u26a1 Keandalan</span>'
-      + '<span class="ai-chip" data-query="Bandingkan semua ULP">\ud83c\udfc6 Ranking ULP</span>'
-      + '<span class="ai-chip" data-query="Beri rekomendasi strategis">\ud83d\udca1 Rekomendasi</span>'
-      + '<span class="ai-chip" data-query="Analisis NKO">\ud83c\udfaf NKO</span>'
-      + '<span class="ai-chip" data-query="Berapa target dan pencapaian?">\ud83d\udcca Target</span>'
+      + '<span class="ai-chip" data-query="Analisis akar masalah SAIDI tinggi dan solusinya">Akar Masalah SAIDI</span>'
+      + '<span class="ai-chip" data-query="Apa penyebab susut distribusi tinggi dan bagaimana solusinya?">Root Cause Susut</span>'
+      + '<span class="ai-chip" data-query="Bandingkan kinerja semua ULP dan identifikasi masalah utama">Ranking & Masalah ULP</span>'
+      + '<span class="ai-chip" data-query="Beri rekomendasi strategis untuk peningkatan NKO">Strategi NKO</span>'
+      + '<span class="ai-chip" data-query="Analisis mendalam keuangan: penyebab tunggakan dan solusi">Analisis Keuangan</span>'
+      + '<span class="ai-chip" data-query="Overview seluruh permasalahan UP3 Indramayu dan action plan">Overview & Action Plan</span>'
       + '</div>'
       + '</div></div>';
     
