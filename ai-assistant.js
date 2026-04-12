@@ -1035,8 +1035,7 @@ function initAIAssistant(){
           chatMsgs.innerHTML += '<div class="msg ai"><div class="bubble">' + chips2 + '</div></div>';
         }
 
-        var lastMsg = chatMsgs.querySelector('.msg:last-child');
-        if(lastMsg) lastMsg.scrollIntoView({behavior:'smooth'});
+        chatMsgs.scrollTop = chatMsgs.scrollHeight;
         bindChips(chatMsgs);
       });
     } else {
@@ -1051,8 +1050,7 @@ function initAIAssistant(){
         if(chips) response += chips;
         chatMsgs.innerHTML += '<div class="msg ai"><div class="bubble">' + response + '</div></div>';
         conversationHistory.push({role:'ai', content:response});
-        var lastMsg = chatMsgs.querySelector('.msg:last-child');
-        if(lastMsg) lastMsg.scrollIntoView({behavior:'smooth'});
+        chatMsgs.scrollTop = chatMsgs.scrollHeight;
         bindChips(chatMsgs);
       }, thinkTime);
     }
